@@ -74,7 +74,7 @@ public class BookDetail {
 
 		pnlInformation = new JPanel();
 		pnlInformation.setBorder(new TitledBorder(new LineBorder(new Color(0,
-				0, 0)), "Buch Information", TitledBorder.LEADING,
+				0, 0)), Messages.getString("BookDetail.pnlInformation.borderTitle"), TitledBorder.LEADING, //$NON-NLS-1$
 				TitledBorder.TOP, null, null));
 		frame.getContentPane().add(pnlInformation);
 		GridBagLayout gbl_pnlInformation = new GridBagLayout();
@@ -86,7 +86,7 @@ public class BookDetail {
 				Double.MIN_VALUE };
 		pnlInformation.setLayout(gbl_pnlInformation);
 
-		lblTitle = new JLabel("Titel");
+		lblTitle = new JLabel(Messages.getString("BookDetail.lblTitle.text")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 		gbc_lblTitle.anchor = GridBagConstraints.EAST;
 		gbc_lblTitle.insets = new Insets(0, 0, 5, 5);
@@ -103,7 +103,7 @@ public class BookDetail {
 		pnlInformation.add(txtTitle, gbc_txtTitle);
 		txtTitle.setColumns(10);
 
-		lblAuthor = new JLabel("Autor");
+		lblAuthor = new JLabel(Messages.getString("BookDetail.lblAuthor.text")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblAuthor = new GridBagConstraints();
 		gbc_lblAuthor.insets = new Insets(0, 0, 5, 5);
 		gbc_lblAuthor.anchor = GridBagConstraints.EAST;
@@ -120,7 +120,7 @@ public class BookDetail {
 		pnlInformation.add(txtAuthor, gbc_txtAuthor);
 		txtAuthor.setColumns(10);
 
-		lblPublisher = new JLabel("Verlag");
+		lblPublisher = new JLabel(Messages.getString("BookDetail.lblPublisher.text")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblPublisher = new GridBagConstraints();
 		gbc_lblPublisher.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPublisher.anchor = GridBagConstraints.EAST;
@@ -137,7 +137,7 @@ public class BookDetail {
 		pnlInformation.add(txtPublisher, gbc_txtPublisher);
 		txtPublisher.setColumns(10);
 
-		lblShelf = new JLabel("Regal");
+		lblShelf = new JLabel(Messages.getString("BookDetail.lblShelf.text")); //$NON-NLS-1$
 		GridBagConstraints gbc_lblShelf = new GridBagConstraints();
 		gbc_lblShelf.insets = new Insets(0, 0, 0, 5);
 		gbc_lblShelf.anchor = GridBagConstraints.EAST;
@@ -155,7 +155,7 @@ public class BookDetail {
 
 		pnlSpecimensEdit = new JPanel();
 		pnlSpecimensEdit.setBorder(new TitledBorder(new LineBorder(new Color(0,
-				0, 0)), "Exemplare", TitledBorder.LEADING, TitledBorder.TOP,
+				0, 0)), Messages.getString("BookDetail.pnlSpecimensEdit.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, //$NON-NLS-1$
 				null, null));
 		frame.getContentPane().add(pnlSpecimensEdit);
 		pnlSpecimensEdit.setLayout(new BoxLayout(pnlSpecimensEdit,
@@ -165,19 +165,19 @@ public class BookDetail {
 		pnlSpecimensEdit.add(pnlAction);
 		pnlAction.setLayout(new BoxLayout(pnlAction, BoxLayout.X_AXIS));
 
-		lblAmount = new JLabel("Anzahl: 8");
+		lblAmount = new JLabel(Messages.getString("BookDetail.lblAmount.text")); //$NON-NLS-1$
 		pnlAction.add(lblAmount);
 
 		Component hglSpecimensEdit = Box.createHorizontalGlue();
 		pnlAction.add(hglSpecimensEdit);
 
-		btnRemove = new JButton("Ausgewählte entfernen");
+		btnRemove = new JButton(Messages.getString("BookDetail.btnRemove.text")); //$NON-NLS-1$
 		pnlAction.add(btnRemove);
 
 		Component horizontalStrut = Box.createHorizontalStrut(5);
 		pnlAction.add(horizontalStrut);
 
-		btnAdd = new JButton("Exemplar hinzufügen");
+		btnAdd = new JButton(Messages.getString("BookDetail.btnAdd.text")); //$NON-NLS-1$
 		pnlAction.add(btnAdd);
 
 		pnlSpecimens = new JPanel();
