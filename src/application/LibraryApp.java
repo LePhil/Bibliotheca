@@ -13,6 +13,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import views.BookMaster;
+
 import domain.Copy;
 import domain.Customer;
 import domain.IllegalLoanOperationException;
@@ -51,6 +53,10 @@ public class LibraryApp {
 		
 		for(Loan l : library.getOverdueLoans())
 			System.out.println(l.getDaysOverdue());
+		
+		// Create Master Book View
+		BookMaster window = new BookMaster();
+		window.getBookMaster().setVisible(true);
 	}
 
 	private static void createBooksAndLoans(Library library)

@@ -20,7 +20,15 @@ import javax.swing.JList;
 
 public class BookMaster {
 
-	private JFrame frmTodoTitle;
+	private JFrame bookMaster;
+	public JFrame getBookMaster() {
+		return bookMaster;
+	}
+
+	public void setBookMaster(JFrame bookMaster) {
+		this.bookMaster = bookMaster;
+	}
+
 	private JTabbedPane tbsMain;
 	private JPanel tabBooks;
 	private JPanel pnlInventoryStats;
@@ -51,7 +59,7 @@ public class BookMaster {
 			public void run() {
 				try {
 					BookMaster window = new BookMaster();
-					window.frmTodoTitle.setVisible(true);
+					window.bookMaster.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -70,14 +78,14 @@ public class BookMaster {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmTodoTitle = new JFrame();
-		frmTodoTitle.setTitle(Messages.getString("BookMaster.frmTodoTitle.title")); //$NON-NLS-1$
-		frmTodoTitle.setBounds(100, 100, 600, 400);
-		frmTodoTitle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		bookMaster = new JFrame();
+		bookMaster.setTitle(Messages.getString("BookMaster.frmTodoTitle.title")); //$NON-NLS-1$
+		bookMaster.setBounds(100, 100, 600, 400);
+		bookMaster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		tbsMain = new JTabbedPane(JTabbedPane.TOP);
 		tbsMain.setToolTipText(Messages.getString("BookMaster.tbsMain.toolTipText")); //$NON-NLS-1$
-		frmTodoTitle.getContentPane().add(tbsMain, BorderLayout.CENTER);
+		bookMaster.getContentPane().add(tbsMain, BorderLayout.CENTER);
 		
 		tabBooks = new JPanel();
 		tbsMain.addTab("Bücher", null, tabBooks, null);
