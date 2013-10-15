@@ -71,12 +71,12 @@ public class BookMaster {
 	 */
 	private void initialize() {
 		frmTodoTitle = new JFrame();
-		frmTodoTitle.setTitle("TODO TITLE - BookMaster");
+		frmTodoTitle.setTitle(Messages.getString("BookMaster.frmTodoTitle.title")); //$NON-NLS-1$
 		frmTodoTitle.setBounds(100, 100, 600, 400);
 		frmTodoTitle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		tbsMain = new JTabbedPane(JTabbedPane.TOP);
-		tbsMain.setToolTipText("TODO TOOLTIP");
+		tbsMain.setToolTipText(Messages.getString("BookMaster.tbsMain.toolTipText")); //$NON-NLS-1$
 		frmTodoTitle.getContentPane().add(tbsMain, BorderLayout.CENTER);
 		
 		tabBooks = new JPanel();
@@ -84,21 +84,21 @@ public class BookMaster {
 		tabBooks.setLayout(new BoxLayout(tabBooks, BoxLayout.Y_AXIS));
 		
 		pnlInventoryStats = new JPanel();
-		pnlInventoryStats.setBorder(new TitledBorder(null, "Inventar-Statistik", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pnlInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 		tabBooks.add(pnlInventoryStats);
 		pnlInventoryStats.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		lblNrOfBooks = new JLabel("Anzahl Bücher: 842");
+		lblNrOfBooks = new JLabel(Messages.getString("BookMaster.lblNrOfBooks.text")); //$NON-NLS-1$
 		pnlInventoryStats.add(lblNrOfBooks);
 		
 		horizontalStrut = Box.createHorizontalStrut(20);
 		pnlInventoryStats.add(horizontalStrut);
 		
-		lblNrOfCopies = new JLabel("Anzahl Exemplare: 2200");
+		lblNrOfCopies = new JLabel(Messages.getString("BookMaster.lblNrOfCopies.text")); //$NON-NLS-1$
 		pnlInventoryStats.add(lblNrOfCopies);
 		
 		pnlBookInventory = new JPanel();
-		pnlBookInventory.setBorder(new TitledBorder(null, "B\u00FCcher-Inventar", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pnlBookInventory.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlBookInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 		tabBooks.add(pnlBookInventory);
 		gbl_pnlBookInventory = new GridBagLayout();
 		gbl_pnlBookInventory.columnWidths = new int[] {0};
@@ -117,16 +117,16 @@ public class BookMaster {
 		pnlBookInventory.add(pnlBooksInvTop, gbc_pnlBooksInvTop);
 		pnlBooksInvTop.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		lblChosen = new JLabel("Ausgewählt: 1");
+		lblChosen = new JLabel(Messages.getString("BookMaster.lblChosen.text")); //$NON-NLS-1$
 		pnlBooksInvTop.add(lblChosen);
 		
 		horizontalStrut_1 = Box.createHorizontalStrut(20);
 		pnlBooksInvTop.add(horizontalStrut_1);
 		
-		btnShowSelected = new JButton("Selektierte Anzeigen");
+		btnShowSelected = new JButton(Messages.getString("BookMaster.btnShowSelected.text")); //$NON-NLS-1$
 		pnlBooksInvTop.add(btnShowSelected);
 		
-		btnAddNewBook = new JButton("Neues Buch hinzufügen");
+		btnAddNewBook = new JButton(Messages.getString("BookMaster.btnAddNewBook.text")); //$NON-NLS-1$
 		pnlBooksInvTop.add(btnAddNewBook);
 		
 		pnlBooksInvBottom = new JPanel();
