@@ -18,47 +18,54 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JList;
 
+import domain.Book;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+
 public class BookMaster {
 
 	private JFrame bookMaster;
-	public JFrame getBookMaster() {
-		return bookMaster;
-	}
-
-	public void setBookMaster(JFrame bookMaster) {
-		this.bookMaster = bookMaster;
-	}
 
 	private JTabbedPane tbsMain;
-	private JPanel tabBooks;
+	
+	private JPanel pnlBooksTab;
 	private JPanel pnlInventoryStats;
-	private JLabel lblNrOfBooks;
-	private Component horizontalStrut;
-	private JLabel lblNrOfCopies;
 	private JPanel pnlBookInventory;
-	private GridBagLayout gbl_pnlBookInventory;
 	private JPanel pnlBooksInvTop;
-	private GridBagConstraints gbc_pnlBooksInvTop;
+	private JPanel pnlBooksInvBottom;
+	private JPanel pnlLoansTab;
+	
+	private JLabel lblNrOfBooks;
+	private JLabel lblNrOfCopies;
 	private JLabel lblChosen;
-	private Component horizontalStrut_1;
+	
 	private JButton btnShowSelected;
 	private JButton btnAddNewBook;
-	private JPanel pnlBooksInvBottom;
-	private GridBagConstraints gbc_pnlBooksInvBottom;
-	private GridBagLayout gbl_pnlBooksInvBottom;
+	
 	private JList<domain.Book> lstBooks;
-	private GridBagConstraints gbc_lstBooks;
-	private JPanel tabLoans;
-	private GridBagLayout gbl_tabLoans;
+	
+	private Component horizontalStrut;
+	private Component horizontalStrut_1;
+	
+	private GridBagLayout gbl_pnlBookInventory;
+	private GridBagLayout gbl_pnlBooksInvBottom;
+	private GridBagLayout gbl_pnlLoansTab;
 
+	private GridBagConstraints gbc_pnlBooksInvTop;
+	private GridBagConstraints gbc_pnlBooksInvBottom;
+	private GridBagConstraints gbc_lstBooks;
+	
 	/**
-	 * Launch the application.
+	 * Just for testing purposes!!!
+	 * TODO: remove main method
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					BookMaster window = new BookMaster();
+					BookMaster window = new BookMaster(null);
 					window.bookMaster.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -69,9 +76,17 @@ public class BookMaster {
 
 	/**
 	 * Create the application.
+	 * @param bookList 
 	 */
-	public BookMaster() {
+	public BookMaster(ArrayList<Book> bookList) {
 		initialize();
+		updateBookList( bookList );
+	}
+
+	private void updateBookList(ArrayList<Book> bookList) {
+		//for ( Book book : bookList ) {
+			//TODO: listModel! not all in the model, stupid.
+		//}
 	}
 
 	/**
@@ -87,13 +102,13 @@ public class BookMaster {
 		tbsMain.setToolTipText(Messages.getString("BookMaster.tbsMain.toolTipText")); //$NON-NLS-1$
 		bookMaster.getContentPane().add(tbsMain, BorderLayout.CENTER);
 		
-		tabBooks = new JPanel();
-		tbsMain.addTab("Bücher", null, tabBooks, null);
-		tabBooks.setLayout(new BoxLayout(tabBooks, BoxLayout.Y_AXIS));
+		pnlBooksTab = new JPanel();
+		tbsMain.addTab("Bücher", null, pnlBooksTab, null);
+		pnlBooksTab.setLayout(new BoxLayout(pnlBooksTab, BoxLayout.Y_AXIS));
 		
 		pnlInventoryStats = new JPanel();
 		pnlInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
-		tabBooks.add(pnlInventoryStats);
+		pnlBooksTab.add(pnlInventoryStats);
 		pnlInventoryStats.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
 		lblNrOfBooks = new JLabel(Messages.getString("BookMaster.lblNrOfBooks.text")); //$NON-NLS-1$
@@ -107,7 +122,7 @@ public class BookMaster {
 		
 		pnlBookInventory = new JPanel();
 		pnlBookInventory.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlBookInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
-		tabBooks.add(pnlBookInventory);
+		pnlBooksTab.add(pnlBookInventory);
 		gbl_pnlBookInventory = new GridBagLayout();
 		gbl_pnlBookInventory.columnWidths = new int[] {0};
 		gbl_pnlBookInventory.rowHeights = new int[] {30, 0};
@@ -135,6 +150,13 @@ public class BookMaster {
 		pnlBooksInvTop.add(btnShowSelected);
 		
 		btnAddNewBook = new JButton(Messages.getString("BookMaster.btnAddNewBook.text")); //$NON-NLS-1$
+		btnAddNewBook.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+				BookDetail detailView = new BookDetail();
+				detailView.getFrame().setVisible(true);
+			}
+		});
 		pnlBooksInvTop.add(btnAddNewBook);
 		
 		pnlBooksInvBottom = new JPanel();
@@ -157,13 +179,22 @@ public class BookMaster {
 		gbc_lstBooks.gridy = 0;
 		pnlBooksInvBottom.add(lstBooks, gbc_lstBooks);
 		
-		tabLoans = new JPanel();
-		tbsMain.addTab("Ausleihen", null, tabLoans, null);
-		gbl_tabLoans = new GridBagLayout();
-		gbl_tabLoans.columnWidths = new int[]{0};
-		gbl_tabLoans.rowHeights = new int[]{0};
-		gbl_tabLoans.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_tabLoans.rowWeights = new double[]{Double.MIN_VALUE};
-		tabLoans.setLayout(gbl_tabLoans);
+		pnlLoansTab = new JPanel();
+		tbsMain.addTab("Ausleihen", null, pnlLoansTab, null);
+		gbl_pnlLoansTab = new GridBagLayout();
+		gbl_pnlLoansTab.columnWidths = new int[]{0};
+		gbl_pnlLoansTab.rowHeights = new int[]{0};
+		gbl_pnlLoansTab.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_pnlLoansTab.rowWeights = new double[]{Double.MIN_VALUE};
+		pnlLoansTab.setLayout(gbl_pnlLoansTab);
 	}
+	
+	public JFrame getBookMaster() {
+		return bookMaster;
+	}
+
+	public void setBookMaster(JFrame bookMaster) {
+		this.bookMaster = bookMaster;
+	}
+
 }

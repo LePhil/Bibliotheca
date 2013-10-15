@@ -2,6 +2,7 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -24,14 +25,16 @@ import domain.Book;
 import domain.Shelf;
 
 public class LibraryApp {
+	
+	private static ArrayList<Book> bookList;
+	private static ArrayList<Customer> customerList;
+	
 	public static void main(String[] args) throws Exception {
 		Library library = new Library();
 		initLibrary(library);
 	}
 
-	private static void initLibrary(Library library)
-			throws ParserConfigurationException, SAXException, IOException,
-			IllegalLoanOperationException {
+	private static void initLibrary(Library library) throws ParserConfigurationException, SAXException, IOException, IllegalLoanOperationException {
 		
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
@@ -55,12 +58,11 @@ public class LibraryApp {
 			System.out.println(l.getDaysOverdue());
 		
 		// Create Master Book View
-		BookMaster window = new BookMaster();
+		BookMaster window = new BookMaster( getBookList() );
 		window.getBookMaster().setVisible(true);
 	}
 
-	private static void createBooksAndLoans(Library library)
-			throws IllegalLoanOperationException {
+	private static void createBooksAndLoans(Library library) throws IllegalLoanOperationException {
 		for(int i = 0; i < library.getBooks().size(); i++) {
 			switch(i%4) {
 			case 0:
@@ -90,8 +92,7 @@ public class LibraryApp {
 		}
 	}
 
-	private static void loadBooksFromXml(Library library,
-			DocumentBuilder builder, File file) throws SAXException, IOException {
+	private static void loadBooksFromXml(Library library, DocumentBuilder builder, File file) throws SAXException, IOException {
 		Document doc2 = builder.parse(file);
 		NodeList titles = doc2.getElementsByTagName("title");
 		for(int i = 0; i < titles.getLength(); i++) {
@@ -100,11 +101,12 @@ public class LibraryApp {
 			b.setAuthor(getTextContentOf(title, "author"));
 			b.setPublisher(getTextContentOf(title, "publisher"));
 			b.setShelf(Shelf.A1);
+			
+			addBook( b );
 		}
 	}
 
-	private static void loadCustomersFromXml(Library library,
-			DocumentBuilder builder, File file) throws SAXException, IOException {
+	private static void loadCustomersFromXml(Library library, DocumentBuilder builder, File file) throws SAXException, IOException {
 		Document doc = builder.parse(file);
 		NodeList customers = doc.getElementsByTagName("customer");
 		for(int i = 0; i < customers.getLength(); i++) {
@@ -112,11 +114,12 @@ public class LibraryApp {
 			
 			Customer c = library.createAndAddCustomer(getTextContentOf(customer,"name"),getTextContentOf(customer,"surname"));
 			c.setAdress(getTextContentOf(customer,"street"), Integer.parseInt(getTextContentOf(customer,"zip")), getTextContentOf(customer,"city"));
+			
+			addCustomer( c );
 		}
 	}
 
-	private static void createLoansForCopy(Library library, Copy copy, int position,
-			int count) throws IllegalLoanOperationException {
+	private static void createLoansForCopy(Library library, Copy copy, int position, int count) throws IllegalLoanOperationException {
 		// Create Loans in the past
 		for(int i = count; i > 1; i--) {
 			Loan l = library.createAndAddLoan(getCustomer(library,position + i), copy);
@@ -137,8 +140,7 @@ public class LibraryApp {
 		}
 	}
 	
-	private static void createOverdueLoanForCopy(Library library, Copy copy, int position)
-		throws IllegalLoanOperationException {
+	private static void createOverdueLoanForCopy(Library library, Copy copy, int position) throws IllegalLoanOperationException {
 		Loan l = library.createAndAddLoan(getCustomer(library, position), copy);
 		GregorianCalendar pickup = l.getPickupDate();
 		pickup.add(GregorianCalendar.MONTH, -1);
@@ -158,5 +160,36 @@ public class LibraryApp {
 			}
 		}
 		return "";
+	}
+
+	///////////////////////////////////////////////////////////////////////////
+	// Getters and Setters
+	///////////////////////////////////////////////////////////////////////////
+	/**
+	 * @return the bookList
+	 */
+	public static ArrayList<Book> getBookList() {
+		return bookList;
+	}
+
+	/**
+	 * @param Book newBook Book to add
+	 */
+	public static void addBook( Book newBook ) {
+		//bookList.add( newBook );
+	}
+
+	/**
+	 * @return the customerList
+	 */
+	public ArrayList<Customer> getCustomerList() {
+		return customerList;
+	}
+
+	/**
+	 * @param Customer newCustomer the Customer to add
+	 */
+	public static void addCustomer(Customer newCustomer) {
+		//customerList.add( newCustomer );
 	}
 }

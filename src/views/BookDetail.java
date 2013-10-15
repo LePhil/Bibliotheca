@@ -31,14 +31,14 @@ public class BookDetail {
 	private JLabel lblAuthor;
 	private JLabel lblPublisher;
 	private JLabel lblShelf;
-	private JComboBox cmbShelf;
-	private JPanel pnlSpecimensEdit;
+	private JComboBox<domain.Shelf> cmbShelf;
+	private JPanel pnlCopiesEdit;
 	private JPanel pnlAction;
 	private JLabel lblAmount;
 	private JButton btnRemove;
 	private JButton btnAdd;
-	private JPanel pnlSpecimens;
-	private JList lstSpecimens;
+	private JPanel pnlCopies;
+	private JList<domain.Copy> lstCopy;
 
 	/**
 	 * Launch the application.
@@ -153,23 +153,23 @@ public class BookDetail {
 		gbc_cmbShelf.gridy = 3;
 		pnlInformation.add(cmbShelf, gbc_cmbShelf);
 
-		pnlSpecimensEdit = new JPanel();
-		pnlSpecimensEdit.setBorder(new TitledBorder(new LineBorder(new Color(0,
+		pnlCopiesEdit = new JPanel();
+		pnlCopiesEdit.setBorder(new TitledBorder(new LineBorder(new Color(0,
 				0, 0)), Messages.getString("BookDetail.pnlSpecimensEdit.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, //$NON-NLS-1$
 				null, null));
-		frame.getContentPane().add(pnlSpecimensEdit);
-		pnlSpecimensEdit.setLayout(new BoxLayout(pnlSpecimensEdit,
+		frame.getContentPane().add(pnlCopiesEdit);
+		pnlCopiesEdit.setLayout(new BoxLayout(pnlCopiesEdit,
 				BoxLayout.Y_AXIS));
 
 		pnlAction = new JPanel();
-		pnlSpecimensEdit.add(pnlAction);
+		pnlCopiesEdit.add(pnlAction);
 		pnlAction.setLayout(new BoxLayout(pnlAction, BoxLayout.X_AXIS));
 
 		lblAmount = new JLabel(Messages.getString("BookDetail.lblAmount.text")); //$NON-NLS-1$
 		pnlAction.add(lblAmount);
 
-		Component hglSpecimensEdit = Box.createHorizontalGlue();
-		pnlAction.add(hglSpecimensEdit);
+		Component hglCopiesEdit = Box.createHorizontalGlue();
+		pnlAction.add(hglCopiesEdit);
 
 		btnRemove = new JButton(Messages.getString("BookDetail.btnRemove.text")); //$NON-NLS-1$
 		pnlAction.add(btnRemove);
@@ -180,12 +180,20 @@ public class BookDetail {
 		btnAdd = new JButton(Messages.getString("BookDetail.btnAdd.text")); //$NON-NLS-1$
 		pnlAction.add(btnAdd);
 
-		pnlSpecimens = new JPanel();
-		pnlSpecimensEdit.add(pnlSpecimens);
-		pnlSpecimens.setLayout(new BorderLayout(0, 0));
+		pnlCopies = new JPanel();
+		pnlCopiesEdit.add(pnlCopies);
+		pnlCopies.setLayout(new BorderLayout(0, 0));
 
-		lstSpecimens = new JList();
-		pnlSpecimens.add(lstSpecimens);
+		lstCopy = new JList<domain.Copy>();
+		pnlCopies.add(lstCopy);
+	}
+	
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
 	}
 
 }
