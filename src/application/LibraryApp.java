@@ -2,6 +2,7 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -13,6 +14,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import views.BookMaster;
+
 import domain.Copy;
 import domain.Customer;
 import domain.IllegalLoanOperationException;
@@ -22,17 +25,16 @@ import domain.Book;
 import domain.Shelf;
 
 public class LibraryApp {
+	
 	public static void main(String[] args) throws Exception {
 		Library library = new Library();
 		initLibrary(library);
 	}
 
-	private static void initLibrary(Library library)
-			throws ParserConfigurationException, SAXException, IOException,
-			IllegalLoanOperationException {
+	private static void initLibrary(Library library) throws ParserConfigurationException, SAXException, IOException, IllegalLoanOperationException {
 		
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
+		
 		loadCustomersFromXml(library, builder,new File("data/customers.xml"));
 		
 		loadBooksFromXml(library, builder,new File("data/books.xml"));
@@ -51,10 +53,13 @@ public class LibraryApp {
 		
 		for(Loan l : library.getOverdueLoans())
 			System.out.println(l.getDaysOverdue());
+		
+		// Create Master Book View
+		BookMaster window = new BookMaster();
+		window.getBookMaster().setVisible(true);
 	}
 
-	private static void createBooksAndLoans(Library library)
-			throws IllegalLoanOperationException {
+	private static void createBooksAndLoans(Library library) throws IllegalLoanOperationException {
 		for(int i = 0; i < library.getBooks().size(); i++) {
 			switch(i%4) {
 			case 0:
@@ -84,8 +89,7 @@ public class LibraryApp {
 		}
 	}
 
-	private static void loadBooksFromXml(Library library,
-			DocumentBuilder builder, File file) throws SAXException, IOException {
+	private static void loadBooksFromXml(Library library, DocumentBuilder builder, File file) throws SAXException, IOException {
 		Document doc2 = builder.parse(file);
 		NodeList titles = doc2.getElementsByTagName("title");
 		for(int i = 0; i < titles.getLength(); i++) {
@@ -97,8 +101,7 @@ public class LibraryApp {
 		}
 	}
 
-	private static void loadCustomersFromXml(Library library,
-			DocumentBuilder builder, File file) throws SAXException, IOException {
+	private static void loadCustomersFromXml(Library library, DocumentBuilder builder, File file) throws SAXException, IOException {
 		Document doc = builder.parse(file);
 		NodeList customers = doc.getElementsByTagName("customer");
 		for(int i = 0; i < customers.getLength(); i++) {
@@ -109,8 +112,7 @@ public class LibraryApp {
 		}
 	}
 
-	private static void createLoansForCopy(Library library, Copy copy, int position,
-			int count) throws IllegalLoanOperationException {
+	private static void createLoansForCopy(Library library, Copy copy, int position, int count) throws IllegalLoanOperationException {
 		// Create Loans in the past
 		for(int i = count; i > 1; i--) {
 			Loan l = library.createAndAddLoan(getCustomer(library,position + i), copy);
@@ -131,8 +133,7 @@ public class LibraryApp {
 		}
 	}
 	
-	private static void createOverdueLoanForCopy(Library library, Copy copy, int position)
-		throws IllegalLoanOperationException {
+	private static void createOverdueLoanForCopy(Library library, Copy copy, int position) throws IllegalLoanOperationException {
 		Loan l = library.createAndAddLoan(getCustomer(library, position), copy);
 		GregorianCalendar pickup = l.getPickupDate();
 		pickup.add(GregorianCalendar.MONTH, -1);
