@@ -26,9 +26,6 @@ import domain.Shelf;
 
 public class LibraryApp {
 	
-	private static ArrayList<Book> bookList;
-	private static ArrayList<Customer> customerList;
-	
 	public static void main(String[] args) throws Exception {
 		Library library = new Library();
 		initLibrary(library);
@@ -37,7 +34,7 @@ public class LibraryApp {
 	private static void initLibrary(Library library) throws ParserConfigurationException, SAXException, IOException, IllegalLoanOperationException {
 		
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
+		
 		loadCustomersFromXml(library, builder,new File("data/customers.xml"));
 		
 		loadBooksFromXml(library, builder,new File("data/books.xml"));
@@ -58,7 +55,7 @@ public class LibraryApp {
 			System.out.println(l.getDaysOverdue());
 		
 		// Create Master Book View
-		BookMaster window = new BookMaster( getBookList() );
+		BookMaster window = new BookMaster();
 		window.getBookMaster().setVisible(true);
 	}
 
@@ -101,8 +98,6 @@ public class LibraryApp {
 			b.setAuthor(getTextContentOf(title, "author"));
 			b.setPublisher(getTextContentOf(title, "publisher"));
 			b.setShelf(Shelf.A1);
-			
-			addBook( b );
 		}
 	}
 
@@ -114,8 +109,6 @@ public class LibraryApp {
 			
 			Customer c = library.createAndAddCustomer(getTextContentOf(customer,"name"),getTextContentOf(customer,"surname"));
 			c.setAdress(getTextContentOf(customer,"street"), Integer.parseInt(getTextContentOf(customer,"zip")), getTextContentOf(customer,"city"));
-			
-			addCustomer( c );
 		}
 	}
 
@@ -160,36 +153,5 @@ public class LibraryApp {
 			}
 		}
 		return "";
-	}
-
-	///////////////////////////////////////////////////////////////////////////
-	// Getters and Setters
-	///////////////////////////////////////////////////////////////////////////
-	/**
-	 * @return the bookList
-	 */
-	public static ArrayList<Book> getBookList() {
-		return bookList;
-	}
-
-	/**
-	 * @param Book newBook Book to add
-	 */
-	public static void addBook( Book newBook ) {
-		//bookList.add( newBook );
-	}
-
-	/**
-	 * @return the customerList
-	 */
-	public ArrayList<Customer> getCustomerList() {
-		return customerList;
-	}
-
-	/**
-	 * @param Customer newCustomer the Customer to add
-	 */
-	public static void addCustomer(Customer newCustomer) {
-		//customerList.add( newCustomer );
 	}
 }

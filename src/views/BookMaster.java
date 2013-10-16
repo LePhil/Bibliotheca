@@ -65,7 +65,7 @@ public class BookMaster {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					BookMaster window = new BookMaster(null);
+					BookMaster window = new BookMaster();
 					window.bookMaster.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -78,15 +78,8 @@ public class BookMaster {
 	 * Create the application.
 	 * @param bookList 
 	 */
-	public BookMaster(ArrayList<Book> bookList) {
+	public BookMaster() {
 		initialize();
-		updateBookList( bookList );
-	}
-
-	private void updateBookList(ArrayList<Book> bookList) {
-		//for ( Book book : bookList ) {
-			//TODO: listModel! not all in the model, stupid.
-		//}
 	}
 
 	/**
