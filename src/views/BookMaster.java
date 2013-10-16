@@ -140,6 +140,11 @@ public class BookMaster {
 		pnlBooksInvTop.add(horizontalStrut_1);
 		
 		btnShowSelected = new JButton(Messages.getString("BookMaster.btnShowSelected.text")); //$NON-NLS-1$
+		btnShowSelected.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO
+			}
+		});
 		pnlBooksInvTop.add(btnShowSelected);
 		
 		btnAddNewBook = new JButton(Messages.getString("BookMaster.btnAddNewBook.text")); //$NON-NLS-1$

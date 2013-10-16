@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class BookDetail {
 
@@ -172,12 +174,22 @@ public class BookDetail {
 		pnlAction.add(hglCopiesEdit);
 
 		btnRemove = new JButton(Messages.getString("BookDetail.btnRemove.text")); //$NON-NLS-1$
+		btnRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//TODO
+			}
+		});
 		pnlAction.add(btnRemove);
 
 		Component horizontalStrut = Box.createHorizontalStrut(5);
 		pnlAction.add(horizontalStrut);
 
 		btnAdd = new JButton(Messages.getString("BookDetail.btnAdd.text")); //$NON-NLS-1$
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO
+			}
+		});
 		pnlAction.add(btnAdd);
 
 		pnlCopies = new JPanel();
