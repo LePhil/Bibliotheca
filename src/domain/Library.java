@@ -2,8 +2,10 @@ package domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Library {
+public class Library extends Observable implements Observer {
 
 	private List<Copy> copies;
 	private List<Customer> customers;
@@ -135,6 +137,12 @@ public class Library {
 
 	public List<Customer> getCustomers() {
 		return customers;
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		setChanged();
+		notifyObservers( o );
 	}
 
 }
