@@ -11,11 +11,11 @@ import domain.Library;
 public class BookListModel extends AbstractListModel implements Observer {
 
 	private static final long serialVersionUID = 1L;
-	Library bookList;
+	Library library;
 	
-	public BookListModel(Library bookList) {
-		this.bookList = bookList;
-		bookList.addObserver( this );
+	public BookListModel(Library library) {
+		this.library = library;
+		library.addObserver( this );
 	}
 	
 	public void propagateUpdate(int pos) {
@@ -24,25 +24,24 @@ public class BookListModel extends AbstractListModel implements Observer {
 
 	@Override
 	public void update(Observable obj, Object arg1) {
+		System.out.println("UPDATE ON BOOKLISTMODEL");
 		//TODO fix this mess.
-		/*
-		if (obj instanceof Book){
-			int pos = bookList.getBooks().indexOf((Book)obj);
-			fireContentsChanged(this, pos, pos);						
-		}
-		*/
+		//if (obj instanceof Book){
+			//int pos = bookList.getBooks().indexOf((Book)obj);
+			//fireContentsChanged(this, pos, pos);						
+		//}
 		if (obj instanceof Library){
-			fireContentsChanged(this, 0, bookList.getBooks().size());
+			fireContentsChanged(this, 0, library.getBooks().size());
 		}
 	}
 
 	@Override
 	public Object getElementAt(int index) {
-		return bookList.getBooks().get(index);
+		return library.getBooks().get(index);
 	}
 
 	@Override
 	public int getSize() {
-		return bookList.getBooks().size();
+		return library.getBooks().size();
 	}
 }

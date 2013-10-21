@@ -10,6 +10,9 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import java.awt.FlowLayout;
 import java.awt.Component;
 import javax.swing.Box;
@@ -19,6 +22,7 @@ import javax.swing.WindowConstants;
 
 import viewModels.BookListModel;
 
+import domain.Book;
 import domain.Library;
 
 import java.awt.event.ActionListener;
@@ -60,6 +64,7 @@ public class BookMaster extends javax.swing.JFrame {
 	private GridBagConstraints gbc_lstBooks;
 	
 	private Library library;
+	private Book editBook;
 	private BooksChangedObserver booksChangedObserver = new BooksChangedObserver();
 	private BookListModel bookListModel;
 	
@@ -87,6 +92,9 @@ public class BookMaster extends javax.swing.JFrame {
 	 * @param bookList 
 	 */
 	public BookMaster( Library library ) {
+		/*
+		 * This View should listen to changes in the book list and the loans list!
+		 */
 		super();
 		this.library = library;
 		library.addObserver( booksChangedObserver );
@@ -105,7 +113,6 @@ public class BookMaster extends javax.swing.JFrame {
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			this.setTitle(Messages.getString("BookMaster.frmTodoTitle.title")); //$NON-NLS-1$
 			this.setBounds(100, 100, 600, 400);
-			//this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
 			tbsMain = new JTabbedPane(JTabbedPane.TOP);
 			tbsMain.setToolTipText(Messages.getString("BookMaster.tbsMain.toolTipText")); //$NON-NLS-1$
@@ -191,6 +198,16 @@ public class BookMaster extends javax.swing.JFrame {
 			//lstBooks.setSelectionMode();
 			//lstBooks.setLayoutOrientation(JList.VERTICAL);
 			//lstBooks.setVisibleRowCount(-1);
+			lstBooks.setModel(bookListModel);
+			lstBooks.setCellRenderer( new BookListCellRenderer() );
+			lstBooks.addListSelectionListener(new ListSelectionListener() {
+				
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+				
+					updateDetailPanel();
+				}
+			});
 			
 			
 			gbc_lstBooks = new GridBagConstraints();
@@ -212,16 +229,33 @@ public class BookMaster extends javax.swing.JFrame {
 		}
 	}
 	
+	private void updateDetailPanel() {
+		if (editBook!=null) {
+			editBook.deleteObserver(booksChangedObserver);
+			editBook=null;
+		}
+		editBook=(Book)lstBooks.getSelectedValue();
+		/*
+		if (editBook==null){
+			toDoTextJField.setText("");
+			importanceJComboBoxModel.setSelectedItem(importanceJComboBoxModel.getElementAt(0));
+			startDateJText.setText("");
+			dueDateJText.setText("");				
+		}else{
+			editBook.addObserver(editToDoChangedObserver);
+			toDoTextJField.setText(editToDo.getText());
+			importanceJComboBoxModel.setSelectedItem(importanceJComboBoxModel.getElementAt(editBook.getImportance()));
+			startDateJText.setText(String.format("%tD", editBook.getStartDate()));
+			dueDateJText.setText(String.format("%tD", editBook.getDueDate()));		
+		}
+		*/
+	}
+	
 	private class BooksChangedObserver implements Observer {
 
 		@Override
 		public void update(Observable o, Object arg) {
-			System.out.println("update in BooksChangedObserver:");
-			System.out.println("--------------------------------");
-			System.out.println(o);
-			System.out.println(arg);
-			System.out.println("--------------------------------");
-			//updateDetailPanel();			
+			updateDetailPanel();			
 		}
 		
 	}

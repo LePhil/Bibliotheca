@@ -29,6 +29,7 @@ public class LibraryApp {
 	public static void main(String[] args) throws Exception {
 		// Create Model and stuff
 		Library library = new Library();
+		
 		initLibrary(library);
 		
 		// Create Master Book View

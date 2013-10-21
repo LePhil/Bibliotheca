@@ -23,6 +23,7 @@ public class Library extends Observable implements Observer {
 		if (!isCopyLent(copy)) {
 			Loan l = new Loan(customer, copy);
 			loans.add(l);
+			doNotify();
 			return l;
 		} else {
 			return null;
@@ -32,18 +33,21 @@ public class Library extends Observable implements Observer {
 	public Customer createAndAddCustomer(String name, String surname) {
 		Customer c = new Customer(name, surname);
 		customers.add(c);
+		doNotify();
 		return c;
 	}
 
 	public Book createAndAddBook(String name) {
 		Book b = new Book(name);
 		books.add(b);
+		doNotify();
 		return b;
 	}
 
 	public Copy createAndAddCopy(Book title) {
 		Copy c = new Copy(title);
 		copies.add(c);
+		doNotify();
 		return c;
 	}
 
@@ -137,6 +141,11 @@ public class Library extends Observable implements Observer {
 
 	public List<Customer> getCustomers() {
 		return customers;
+	}
+	
+	private void doNotify() {
+		setChanged();
+		notifyObservers();
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package domain;
 
-public class Book {
+import java.util.Observable;
+
+public class Book extends Observable {
 	
 	private String title, author, publisher;
 	private Shelf shelf;
