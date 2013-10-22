@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -18,6 +19,7 @@ import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import viewModels.BookListModel;
@@ -27,6 +29,8 @@ import domain.Library;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -173,9 +177,7 @@ public class BookMaster extends javax.swing.JFrame {
 			btnAddNewBook = new JButton(Messages.getString("BookMaster.btnAddNewBook.text")); //$NON-NLS-1$
 			btnAddNewBook.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//TODO
-					//ToDo editToDo=(ToDo)toDoJList.getSelectedValue();
-					//MultiEditToDoDetailJFrame.editToDo(editToDo);
+					addButtonActionPerformed(e);
 				}
 			});
 			pnlBooksInvTop.add(btnAddNewBook);
@@ -195,17 +197,16 @@ public class BookMaster extends javax.swing.JFrame {
 			
 			////////////// JList /////////////////////
 			lstBooks = new JList<domain.Book>();
-			//lstBooks.setSelectionMode();
-			//lstBooks.setLayoutOrientation(JList.VERTICAL);
-			//lstBooks.setVisibleRowCount(-1);
+			lstBooks.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+			lstBooks.setLayoutOrientation(JList.VERTICAL);
+			lstBooks.setVisibleRowCount(-1);
 			lstBooks.setModel(bookListModel);
 			lstBooks.setCellRenderer( new BookListCellRenderer() );
 			lstBooks.addListSelectionListener(new ListSelectionListener() {
-				
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
-				
-					updateDetailPanel();
+					updateListButtons(lstBooks.getSelectedValues().length !=0 );
+					//updateDetailPanel();
 				}
 			});
 			
@@ -224,9 +225,15 @@ public class BookMaster extends javax.swing.JFrame {
 			gbl_pnlLoansTab.columnWeights = new double[]{Double.MIN_VALUE};
 			gbl_pnlLoansTab.rowWeights = new double[]{Double.MIN_VALUE};
 			pnlLoansTab.setLayout(gbl_pnlLoansTab);
+			
+			updateListButtons(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void updateListButtons(boolean bookItemIsSelectedP) {
+		btnShowSelected.setEnabled(bookItemIsSelectedP);
 	}
 	
 	private void updateDetailPanel() {
@@ -252,8 +259,16 @@ public class BookMaster extends javax.swing.JFrame {
 	}
 	
 	private void showSelectedButtonActionPerformed(ActionEvent evt) {
-		Book editBook=(Book)lstBooks.getSelectedValue();
-		BookDetail.editBook(editBook);
+		List<Book> selectedBooks = lstBooks.getSelectedValuesList();
+		for (Book selectedBook : selectedBooks) {
+			BookDetail.editBook(selectedBook);
+		}
+		//Book editBook=(Book)lstBooks.getSelectedValue();
+		//BookDetail.editBook(editBook);
+	}
+	
+	private void addButtonActionPerformed(ActionEvent evt) {
+		// TODO
 	}
 	
 	private class BooksChangedObserver implements Observer {
