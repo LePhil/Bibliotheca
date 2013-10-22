@@ -1,5 +1,6 @@
 package views;
 
+import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JLabel;
@@ -24,6 +25,13 @@ public class BookListCellRenderer implements ListCellRenderer {
 		Book book = (Book) obj;
 		renderLabel.setText(book.toString());
 		
+		if(isSelected) {
+			renderLabel.setBackground(Color.BLACK);
+			renderLabel.setForeground(Color.WHITE);				
+		} else{
+			renderLabel.setBackground(Color.WHITE);
+			renderLabel.setForeground(Color.BLACK);			
+		}
 		
 		return renderLabel;
 	}
