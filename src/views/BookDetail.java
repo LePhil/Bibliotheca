@@ -20,10 +20,17 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+
+import domain.Book;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.Observable;
+import java.util.Observer;
 
-public class BookDetail extends javax.swing.JDialog{
+public class BookDetail extends javax.swing.JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -43,31 +50,46 @@ public class BookDetail extends javax.swing.JDialog{
 	private JButton btnAdd;
 	private JPanel pnlCopies;
 	private JList<domain.Copy> lstCopy;
-
-	/**
-	 * Launch the application.
-	 */
-	public void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JFrame frame = new JFrame();
-					BookDetail inst = new BookDetail(frame);
-					inst.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
+	private Book book;
+	
+	private static Dictionary<Book, BookDetail> editFramesDict = new Hashtable<Book, BookDetail>();
 
 	/**
 	 * Create the application.
-	 * @param frame 
 	 */
-	public BookDetail(JFrame frame) {
-		super(frame);
+	public BookDetail() {
+		super();
 		initialize();
+	}
+	
+	public static void editBook(Book book) {
+		BookDetail editFrame = editFramesDict.get( book );
+		if ( editFrame == null ) {
+			editFrame = new BookDetail();
+			editFrame.setBook(book);
+			editFramesDict.put(book, editFrame);
+		}
+		editFrame.setVisible(true);
+	}
+	private void setBook(Book newBook) {
+		if (book !=null){
+			//replacing currently editing Book
+			book.deleteObserver(this);
+		}
+		this.book = newBook;
+		displayBook();
+		if (newBook !=null){
+			newBook.addObserver(this);
+		}
+	}
+	
+	private void displayBook() {
+		if ( book == null ) {
+			// TODO: disable everything
+		} else {
+			// TODO: fill everything
+		}
 	}
 
 	/**
@@ -75,7 +97,6 @@ public class BookDetail extends javax.swing.JDialog{
 	 */
 	private void initialize() {
 		try {
-			setModal(true);
 			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			setBounds(100, 100, 450, 300);
 			getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
@@ -209,5 +230,10 @@ public class BookDetail extends javax.swing.JDialog{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		displayBook();
 	}
 }

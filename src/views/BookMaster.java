@@ -165,7 +165,7 @@ public class BookMaster extends javax.swing.JFrame {
 			btnShowSelected = new JButton(Messages.getString("BookMaster.btnShowSelected.text")); //$NON-NLS-1$
 			btnShowSelected.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// TODO
+					showSelectedButtonActionPerformed(e);
 				}
 			});
 			pnlBooksInvTop.add(btnShowSelected);
@@ -249,6 +249,11 @@ public class BookMaster extends javax.swing.JFrame {
 			dueDateJText.setText(String.format("%tD", editBook.getDueDate()));		
 		}
 		*/
+	}
+	
+	private void showSelectedButtonActionPerformed(ActionEvent evt) {
+		Book editBook=(Book)lstBooks.getSelectedValue();
+		BookDetail.editBook(editBook);
 	}
 	
 	private class BooksChangedObserver implements Observer {
