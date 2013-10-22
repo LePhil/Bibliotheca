@@ -30,6 +30,8 @@ import domain.Book;
 import domain.Copy;
 import domain.Library;
 import domain.Shelf;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class BookDetail extends javax.swing.JFrame implements Observer {
 
@@ -225,9 +227,12 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 
 			btnRemove = new JButton(
 					Messages.getString("BookDetail.btnRemove.text")); //$NON-NLS-1$
+			btnRemove.setEnabled(false);
 			btnRemove.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// TODO
+					library.removeCopy(lstCopy.getSelectedValue());
+					lstCopy.setModel(new CopyListModel(library
+							.getCopiesOfBook(book)));
 				}
 			});
 			pnlAction.add(btnRemove);
@@ -239,7 +244,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			btnAdd.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					library.createAndAddCopy(book);
-					lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+					lstCopy.setModel(new CopyListModel(library
+							.getCopiesOfBook(book)));
 				}
 			});
 			pnlAction.add(btnAdd);
@@ -249,6 +255,11 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			pnlCopies.setLayout(new BorderLayout(0, 0));
 
 			lstCopy = new JList<Copy>();
+			lstCopy.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent e) {
+					updateRemoveCopyButton(lstCopy.getSelectedValue() != null);
+				}
+			});
 			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
 			pnlCopies.add(lstCopy);
 
@@ -256,6 +267,10 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void updateRemoveCopyButton(boolean copySelected) {
+		btnRemove.setEnabled(copySelected);
 	}
 
 	@Override

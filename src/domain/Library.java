@@ -50,6 +50,11 @@ public class Library extends Observable implements Observer {
 		doNotify();
 		return c;
 	}
+	
+	public void removeCopy(Copy copy){
+		int index = copies.indexOf(copy);
+		copies.remove(index);
+	}
 
 	public Book findByBookTitle(String title) {
 		for (Book b : books) {
