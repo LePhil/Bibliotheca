@@ -15,6 +15,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import views.BookMaster;
+import views.BookMasterTable;
 
 import domain.Copy;
 import domain.Customer;
@@ -33,7 +34,7 @@ public class LibraryApp {
 		initLibrary(library);
 		
 		// Create Master Book View
-		new BookMaster( library );
+		new BookMasterTable( library );
 	}
 
 	private static void initLibrary(Library library) throws ParserConfigurationException, SAXException, IOException, IllegalLoanOperationException {

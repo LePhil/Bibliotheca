@@ -10,31 +10,46 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 import javax.swing.BoxLayout;
+import javax.swing.RowFilter.Entry;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import java.awt.FlowLayout;
 import java.awt.Component;
+
+import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
 import javax.swing.WindowConstants;
 
 import viewModels.BookListModel;
+import viewModels.BookTableModel;
 
 import domain.Book;
 import domain.Library;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JCheckBox;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
-public class BookMaster extends javax.swing.JFrame {
+public class BookMasterTable extends javax.swing.JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,12 +64,9 @@ public class BookMaster extends javax.swing.JFrame {
 	
 	private JLabel lblNrOfBooks;
 	private JLabel lblNrOfCopies;
-	private JLabel lblChosen;
 	
 	private JButton btnShowSelected;
 	private JButton btnAddNewBook;
-	
-	private JList<domain.Book> lstBooks;
 	
 	private Component horizontalStrut;
 	private Component horizontalStrut_1;
@@ -65,45 +77,38 @@ public class BookMaster extends javax.swing.JFrame {
 
 	private GridBagConstraints gbc_pnlBooksInvTop;
 	private GridBagConstraints gbc_pnlBooksInvBottom;
-	private GridBagConstraints gbc_lstBooks;
 	
 	private Library library;
 	private Book editBook;
-	private BooksChangedObserver booksChangedObserver = new BooksChangedObserver();
-	private BookListModel bookListModel;
+	private JScrollPane scrollPane;
 	
-	/**
-	 * Just for testing purposes!!!
-	 * TODO: remove main method
-	 */
-	/*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					BookMaster window = new BookMaster();
-					window.bookMaster.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	*/
+	private JTable tblBooks;
+	private JTextField txtSearch;
+	private JCheckBox chckbxOnlyAvailable;
+	private Component horizontalStrut_2;
+	
+	private BookTableModel bookTableModel;
+	private TableRowSorter<BookTableModel> sorter;
+	private RowFilter<Object, Object> filter;
+	
+	private boolean showUnavailable = true;
+	
+	// Actions:
+	private AbstractAction toggleShowUnavailabeAction;
 
 	/**
 	 * Create the application.
 	 * @param bookList 
 	 */
-	public BookMaster( Library library ) {
+	public BookMasterTable( Library library ) {
 		/*
 		 * This View should listen to changes in the book list and the loans list!
 		 */
 		super();
 		this.library = library;
-		library.addObserver( booksChangedObserver );
-		bookListModel = new BookListModel( this.library );
+		bookTableModel = new BookTableModel( this.library );
 		initialize();
+		library.addObserver( this );
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
@@ -116,7 +121,7 @@ public class BookMaster extends javax.swing.JFrame {
 			
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			this.setTitle(Messages.getString("BookMaster.frmTodoTitle.title")); //$NON-NLS-1$
-			this.setBounds(100, 100, 600, 400);
+			this.setBounds(100, 100, 631, 400);
 			
 			tbsMain = new JTabbedPane(JTabbedPane.TOP);
 			tbsMain.setToolTipText(Messages.getString("BookMaster.tbsMain.toolTipText")); //$NON-NLS-1$
@@ -160,8 +165,10 @@ public class BookMaster extends javax.swing.JFrame {
 			pnlBookInventory.add(pnlBooksInvTop, gbc_pnlBooksInvTop);
 			pnlBooksInvTop.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			
-			lblChosen = new JLabel(Messages.getString("BookMaster.lblChosen.text")); //$NON-NLS-1$
-			pnlBooksInvTop.add(lblChosen);
+			txtSearch = new JTextField();
+			txtSearch.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
+			pnlBooksInvTop.add(txtSearch);
+			txtSearch.setColumns(10);
 			
 			horizontalStrut_1 = Box.createHorizontalStrut(20);
 			pnlBooksInvTop.add(horizontalStrut_1);
@@ -172,6 +179,13 @@ public class BookMaster extends javax.swing.JFrame {
 					showSelectedButtonActionPerformed(e);
 				}
 			});
+			
+			chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
+			chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
+			pnlBooksInvTop.add(chckbxOnlyAvailable);
+			
+			horizontalStrut_2 = Box.createHorizontalStrut(20);
+			pnlBooksInvTop.add(horizontalStrut_2);
 			pnlBooksInvTop.add(btnShowSelected);
 			
 			btnAddNewBook = new JButton(Messages.getString("BookMaster.btnAddNewBook.text")); //$NON-NLS-1$
@@ -190,32 +204,26 @@ public class BookMaster extends javax.swing.JFrame {
 			pnlBookInventory.add(pnlBooksInvBottom, gbc_pnlBooksInvBottom);
 			gbl_pnlBooksInvBottom = new GridBagLayout();
 			gbl_pnlBooksInvBottom.columnWidths = new int[]{0, 0};
-			gbl_pnlBooksInvBottom.rowHeights = new int[]{0, 0};
+			gbl_pnlBooksInvBottom.rowHeights = new int[]{0, 0, 0};
 			gbl_pnlBooksInvBottom.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-			gbl_pnlBooksInvBottom.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+			gbl_pnlBooksInvBottom.rowWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
 			pnlBooksInvBottom.setLayout(gbl_pnlBooksInvBottom);
 			
-			////////////// JList /////////////////////
-			lstBooks = new JList<domain.Book>();
-			lstBooks.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-			lstBooks.setLayoutOrientation(JList.VERTICAL);
-			lstBooks.setVisibleRowCount(-1);
-			lstBooks.setModel(bookListModel);
-			lstBooks.setCellRenderer( new BookListCellRenderer() );
-			lstBooks.addListSelectionListener(new ListSelectionListener() {
-				@Override
-				public void valueChanged(ListSelectionEvent e) {
-					updateListButtons(lstBooks.getSelectedValues().length !=0 );
-					//updateDetailPanel();
-				}
-			});
+			scrollPane = new JScrollPane();
+			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+			gbc_scrollPane.gridheight = 2;
+			gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+			gbc_scrollPane.fill = GridBagConstraints.BOTH;
+			gbc_scrollPane.gridx = 0;
+			gbc_scrollPane.gridy = 0;
+			pnlBooksInvBottom.add(scrollPane, gbc_scrollPane);
 			
-			
-			gbc_lstBooks = new GridBagConstraints();
-			gbc_lstBooks.fill = GridBagConstraints.BOTH;
-			gbc_lstBooks.gridx = 0;
-			gbc_lstBooks.gridy = 0;
-			pnlBooksInvBottom.add(lstBooks, gbc_lstBooks);
+			//jTable////////////////////////////////////
+			tblBooks = new JTable();
+			initTable();
+
+			scrollPane.setViewportView(tblBooks);
 			
 			pnlLoansTab = new JPanel();
 			tbsMain.addTab("Ausleihen", null, pnlLoansTab, null);
@@ -232,52 +240,106 @@ public class BookMaster extends javax.swing.JFrame {
 		}
 	}
 	
-	private void updateListButtons(boolean bookItemIsSelected) {
-		btnShowSelected.setEnabled(bookItemIsSelected);
-	}
-	
-	private void updateDetailPanel() {
-		if (editBook!=null) {
-			editBook.deleteObserver(booksChangedObserver);
-			editBook=null;
-		}
-		editBook=(Book)lstBooks.getSelectedValue();
-		/*
-		if (editBook==null){
-			toDoTextJField.setText("");
-			importanceJComboBoxModel.setSelectedItem(importanceJComboBoxModel.getElementAt(0));
-			startDateJText.setText("");
-			dueDateJText.setText("");				
-		}else{
-			editBook.addObserver(editToDoChangedObserver);
-			toDoTextJField.setText(editToDo.getText());
-			importanceJComboBoxModel.setSelectedItem(importanceJComboBoxModel.getElementAt(editBook.getImportance()));
-			startDateJText.setText(String.format("%tD", editBook.getStartDate()));
-			dueDateJText.setText(String.format("%tD", editBook.getDueDate()));		
-		}
-		*/
+	private void updateListButtons(boolean bookItemIsSelectedP) {
+		btnShowSelected.setEnabled(bookItemIsSelectedP);
 	}
 	
 	private void showSelectedButtonActionPerformed(ActionEvent evt) {
-		List<Book> selectedBooks = lstBooks.getSelectedValuesList();
-		for (Book selectedBook : selectedBooks) {
-			BookDetail.editBook(selectedBook);
+		int[] selectedRows = tblBooks.getSelectedRows();
+
+		for (int selectedRow : selectedRows) {
+			BookDetail.editBook( library.getBooks().get(selectedRow) );
 		}
-		//Book editBook=(Book)lstBooks.getSelectedValue();
-		//BookDetail.editBook(editBook);
 	}
 	
 	private void addButtonActionPerformed(ActionEvent evt) {
 		// TODO
 	}
 	
-	private class BooksChangedObserver implements Observer {
-
-		@Override
-		public void update(Observable o, Object arg) {
-			updateDetailPanel();			
-		}
+	private void initTable() {
+		tblBooks.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		scrollPane.setViewportView(tblBooks);
+		tblBooks.setModel(bookTableModel);
 		
+		// Make the columns sortable
+		sorter = new TableRowSorter<BookTableModel>(bookTableModel);
+		tblBooks.setRowSorter(sorter);
+		
+		// Filters are awesome!
+		filter = new RowFilter<Object, Object>() {
+	        public boolean include(Entry entry) {
+	        	if (showUnavailable){
+	        		return true;
+	        	}
+	        	// get value of Available column (column 0)
+	        	//TODO: get available copies. Can't do it like this because
+	        	// there's a string in that row.
+	        	//Boolean completed = (Boolean) entry.getValue(0);
+	        	//return ! completed.booleanValue();
+	        	return false;
+	        }
+	    };
+		sorter.setRowFilter(filter);
+		
+		TableColumn availabilityColumn = tblBooks.getColumnModel().getColumn(0);
+		availabilityColumn.setCellRenderer(new BookTableCellRenderer(library));
+		
+		TableColumn titleColumn = tblBooks.getColumnModel().getColumn(1);
+		titleColumn.setCellRenderer(new BookTableCellRenderer(library));
+
+		TableColumn authorColumn = tblBooks.getColumnModel().getColumn(2);
+		authorColumn.setCellRenderer(new BookTableCellRenderer(library));
+		
+		TableColumn publisherColumn = tblBooks.getColumnModel().getColumn(3);
+		publisherColumn.setCellRenderer(new BookTableCellRenderer(library));
+		
+		tblBooks.getSelectionModel().addListSelectionListener(
+			new ListSelectionListener() {
+				
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			}
+		);
+	}
+	
+	private AbstractAction getToggleShowUnavailableAction() {
+		if(toggleShowUnavailabeAction == null) {
+			toggleShowUnavailabeAction = new ToggleShowUnavailableAction();
+		}
+		return toggleShowUnavailabeAction;
+	}
+	
+	private class ToggleShowUnavailableAction extends AbstractAction {
+
+		ToggleShowUnavailableAction() {
+			super("Show Unvailable", null);
+			putValue(MNEMONIC_KEY, KeyEvent.VK_U);
+			putValue(SHORT_DESCRIPTION, "Show or Hide Unavailable Books");
+			putValue(ACCELERATOR_KEY, 
+					KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			showUnavailable=!showUnavailable;
+			
+			// Re-Filter		
+			sorter.setRowFilter(filter);
+			updateListButtons();
+		}
+	}
+	
+	private void updateListButtons() {
+		// Enables or disables the "Show Selected" button
+		// depending on whether a book is selected.
+		btnShowSelected.setEnabled(tblBooks.getSelectedRowCount()>0);
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		updateListButtons(false);
 	}
 
 }
