@@ -8,7 +8,7 @@ import javax.swing.AbstractListModel;
 import domain.Book;
 import domain.Library;
 
-public class BookListModel extends AbstractListModel implements Observer {
+public class BookListModel extends AbstractListModel<Book> implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	Library library;
@@ -26,17 +26,17 @@ public class BookListModel extends AbstractListModel implements Observer {
 	public void update(Observable obj, Object arg1) {
 		System.out.println("UPDATE ON BOOKLISTMODEL");
 		//TODO fix this mess.
-		//if (obj instanceof Book){
-			//int pos = bookList.getBooks().indexOf((Book)obj);
-			//fireContentsChanged(this, pos, pos);						
-		//}
+		if (obj instanceof Book){
+			int pos = library.getBooks().indexOf((Book)obj);
+			fireContentsChanged(this, pos, pos);						
+		}
 		if (obj instanceof Library){
 			fireContentsChanged(this, 0, library.getBooks().size());
 		}
 	}
 
 	@Override
-	public Object getElementAt(int index) {
+	public Book getElementAt(int index) {
 		return library.getBooks().get(index);
 	}
 
