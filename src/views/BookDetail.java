@@ -238,7 +238,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			btnAdd = new JButton(Messages.getString("BookDetail.btnAdd.text")); //$NON-NLS-1$
 			btnAdd.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					// TODO
+					library.createAndAddCopy(book);
+					lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
 				}
 			});
 			pnlAction.add(btnAdd);
@@ -247,7 +248,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			pnlCopiesEdit.add(pnlCopies);
 			pnlCopies.setLayout(new BorderLayout(0, 0));
 
-			lstCopy = new JList<domain.Copy>();
+			lstCopy = new JList<Copy>();
 			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
 			pnlCopies.add(lstCopy);
 
