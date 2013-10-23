@@ -52,6 +52,7 @@ import javax.swing.JCheckBox;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+import java.awt.event.KeyAdapter;
 
 public class BookMasterTable extends javax.swing.JFrame implements Observer {
 
@@ -190,10 +191,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			pnlBookInventory.add(pnlBooksInvTop, gbc_pnlBooksInvTop);
 			pnlBooksInvTop.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			
-			txtSearch = new JTextField();
-			txtSearch.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
-			pnlBooksInvTop.add(txtSearch);
-			txtSearch.setColumns(10);
+			// Search field i.e. Searchbox
+			initSearchField();
 			
 			horizontalStrut_1 = Box.createHorizontalStrut(20);
 			pnlBooksInvTop.add(horizontalStrut_1);
@@ -328,6 +327,45 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 				}
 			}
 		);
+	}
+	
+	/**
+	 * 
+	 */
+	private void initSearchField() {
+		txtSearch = new JTextField();
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				System.out.println("Key pressed");
+			}
+		});
+		txtSearch.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
+		txtSearch.addFocusListener(new java.awt.event.FocusAdapter() {
+			// Mark the whole text when the text field gains focus
+    	    public void focusGained(java.awt.event.FocusEvent evt) {
+    	    	SwingUtilities.invokeLater( new Runnable() {
+
+    				@Override
+    				public void run() {
+    					// TODO: filter table
+    				}
+    			});
+    	    }
+    	    
+    	    // "unmark" everything (=mark nothing) when losing focus
+    	    public void focusLost(java.awt.event.FocusEvent evt) {
+    	    	SwingUtilities.invokeLater( new Runnable() {
+
+    				@Override
+    				public void run() {
+    					txtSearch.select(0, 0);		
+    				}
+    			});
+    	    }
+    	});
+		pnlBooksInvTop.add(txtSearch);
+		txtSearch.setColumns(10);
 	}
 	
 	private AbstractAction getToggleShowUnavailableAction() {
