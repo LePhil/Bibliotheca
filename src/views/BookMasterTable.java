@@ -20,8 +20,10 @@ import java.awt.Component;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -312,6 +314,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		
 		TableColumn titleColumn = tblBooks.getColumnModel().getColumn(1);
 		titleColumn.setCellRenderer(new BookTableCellRenderer(library));
+		titleColumn.setCellEditor(new BookTextCellEditor(library));
 
 		TableColumn authorColumn = tblBooks.getColumnModel().getColumn(2);
 		authorColumn.setCellRenderer(new BookTableCellRenderer(library));
@@ -428,4 +431,18 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		updateStatistics();
 	}
 
+	public class BookTextCellEditor extends AbstractBookTableCellEditor {
+		private static final long serialVersionUID = 1L;
+
+		public BookTextCellEditor (Library library) {
+			super(new JTextField(), library);
+		}
+
+		@Override
+		public boolean setBookValue(Book book) {
+			JTextField textField = (JTextField)getComponent();
+			book.setName(textField.getText());
+			return true; //false would disallow leaving the field
+		}
+	}
 }

@@ -35,8 +35,7 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public boolean isCellEditable(int arg0, int arg1) {
-		//TODO return true if we have a CellEditor
-		return false;
+		return true;
 	}
 	
 	@Override
