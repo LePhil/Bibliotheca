@@ -338,6 +338,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				System.out.println("Key pressed");
+				// TODO: filter table
 			}
 		});
 		txtSearch.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
@@ -348,7 +349,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 
     				@Override
     				public void run() {
-    					// TODO: filter table
+    					txtSearch.selectAll();
     				}
     			});
     	    }
