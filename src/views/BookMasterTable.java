@@ -21,10 +21,14 @@ import java.awt.Component;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import viewModels.BookListModel;
@@ -54,6 +58,10 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 
 	private JTabbedPane tbsMain;
+	
+	private JMenuBar jMenuBar;
+	private JMenu viewMenu;
+	private JCheckBoxMenuItem showUnavailableMenuItem;
 	
 	private JPanel pnlBooksTab;
 	private JPanel pnlInventoryStats;
@@ -122,6 +130,23 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			this.setTitle(Messages.getString("BookMaster.frmTodoTitle.title")); //$NON-NLS-1$
 			this.setBounds(100, 100, 631, 400);
+			
+			// Menu
+			jMenuBar = new JMenuBar();
+			setJMenuBar(jMenuBar);
+			
+			viewMenu = new JMenu();
+			jMenuBar.add(viewMenu);
+			viewMenu.setText("View");
+			viewMenu.setMnemonic(KeyEvent.VK_V);
+			{
+				showUnavailableMenuItem = new JCheckBoxMenuItem();
+				viewMenu.add(showUnavailableMenuItem);
+				showUnavailableMenuItem.setText("Show Completed");
+				showUnavailableMenuItem.setMnemonic(KeyEvent.VK_U);
+				showUnavailableMenuItem.setAction(getToggleShowUnavailableAction());
+			}
+			
 			
 			tbsMain = new JTabbedPane(JTabbedPane.TOP);
 			tbsMain.setToolTipText(Messages.getString("BookMaster.tbsMain.toolTipText")); //$NON-NLS-1$
@@ -234,14 +259,12 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			gbl_pnlLoansTab.rowWeights = new double[]{Double.MIN_VALUE};
 			pnlLoansTab.setLayout(gbl_pnlLoansTab);
 			
-			updateListButtons(false);
+			updateListButtons();
+			updateShowUnavailableCheckbox();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private void updateListButtons(boolean bookItemIsSelectedP) {
-		btnShowSelected.setEnabled(bookItemIsSelectedP);
 	}
 	
 	private void showSelectedButtonActionPerformed(ActionEvent evt) {
@@ -253,7 +276,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	}
 	
 	private void addButtonActionPerformed(ActionEvent evt) {
-		// TODO
+		// TODO: have to tell DetailDialog somehow that it'll be a new book
 	}
 	
 	private void initTable() {
@@ -295,11 +318,13 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		
 		tblBooks.getSelectionModel().addListSelectionListener(
 			new ListSelectionListener() {
-				
-				@Override
-				public void valueChanged(ListSelectionEvent e) {
-					// TODO Auto-generated method stub
-					
+				public void valueChanged(ListSelectionEvent evt) {
+					SwingUtilities.invokeLater(new Runnable() {  
+						public void run() {
+							// Update the "Show Selected" button
+							updateListButtons();
+						}
+					});
 				}
 			}
 		);
@@ -313,7 +338,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	}
 	
 	private class ToggleShowUnavailableAction extends AbstractAction {
-
+		private static final long serialVersionUID = 1L;
+		
 		ToggleShowUnavailableAction() {
 			super("Show Unvailable", null);
 			putValue(MNEMONIC_KEY, KeyEvent.VK_U);
@@ -328,6 +354,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			// Re-Filter		
 			sorter.setRowFilter(filter);
 			updateListButtons();
+			updateShowUnavailableCheckbox();
 		}
 	}
 	
@@ -336,10 +363,15 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		// depending on whether a book is selected.
 		btnShowSelected.setEnabled(tblBooks.getSelectedRowCount()>0);
 	}
+	
+	private void updateShowUnavailableCheckbox() {
+		chckbxOnlyAvailable.setSelected( showUnavailable );
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		updateListButtons(false);
+		updateListButtons();
+		updateShowUnavailableCheckbox();
 	}
 
 }
