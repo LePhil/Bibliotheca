@@ -1,15 +1,17 @@
 package domain;
 
 public class Copy {
-	
-	public enum Condition {NEW, GOOD, DAMAGED, WASTE, LOST }
-	
+
+	public enum Condition {
+		NEW, GOOD, DAMAGED, WASTE, LOST
+	}
+
 	public static long nextInventoryNumber = 1;
-	
+
 	private final long inventoryNumber;
 	private final Book book;
 	private Condition condition;
-	
+
 	public Copy(Book title) {
 		this.book = title;
 		inventoryNumber = nextInventoryNumber++;
@@ -30,5 +32,11 @@ public class Copy {
 
 	public long getInventoryNumber() {
 		return inventoryNumber;
+	}
+
+	@Override
+	public String toString() {
+		// TODO pforster: optimize as soon as loan information are available
+		return this.inventoryNumber + book.getName();
 	}
 }
