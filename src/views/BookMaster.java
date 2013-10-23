@@ -261,7 +261,7 @@ public class BookMaster extends javax.swing.JFrame {
 	private void showSelectedButtonActionPerformed(ActionEvent evt) {
 		List<Book> selectedBooks = lstBooks.getSelectedValuesList();
 		for (Book selectedBook : selectedBooks) {
-			BookDetail.editBook(selectedBook);
+			BookDetail.editBook(library, selectedBook);
 		}
 		//Book editBook=(Book)lstBooks.getSelectedValue();
 		//BookDetail.editBook(editBook);
