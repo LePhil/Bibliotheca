@@ -130,7 +130,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			this.setTitle(Messages.getString("BookMaster.frmTodoTitle.title")); //$NON-NLS-1$
-			this.setBounds(100, 100, 631, 400);
+			this.setBounds(100, 100, 700, 550);
 			
 			// Menu
 			jMenuBar = new JMenuBar();
@@ -162,13 +162,13 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			pnlBooksTab.add(pnlInventoryStats);
 			pnlInventoryStats.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			
-			lblNrOfBooks = new JLabel(Messages.getString("BookMaster.lblNrOfBooks.text")); //$NON-NLS-1$
+			lblNrOfBooks = new JLabel();
 			pnlInventoryStats.add(lblNrOfBooks);
 			
 			horizontalStrut = Box.createHorizontalStrut(20);
 			pnlInventoryStats.add(horizontalStrut);
 			
-			lblNrOfCopies = new JLabel(Messages.getString("BookMaster.lblNrOfCopies.text")); //$NON-NLS-1$
+			lblNrOfCopies = new JLabel(); //$NON-NLS-1$
 			pnlInventoryStats.add(lblNrOfCopies);
 			
 			pnlBookInventory = new JPanel();
@@ -260,6 +260,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			
 			updateListButtons();
 			updateShowUnavailableCheckbox();
+			updateStatistics();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -293,6 +294,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	        	if (showUnavailable){
 	        		return true;
 	        	}
+	        	System.out.println("Filter");
 	        	// get value of Available column (column 0)
 	        	//TODO: get available copies. Can't do it like this because
 	        	// there's a string in that row.
@@ -304,6 +306,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		sorter.setRowFilter(filter);
 		
 		TableColumn availabilityColumn = tblBooks.getColumnModel().getColumn(0);
+		availabilityColumn.setMinWidth(100);
+		availabilityColumn.setMaxWidth(100);
 		availabilityColumn.setCellRenderer(new BookTableCellRenderer(library));
 		
 		TableColumn titleColumn = tblBooks.getColumnModel().getColumn(1);
@@ -339,6 +343,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			public void keyTyped(KeyEvent e) {
 				System.out.println("Key pressed");
 				// TODO: filter table
+				sorter.setRowFilter( RowFilter.regexFilter( txtSearch.getText() ) );
 			}
 		});
 		txtSearch.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
@@ -406,11 +411,21 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	private void updateShowUnavailableCheckbox() {
 		chckbxOnlyAvailable.setSelected( showUnavailable );
 	}
+	
+	/**
+	 * Updates the two labels that contain statistical information about the library.
+	 * @author Philipp Christen
+	 */
+	private void updateStatistics() {
+		lblNrOfBooks.setText( Messages.getString("BookMaster.lblNrOfBooks.text", String.valueOf(library.getBooks().size())) );
+		lblNrOfCopies.setText( Messages.getString("BookMaster.lblNrOfCopies.text", String.valueOf(library.getCopies().size())) );
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		updateListButtons();
 		updateShowUnavailableCheckbox();
+		updateStatistics();
 	}
 
 }

@@ -20,7 +20,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -53,6 +55,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private JButton btnAdd;
 	private JPanel pnlCopies;
 	private JList<Copy> lstCopy;
+	private JScrollPane scrollPane;
 
 	private Book book;
 	private Library library;
@@ -251,9 +254,24 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			pnlAction.add(btnAdd);
 
 			pnlCopies = new JPanel();
+			// TODO: pnlCopies should be a scrollPane
+			//pnlCopies = new JScrollPane();
 			pnlCopiesEdit.add(pnlCopies);
 			pnlCopies.setLayout(new BorderLayout(0, 0));
-
+		
+			/*
+			 * TODO: get scrollPane working
+			scrollPane = new JScrollPane();
+			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+			gbc_scrollPane.gridheight = 2;
+			gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+			gbc_scrollPane.fill = GridBagConstraints.BOTH;
+			gbc_scrollPane.gridx = 0;
+			gbc_scrollPane.gridy = 0;
+			pnlCopies.add(scrollPane, gbc_scrollPane);
+			*/
+			
 			lstCopy = new JList<Copy>();
 			lstCopy.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent e) {
@@ -262,6 +280,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			});
 			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
 			pnlCopies.add(lstCopy);
+			
+			//scrollPane.setViewportView(lstCopy);
 
 			pack();
 		} catch (Exception e) {

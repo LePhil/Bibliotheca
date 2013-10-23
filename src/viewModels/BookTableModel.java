@@ -5,6 +5,8 @@ import java.util.Observer;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 import views.Messages;
 
 import domain.Book;
@@ -89,15 +91,31 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 			return Object.class;
 		}
 	}
-	
-	//public int getBookIndex(Book book) {
-	//	return library.getBooks().get(book);
-	//}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		System.out.println("UPDATE IN BOOKTABLEMODEL CALLED");
-		//int bookPos = library.getBooks().getEditedBookPos();
+		int pos = library.getEditedBookPos();
+		
+		if ( pos >= 0 ) {
+			// edit happened, redraw edited book
+			fireTableRowsUpdated(pos, pos);
+		} else {
+			pos = library.getRemovedBookIndex();
+			
+			if (pos>=0){
+				//remove happend
+				fireTableRowsDeleted(pos, pos);
+			}else{
+				pos = library.getInsertedBookIndex();
+				if (pos >= 0){
+					//insert happend
+					fireTableRowsInserted(pos, pos);
+				}else{
+					fireTableDataChanged();
+				}
+			}
+		}
 		
 	}
 

@@ -11,6 +11,10 @@ public class Library extends Observable implements Observer {
 	private List<Customer> customers;
 	private List<Loan> loans;
 	private List<Book> books;
+	
+	private int editedBookPos;
+	private int addBookIndex;
+	private int removeBookIndex;
 
 	public Library() {
 		copies = new ArrayList<Copy>();
@@ -40,8 +44,25 @@ public class Library extends Observable implements Observer {
 	public Book createAndAddBook(String name) {
 		Book b = new Book(name);
 		books.add(b);
+		
+		editedBookPos = -1;
+		addBookIndex = books.indexOf(b);
+		removeBookIndex = -1;
+		
 		doNotify();
 		return b;
+	}
+	
+	public boolean removeBook( Book book ) {
+		book.deleteObserver(this);
+		boolean succeeded = books.remove(book);
+		
+		editedBookPos = -1;
+		addBookIndex = -1;
+		removeBookIndex = books.indexOf(book);
+		
+		doNotify();
+		return succeeded;
 	}
 
 	public Copy createAndAddCopy(Book title) {
@@ -56,6 +77,10 @@ public class Library extends Observable implements Observer {
 		copies.remove(index);
 	}
 
+	public Integer getEditedBookPos() {
+		return editedBookPos;
+	}
+	
 	public Book findByBookTitle(String title) {
 		for (Book b : books) {
 			if (b.getName().equals(title)) {
@@ -154,9 +179,26 @@ public class Library extends Observable implements Observer {
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(Observable book, Object arg) {
+		
+		editedBookPos = books.indexOf(book);
+		addBookIndex = -1;
+		removeBookIndex = -1;
+		
 		setChanged();
-		notifyObservers( o );
+		notifyObservers( book );
+	}
+	
+	public int getInsertedBookIndex() {
+		return addBookIndex;
+	}
+	
+	public int getRemovedBookIndex() {
+		return removeBookIndex;
+	}
+	
+	public int getBookIndex(Book book) {
+		return books.indexOf(book);
 	}
 
 }
