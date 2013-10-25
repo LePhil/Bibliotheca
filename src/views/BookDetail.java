@@ -109,7 +109,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private void initialize() {
 		try {
 			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-			setBounds(100, 100, 450, 300);
+			setBounds(100, 100, 466, 281);
 			getContentPane().setLayout(
 					new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 
@@ -254,23 +254,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			pnlAction.add(btnAdd);
 
 			pnlCopies = new JPanel();
-			// TODO: pnlCopies should be a scrollPane
-			//pnlCopies = new JScrollPane();
 			pnlCopiesEdit.add(pnlCopies);
 			pnlCopies.setLayout(new BorderLayout(0, 0));
-		
-			/*
-			 * TODO: get scrollPane working
-			scrollPane = new JScrollPane();
-			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-			GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-			gbc_scrollPane.gridheight = 2;
-			gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
-			gbc_scrollPane.fill = GridBagConstraints.BOTH;
-			gbc_scrollPane.gridx = 0;
-			gbc_scrollPane.gridy = 0;
-			pnlCopies.add(scrollPane, gbc_scrollPane);
-			*/
 			
 			lstCopy = new JList<Copy>();
 			lstCopy.addListSelectionListener(new ListSelectionListener() {
@@ -279,10 +264,9 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				}
 			});
 			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
-			pnlCopies.add(lstCopy);
 			
-			//scrollPane.setViewportView(lstCopy);
-
+			pnlCopies.add( add(new JScrollPane(lstCopy)) );
+			
 			pack();
 		} catch (Exception e) {
 			e.printStackTrace();
