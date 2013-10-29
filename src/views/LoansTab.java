@@ -37,6 +37,8 @@ import javax.swing.table.TableRowSorter;
 
 import viewModels.LoanTableModel;
 import domain.Library;
+import domain.Loan;
+import domain.LoanList;
 
 public class LoansTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;
@@ -148,7 +150,7 @@ public class LoansTab extends LibraryTab {
 		btnShowSelectedLoans = new JButton(Messages.getString("BookMaster.btnShowSelectedLoans.text")); //$NON-NLS-1$
 		btnShowSelectedLoans.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//showSelectedLoansButtonActionPerformed(e);
+				showSelectedLoansButtonActionPerformed(e);
 			}
 		});
 		
@@ -367,6 +369,12 @@ public class LoansTab extends LibraryTab {
 		lblNrOfCurrentLoans.setText( Messages.getString( "BookMasterTable.lblNrOfCurrentLoans.text", String.valueOf( getLibrary().getLentOutBooks().size() ) ) );
 		lblNrOfDueLoans.setText( Messages.getString( "BookMasterTable.lblNrOfDueLoans.text", String.valueOf( getLibrary().getOverdueLoans().size() ) ) );
 		lblNrOfLoans.setText( Messages.getString( "BookMasterTable.lblNrOfLoans.text", String.valueOf( getLibrary().getLoans().size() ) ) );
+	}
+	
+	private void showSelectedLoansButtonActionPerformed(ActionEvent event){
+		int selectedRow = tblLoans.getSelectedRow();
+		Loan selectedLoan = getLibrary().getLoans().get(selectedRow);
+		LoanDetail.editLoan(selectedLoan, getLibrary());
 	}
 
 }
