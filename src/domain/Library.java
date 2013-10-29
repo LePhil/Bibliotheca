@@ -15,6 +15,10 @@ public class Library extends Observable implements Observer {
 	private int editedBookPos;
 	private int addBookIndex;
 	private int removeBookIndex;
+	
+	private int editedLoanPos;
+	private int addLoanIndex;
+	private int removeLoanIndex;
 
 	public Library() {
 		copies = new ArrayList<Copy>();
@@ -196,9 +200,27 @@ public class Library extends Observable implements Observer {
 	public int getRemovedBookIndex() {
 		return removeBookIndex;
 	}
-	
+	 
 	public int getBookIndex(Book book) {
 		return books.indexOf(book);
+	}
+
+	
+	//LOANS
+	public int getEditedLoanPos() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public int getInsertedLoanIndex() {
+		return addLoanIndex;
+	}
+	
+	public int getRemovedLoanIndex() {
+		return removeLoanIndex;
+	}
+	
+	public int getloansIndex(Loan loan) {
+		return loans.indexOf(loan);
 	}
 
 }

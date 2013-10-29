@@ -10,6 +10,8 @@ import java.awt.Insets;
 
 import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -29,6 +31,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import viewModels.BookTableModel;
+import viewModels.LoanTableModel;
 
 import domain.Book;
 import domain.Library;
@@ -128,6 +131,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	// Models
 	private BookTableModel bookTableModel;
 	private TableRowSorter<BookTableModel> sorter;
+	private LoanTableModel loanTableModel;
+	private TableRowSorter<LoanTableModel> loanSorter;
 	
 	// Filter variables. filters contains all filters that can be applied to the jTable.
 	private List<RowFilter<Object,Object>> filters;
@@ -150,6 +155,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		super();
 		this.library = library;
 		bookTableModel = new BookTableModel( this.library );
+		loanTableModel = new LoanTableModel( this.library );
 		
 		// Init filter list
 		filters = new ArrayList<RowFilter<Object,Object>>();
@@ -189,6 +195,11 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			
 			tbsMain = new JTabbedPane(JTabbedPane.TOP);
 			tbsMain.setToolTipText(Messages.getString("BookMaster.tbsMain.toolTipText")); //$NON-NLS-1$
+			tbsMain.addChangeListener(new ChangeListener() {
+		        public void stateChanged(ChangeEvent e) {
+		            changedTab();
+		        }
+		    });
 			this.getContentPane().add(tbsMain, BorderLayout.CENTER);
 			
 			///////////////////////////////////////////////////////////////////
@@ -398,12 +409,13 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			pnlLoansInvBottom.add(scrollPaneLoans, gbc_scrollPaneLoans);
 			
 			//jTable////////////////////////////////////
+			tblBooks= new JTable();
 			tblLoans= new JTable();
-			//initLoansTable(); // TODO LoansTable
-
+			scrollPane.setViewportView(tblBooks);
 			scrollPaneLoans.setViewportView(tblLoans);
 			
-			
+			initTable();
+			initLoansTable();
 			
 			///////////////////////////////////////////////////////////////////
 			// Initialize the buttons, actions, etc.
@@ -472,6 +484,47 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		);
 	}
 	
+	private void initLoansTable() {
+		tblLoans.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		scrollPaneLoans.setViewportView(tblLoans);
+		tblLoans.setModel(loanTableModel);
+		
+		// Make the columns sortable
+		loanSorter = new TableRowSorter<LoanTableModel>(loanTableModel);
+		tblLoans.setRowSorter(loanSorter);
+		
+		// Handle the filtering over there:
+		updateFilters();
+		
+		TableColumn statusColumn = tblLoans.getColumnModel().getColumn(0);
+		statusColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		
+		TableColumn copyIDColumn = tblLoans.getColumnModel().getColumn(1);
+		copyIDColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		
+		TableColumn copyTitleColumn = tblLoans.getColumnModel().getColumn(2);
+		copyTitleColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		
+		TableColumn lentUntilColumn = tblLoans.getColumnModel().getColumn(3);
+		lentUntilColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		
+		TableColumn lentAtColumn = tblLoans.getColumnModel().getColumn(4);
+		lentAtColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		
+		tblLoans.getSelectionModel().addListSelectionListener(
+			new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent evt) {
+					SwingUtilities.invokeLater(new Runnable() {  
+						public void run() {
+							// Update the "Show Selected" button
+							updateListButtons();
+						}
+					});
+				}
+			}
+		);
+	}
+	
 	/**
 	 * 
 	 */
@@ -513,6 +566,9 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		pnlBooksInvTop.add(txtSearch);
 	}
 	
+	/**
+	 * 
+	 */
 	private void initLoansSearchField() {
 		txtSearchLoans = new JTextField();
 		txtSearchLoans.addKeyListener(new KeyAdapter() {
@@ -681,6 +737,16 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			JTextField textField = (JTextField)getComponent();
 			book.setName(textField.getText());
 			return true; //false would disallow leaving the field
+		}
+	}
+
+	public void changedTab() {
+		System.out.println("Tab: " + tbsMain.getSelectedIndex());
+		switch ( tbsMain.getSelectedIndex() ) {
+		case 0:	// Books
+			break;
+		case 1: // Loans
+			break;
 		}
 	}
 }
