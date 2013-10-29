@@ -29,7 +29,6 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	}
 	
 	public void propagateUpdate(int pos) {
-		System.out.println("it's happening!");
 		fireTableDataChanged();
 	}
 	
