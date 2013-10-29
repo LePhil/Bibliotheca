@@ -35,15 +35,12 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
-import viewModels.BookTableModel;
 import viewModels.LoanTableModel;
 import domain.Library;
 
-public class LoansTab extends JPanel {
+public class LoansTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;
 
-private Library library;
-	
 	GridBagConstraints gbc_scrollPane;
 	private JPanel pnlLoansInventoryStats;
 	private JPanel pnlLoansInventory;
@@ -88,8 +85,8 @@ private Library library;
 	private AbstractAction toggleShowDueLoansAction;
 
 	public LoansTab(LoanTableModel loanTableModel, Library library) {
+		super(library);
 		this.loanTableModel = loanTableModel;
-		this.library = library;
 		
 		// Init filter lists
 		loanFilters = new ArrayList<RowFilter<Object,Object>>();
@@ -217,21 +214,21 @@ private Library library;
 		TableColumn statusColumn = tblLoans.getColumnModel().getColumn(0);
 		statusColumn.setMinWidth(50);
 		statusColumn.setMaxWidth(50);
-		statusColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		statusColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));
 		
 		TableColumn copyIDColumn = tblLoans.getColumnModel().getColumn(1);
 		copyIDColumn.setMinWidth(50);
 		copyIDColumn.setMaxWidth(50);
-		copyIDColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		copyIDColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));
 		
 		TableColumn copyTitleColumn = tblLoans.getColumnModel().getColumn(2);
-		copyTitleColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		copyTitleColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));
 		
 		TableColumn lentUntilColumn = tblLoans.getColumnModel().getColumn(3);
-		lentUntilColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		lentUntilColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));
 		
 		TableColumn lentAtColumn = tblLoans.getColumnModel().getColumn(4);
-		lentAtColumn.setCellRenderer(new LoanTableCellRenderer(library));
+		lentAtColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));
 		
 		tblLoans.getSelectionModel().addListSelectionListener(
 			new ListSelectionListener() {
@@ -364,12 +361,12 @@ private Library library;
 	
 	/**
 	 * Updates the labels that contain statistical information.
-	 * @author Philipp Christen
+	 * @author PCHR
 	 */
 	public void updateStatistics() {
-		lblNrOfCurrentLoans.setText( Messages.getString( "BookMasterTable.lblNrOfCurrentLoans.text", String.valueOf( library.getLentOutBooks().size() ) ) );
-		lblNrOfDueLoans.setText( Messages.getString( "BookMasterTable.lblNrOfDueLoans.text", String.valueOf( library.getOverdueLoans().size() ) ) );
-		lblNrOfLoans.setText( Messages.getString( "BookMasterTable.lblNrOfLoans.text", String.valueOf( library.getLoans().size() ) ) );
+		lblNrOfCurrentLoans.setText( Messages.getString( "BookMasterTable.lblNrOfCurrentLoans.text", String.valueOf( getLibrary().getLentOutBooks().size() ) ) );
+		lblNrOfDueLoans.setText( Messages.getString( "BookMasterTable.lblNrOfDueLoans.text", String.valueOf( getLibrary().getOverdueLoans().size() ) ) );
+		lblNrOfLoans.setText( Messages.getString( "BookMasterTable.lblNrOfLoans.text", String.valueOf( getLibrary().getLoans().size() ) ) );
 	}
 
 }

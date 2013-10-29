@@ -37,7 +37,7 @@ import viewModels.BookTableModel;
 import domain.Book;
 import domain.Library;
 
-public class BooksTab extends JPanel {
+public class BooksTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;
 	private JPanel pnlBookInventoryStats;
 	private JPanel pnlBookInventory;
@@ -60,7 +60,6 @@ public class BooksTab extends JPanel {
 	private GridBagConstraints gbc_pnlBooksInvTop;
 	private GridBagConstraints gbc_pnlBooksInvBottom;
 	
-	private Library library;
 	GridBagConstraints gbc_scrollPane;
 	private JScrollPane scrollPane;
 	
@@ -82,8 +81,8 @@ public class BooksTab extends JPanel {
 	
 
 	BooksTab(BookTableModel bookTableModel, Library library) {
+		super(library);
 		this.bookTableModel = bookTableModel;
-		this.library = library;
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -202,19 +201,19 @@ public class BooksTab extends JPanel {
 		TableColumn availabilityColumn = tblBooks.getColumnModel().getColumn(0);
 		availabilityColumn.setMinWidth(100);
 		availabilityColumn.setMaxWidth(100);
-		availabilityColumn.setCellRenderer(new BookTableCellRenderer(library));
+		availabilityColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
 		
 		TableColumn titleColumn = tblBooks.getColumnModel().getColumn(1);
-		titleColumn.setCellRenderer(new BookTableCellRenderer(library));
-		titleColumn.setCellEditor(new BookTextCellEditor(library));
+		titleColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+		titleColumn.setCellEditor(new BookTextCellEditor(getLibrary()));
 
 		TableColumn authorColumn = tblBooks.getColumnModel().getColumn(2);
-		authorColumn.setCellRenderer(new BookTableCellRenderer(library));
+		authorColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
 		
 		TableColumn publisherColumn = tblBooks.getColumnModel().getColumn(3);
 		publisherColumn.setMinWidth(100);
 		publisherColumn.setMaxWidth(100);
-		publisherColumn.setCellRenderer(new BookTableCellRenderer(library));
+		publisherColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
 		
 		tblBooks.getSelectionModel().addListSelectionListener(
 			new ListSelectionListener() {
@@ -275,9 +274,9 @@ public class BooksTab extends JPanel {
 		int[] selectedRows = tblBooks.getSelectedRows();
 
 		for (int selectedRow : selectedRows) {
-			Book book = library.getBooks().get(selectedRow);
-			book.addObserver(library);
-			BookDetail.editBook( library, library.getBooks().get(selectedRow) );
+			Book book = getLibrary().getBooks().get(selectedRow);
+			book.addObserver(getLibrary());
+			BookDetail.editBook( getLibrary(), getLibrary().getBooks().get(selectedRow) );
 		}
 	}
 	
@@ -375,7 +374,7 @@ public class BooksTab extends JPanel {
 	
 	public void updateStatistics() {
 		// Books stats
-		lblNrOfBooks.setText( Messages.getString("BookMaster.lblNrOfBooks.text", String.valueOf(library.getBooks().size())) );
-		lblNrOfCopies.setText( Messages.getString("BookMaster.lblNrOfCopies.text", String.valueOf(library.getCopies().size())) );
+		lblNrOfBooks.setText( Messages.getString("BookMaster.lblNrOfBooks.text", String.valueOf(getLibrary().getBooks().size())) );
+		lblNrOfCopies.setText( Messages.getString("BookMaster.lblNrOfCopies.text", String.valueOf(getLibrary().getCopies().size())) );
 	}
 }

@@ -69,9 +69,6 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	
 	private Library library;
 	
-	GridBagConstraints gbc_scrollPane;
-	
-	GridBagConstraints gbc_scrollPaneLoans;
 	// Models
 	private BookTableModel bookTableModel;
 	private LoanTableModel loanTableModel;
@@ -79,7 +76,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	
 	/**
 	 * Create the application.
-	 * @param bookList 
+	 * @param library
+	 * @author PCHR
 	 */
 	public BookMasterTable( Library library ) {
 		/*
@@ -98,8 +96,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 
 	/**
 	 * Initialize the contents of the frames.
-	 * @author Pascal Forster
-	 * @author Philipp Christen
+	 * @author PFORSTER
+	 * @author PCHR
 	 */
 	private void initialize() {
 		try {
@@ -147,7 +145,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			///////////////////////////////////////////////////////////////////
 			// Initialize the buttons, actions, etc.
 			///////////////////////////////////////////////////////////////////
-			updateListButtons();
+			updateButtons();
 			updateStatistics();
 			
 		} catch (Exception e) {
@@ -155,34 +153,33 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		}
 	}
 	
-		
-	/**
-	 * Updates the labels that contain statistical information.
-	 * @author Philipp Christen
-	 */
-	private void updateStatistics() {
-		// Books stats
-		pnlBooksTab.updateStatistics();
-		
-		// Loans stats
-		pnlLoansTab.updateStatistics();
-	}
-
 	@Override
 	public void update(Observable o, Object arg) {
-		updateListButtons();
+		updateButtons();
 		pnlBooksTab.updateShowUnavailableCheckbox();
 		pnlLoansTab.updateShowDueLoansCheckbox();
 		updateStatistics();
 	}
+		
+	/**
+	 * Updates the labels that contain statistical information.
+	 * @author PCHR
+	 */
+	private void updateStatistics() {
+		pnlBooksTab.updateStatistics();
+		pnlLoansTab.updateStatistics();
+	}
 	
-	public void updateListButtons() {
+	/**
+	 * Updates all buttons on the view
+	 * @author PCHR
+	 */
+	public void updateButtons() {
 		pnlBooksTab.updateListButtons();
 		pnlLoansTab.updateListButtons();
 	}
 
 	public void changedTab() {
-		System.out.println("Tab: " + tbsMain.getSelectedIndex());
 		switch ( tbsMain.getSelectedIndex() ) {
 		case 0:	// Books
 			break;
