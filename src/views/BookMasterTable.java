@@ -745,8 +745,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	}
 	
 	private void updateListButtons() {
-		// Enables or disables the "Show Selected" button
-		// depending on whether a book is selected.
+		// Enables or disables the "Show Selected" buttons
+		// depending on whether a book/loan is selected.
 		btnShowSelected.setEnabled(tblBooks.getSelectedRowCount()>0);
 		btnShowSelectedLoans.setEnabled( tblLoans.getSelectedRowCount()>0);
 	}
@@ -760,14 +760,18 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	}
 	
 	/**
-	 * Updates the two labels that contain statistical information about the library.
+	 * Updates the labels that contain statistical information.
 	 * @author Philipp Christen
 	 */
 	private void updateStatistics() {
+		// Books stats
 		lblNrOfBooks.setText( Messages.getString("BookMaster.lblNrOfBooks.text", String.valueOf(library.getBooks().size())) );
 		lblNrOfCopies.setText( Messages.getString("BookMaster.lblNrOfCopies.text", String.valueOf(library.getCopies().size())) );
 		
-		// TODO: loan stuff.
+		// Loans stats
+		lblNrOfCurrentLoans.setText( Messages.getString( "BookMasterTable.lblNrOfCurrentLoans.text", String.valueOf( library.getLentOutBooks().size() ) ) );
+		lblNrOfDueLoans.setText( Messages.getString( "BookMasterTable.lblNrOfDueLoans.text", String.valueOf( library.getOverdueLoans().size() ) ) );
+		lblNrOfLoans.setText( Messages.getString( "BookMasterTable.lblNrOfLoans.text", String.valueOf( library.getLoans().size() ) ) );
 	}
 
 	@Override
