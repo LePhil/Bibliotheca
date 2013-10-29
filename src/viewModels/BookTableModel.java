@@ -62,7 +62,8 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 		case 0:
 			copies = library.getCopiesOfBook(book).size();
 			if ( copies == 0 ) {
-				return "bald";	//TODO find datum
+				// library.getLentCopiesOfBook(book) <-- sowas... TODO PCHR
+				return "bald";	//TODO PCHR find datum
 			} else {
 				return String.valueOf(copies);
 			}
