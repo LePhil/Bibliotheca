@@ -1,9 +1,13 @@
 package viewModels;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.table.AbstractTableModel;
+
 
 import views.Messages;
 
@@ -14,12 +18,14 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	Library library;
+    SimpleDateFormat dateFormat = new SimpleDateFormat( "dd/mm/yy" ); //TODO READ local instead of guessing it :P
+
 	private String[] columns = {
 		Messages.getString("BookMasterLoanTable.ColumnHeader.Status"),
 		Messages.getString("BookMasterLoanTable.ColumnHeader.CopyID"),
 		Messages.getString("BookMasterLoanTable.ColumnHeader.Title"),
 		Messages.getString("BookMasterLoanTable.ColumnHeader.LentUntil"),
-		Messages.getString("BookMasterLoanTable.ColumnHeader.LentAt")
+		Messages.getString("BookMasterLoanTable.ColumnHeader.LentTo")
 	};
 	
 	public LoanTableModel(Library library){
@@ -58,15 +64,23 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 		
 		switch (columnIndex) {
 		case 0:
-			return "1";
+			if ( loan.isOverdue() ) {
+				return "!!!";
+			} else {
+				return "OK";
+			}
 		case 1:
 			return loan.getCopy().getInventoryNumber();
 		case 2:
 			return loan.getCopy().getTitle();
 		case 3:
-			return "3";
+			if ( loan.getReturnDate() == null ) {
+				return Messages.getString("BookMasterLoanTable.LoanDate.Since", dateFormat.format( loan.getPickupDate().getTime() ).toString() );
+			} else {
+				return Messages.getString("BookMasterLoanTable.LoanDate.Until", dateFormat.format( loan.getPickupDate().getTime() ).toString() );
+			}
 		case 4:
-			return "4";
+			return loan.getCustomer().getName() + ", " + loan.getCustomer().getSurname();
 		default:
 			return null;
 		}

@@ -135,8 +135,10 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	private TableRowSorter<LoanTableModel> loanSorter;
 	
 	// Filter variables. filters contains all filters that can be applied to the jTable.
-	private List<RowFilter<Object,Object>> filters;
+	private List<RowFilter<Object,Object>> bookFilters;
+	private List<RowFilter<Object,Object>> loanFilters;
 	private boolean showUnavailable = true;
+	private boolean showDueLoans = true;
 	private String searchText;
 	private String searchTextLoans;
 	
@@ -157,8 +159,9 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		bookTableModel = new BookTableModel( this.library );
 		loanTableModel = new LoanTableModel( this.library );
 		
-		// Init filter list
-		filters = new ArrayList<RowFilter<Object,Object>>();
+		// Init filter lists
+		bookFilters = new ArrayList<RowFilter<Object,Object>>();
+		loanFilters = new ArrayList<RowFilter<Object,Object>>();
 		
 		initialize();
 		library.addObserver( this );
@@ -168,6 +171,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 
 	/**
 	 * Initialize the contents of the frames.
+	 * @author Pascal Forster
+	 * @author Philipp Christen
 	 */
 	private void initialize() {
 		try {
@@ -494,12 +499,16 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		tblLoans.setRowSorter(loanSorter);
 		
 		// Handle the filtering over there:
-		updateFilters();
+		updateLoanFilters();
 		
 		TableColumn statusColumn = tblLoans.getColumnModel().getColumn(0);
+		statusColumn.setMinWidth(50);
+		statusColumn.setMaxWidth(50);
 		statusColumn.setCellRenderer(new LoanTableCellRenderer(library));
 		
 		TableColumn copyIDColumn = tblLoans.getColumnModel().getColumn(1);
+		copyIDColumn.setMinWidth(50);
+		copyIDColumn.setMaxWidth(50);
 		copyIDColumn.setCellRenderer(new LoanTableCellRenderer(library));
 		
 		TableColumn copyTitleColumn = tblLoans.getColumnModel().getColumn(2);
@@ -537,7 +546,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 				updateFilters();
 			}
 		});
-		txtSearch.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
+		txtSearch.setText(Messages.getString("BookMasterTable.txtSearch.text")); //$NON-NLS-1$
 		txtSearch.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
     	    public void focusGained(java.awt.event.FocusEvent evt) {
@@ -575,7 +584,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				searchText = txtSearch.getText();
-				updateFilters();
+				updateLoanFilters();
 			}
 		});
 		txtSearchLoans.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
@@ -606,18 +615,19 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		txtSearchLoans.setColumns(10);
 		pnlLoansInvTop.add(txtSearchLoans);
 	}
+	
 	/**
 	 * @author PCHR
 	 */
 	private void updateFilters() {
 		// 1st, clear all filters, if there are any
-		if ( !filters.isEmpty() ) {
-			filters.clear();
+		if ( !bookFilters.isEmpty() ) {
+			bookFilters.clear();
 		}
 		
 		// 2nd: apply the "showUnavailable" filter if applicable
 		if ( !showUnavailable ) {
-			filters.add( new RowFilter<Object, Object>() {
+			bookFilters.add( new RowFilter<Object, Object>() {
 		        public boolean include(Entry entry) {
 		        	if (showUnavailable){
 		        		return true;
@@ -635,11 +645,48 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		
 		// 3rd: apply the filter from the search box.
 		if ( searchText != null ) {
-			filters.add( RowFilter.regexFilter( searchText ) );
+			bookFilters.add( RowFilter.regexFilter( searchText ) );
 		}
 		
-		sorter.setRowFilter( RowFilter.andFilter(filters) );
+		sorter.setRowFilter( RowFilter.andFilter(bookFilters) );
+	}	
+
+	/**
+	 *  @author PCHR
+	 */
+	private void updateLoanFilters() {
+		// 1st, clear all filters, if there are any
+		if ( !loanFilters.isEmpty() ) {
+			loanFilters.clear();
+		}
+		
+		// 2nd: apply the "showDueLoans" filter if applicable
+		if ( !showDueLoans) {
+			loanFilters.add( new RowFilter<Object, Object>() {
+		        public boolean include(Entry entry) {
+		        	
+		        	if (showDueLoans){
+		        		return true;
+		        	}
+		        	System.out.println("Filter");
+		        	// get value of Available column (column 0)
+		        	//TODO: get available copies. Can't do it like this because
+		        	// there's a string in that row.
+		        	//Boolean completed = (Boolean) entry.getValue(0);
+		        	//return ! completed.booleanValue();
+		        	return false;
+		        }
+		    } );
+		}
+		
+		// 3rd: apply the filter from the search box.
+		if ( searchTextLoans != null ) {
+			loanFilters.add( RowFilter.regexFilter( searchTextLoans ) );
+		}
+		
+		loanSorter.setRowFilter( RowFilter.andFilter(loanFilters) );
 	}
+	
 	
 	private AbstractAction getToggleShowUnavailableAction() {
 		if(toggleShowUnavailabeAction == null) {
@@ -688,14 +735,12 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			showUnavailable=!showUnavailable;
+			showDueLoans=!showDueLoans;
 			
 			// Re-Filter		
-			/*
-			updateFilters();
+			updateLoanFilters();
 			updateListButtons();
-			updateShowUnavailableCheckbox();
-			*/
+			updateShowDueLoansCheckbox();
 		}
 	}
 	
@@ -703,10 +748,15 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		// Enables or disables the "Show Selected" button
 		// depending on whether a book is selected.
 		btnShowSelected.setEnabled(tblBooks.getSelectedRowCount()>0);
+		btnShowSelectedLoans.setEnabled( tblLoans.getSelectedRowCount()>0);
 	}
 	
 	private void updateShowUnavailableCheckbox() {
 		chckbxOnlyAvailable.setSelected( showUnavailable );
+	}
+	
+	private void updateShowDueLoansCheckbox() {
+		chckbxOnlyDueLoans.setSelected( showDueLoans );
 	}
 	
 	/**
@@ -716,6 +766,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	private void updateStatistics() {
 		lblNrOfBooks.setText( Messages.getString("BookMaster.lblNrOfBooks.text", String.valueOf(library.getBooks().size())) );
 		lblNrOfCopies.setText( Messages.getString("BookMaster.lblNrOfCopies.text", String.valueOf(library.getCopies().size())) );
+		
+		// TODO: loan stuff.
 	}
 
 	@Override
