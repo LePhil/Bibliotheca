@@ -699,9 +699,9 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		private static final long serialVersionUID = 1L;
 		
 		ToggleShowUnavailableAction() {
-			super("Show Unvailable", null);
+			super("Show Unvailable", null);	//TODO: I18N
 			putValue(MNEMONIC_KEY, KeyEvent.VK_U);
-			putValue(SHORT_DESCRIPTION, "Show or Hide Unavailable Books");
+			putValue(SHORT_DESCRIPTION, "Show or Hide Unavailable Books");	//TODO: I18N
 			putValue(ACCELERATOR_KEY, 
 					KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 		}
@@ -727,9 +727,9 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		private static final long serialVersionUID = 1L;
 		
 		ToggleShowDueLoansAction() {
-			super("Show Due Loans", null);	//TODO i8n
+			super("Show Due Loans", null);	//TODO I18N
 			putValue(MNEMONIC_KEY, KeyEvent.VK_D);
-			putValue(SHORT_DESCRIPTION, "Show or Hide Due Loans");
+			putValue(SHORT_DESCRIPTION, "Show or Hide Due Loans");	// TODO: I18N
 			putValue(ACCELERATOR_KEY, 
 					KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
 		}
