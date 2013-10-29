@@ -34,6 +34,8 @@ import domain.Library;
 import domain.Shelf;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class BookDetail extends javax.swing.JFrame implements Observer {
 
@@ -61,6 +63,10 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private Library library;
 
 	private static Dictionary<Book, BookDetail> editFramesDict = new Hashtable<Book, BookDetail>();
+	private JPanel pnlButtons;
+	private JButton btnSave;
+	private JButton btnReset;
+	private Component horizontalGlue;
 
 	/**
 	 * Create the application.
@@ -97,9 +103,12 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 
 	private void displayBook() {
 		if (book == null) {
-			// TODO: disable everything
+			txtTitle.setEnabled(false);
+			txtPublisher.setEnabled(false);
+			txtAuthor.setEnabled(false);
+			cmbShelf.setEnabled(false);
 		} else {
-			// TODO: fill everything
+			setBookValuesToView();
 		}
 	}
 
@@ -122,10 +131,10 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			getContentPane().add(pnlInformation);
 			GridBagLayout gbl_pnlInformation = new GridBagLayout();
 			gbl_pnlInformation.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-			gbl_pnlInformation.rowHeights = new int[] { 0, 0, 0, 0, 0 };
+			gbl_pnlInformation.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
 			gbl_pnlInformation.columnWeights = new double[] { 0.0, 0.0, 1.0,
 					0.0, Double.MIN_VALUE };
-			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
+			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0,
 					Double.MIN_VALUE };
 			pnlInformation.setLayout(gbl_pnlInformation);
 
@@ -139,6 +148,12 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			pnlInformation.add(lblTitle, gbc_lblTitle);
 
 			txtTitle = new JTextField();
+			txtTitle.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					validateInformation();
+				}
+			});
 			GridBagConstraints gbc_txtTitle = new GridBagConstraints();
 			gbc_txtTitle.insets = new Insets(0, 0, 5, 5);
 			gbc_txtTitle.fill = GridBagConstraints.HORIZONTAL;
@@ -146,7 +161,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			gbc_txtTitle.gridy = 0;
 			pnlInformation.add(txtTitle, gbc_txtTitle);
 			txtTitle.setColumns(10);
-			txtTitle.setText(book.getName());
 
 			lblAuthor = new JLabel(
 					Messages.getString("BookDetail.lblAuthor.text")); //$NON-NLS-1$
@@ -165,7 +179,12 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			gbc_txtAuthor.gridy = 1;
 			pnlInformation.add(txtAuthor, gbc_txtAuthor);
 			txtAuthor.setColumns(10);
-			txtAuthor.setText(book.getAuthor());
+			txtAuthor.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					validateInformation();
+				}
+			});
 
 			lblPublisher = new JLabel(
 					Messages.getString("BookDetail.lblPublisher.text")); //$NON-NLS-1$
@@ -184,12 +203,17 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			gbc_txtPublisher.gridy = 2;
 			pnlInformation.add(txtPublisher, gbc_txtPublisher);
 			txtPublisher.setColumns(10);
-			txtPublisher.setText(book.getPublisher());
+			txtPublisher.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					validateInformation();
+				}
+			});
 
 			lblShelf = new JLabel(
 					Messages.getString("BookDetail.lblShelf.text")); //$NON-NLS-1$
 			GridBagConstraints gbc_lblShelf = new GridBagConstraints();
-			gbc_lblShelf.insets = new Insets(0, 0, 0, 5);
+			gbc_lblShelf.insets = new Insets(0, 0, 5, 5);
 			gbc_lblShelf.anchor = GridBagConstraints.EAST;
 			gbc_lblShelf.gridx = 1;
 			gbc_lblShelf.gridy = 3;
@@ -199,13 +223,46 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			for (Shelf shelf : Shelf.values()) {
 				cmbShelf.addItem(shelf);
 			}
-			cmbShelf.setSelectedItem(book.getShelf());
 			GridBagConstraints gbc_cmbShelf = new GridBagConstraints();
-			gbc_cmbShelf.insets = new Insets(0, 0, 0, 5);
+			gbc_cmbShelf.insets = new Insets(0, 0, 5, 5);
 			gbc_cmbShelf.fill = GridBagConstraints.HORIZONTAL;
 			gbc_cmbShelf.gridx = 2;
 			gbc_cmbShelf.gridy = 3;
 			pnlInformation.add(cmbShelf, gbc_cmbShelf);
+			
+			pnlButtons = new JPanel();
+			GridBagConstraints gbc_panel = new GridBagConstraints();
+			gbc_panel.insets = new Insets(0, 0, 0, 5);
+			gbc_panel.fill = GridBagConstraints.BOTH;
+			gbc_panel.gridx = 2;
+			gbc_panel.gridy = 4;
+			pnlInformation.add(pnlButtons, gbc_panel);
+			pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout.X_AXIS));
+			
+			horizontalGlue = Box.createHorizontalGlue();
+			pnlButtons.add(horizontalGlue);
+			
+			btnSave = new JButton(Messages.getString("BookDetail.btnNewButton.text")); //$NON-NLS-1$
+			btnSave.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					book.setAuthor(txtAuthor.getText());
+					book.setName(txtTitle.getText());
+					book.setPublisher(txtPublisher.getText());
+					book.setShelf((Shelf) cmbShelf.getSelectedItem());
+					btnSave.setEnabled(false);
+				}
+			});
+			btnSave.setEnabled(false);
+			pnlButtons.add(btnSave);
+			
+			btnReset = new JButton(Messages.getString("BookDetail.btnNewButton_1.text")); //$NON-NLS-1$
+			btnReset.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setBookValuesToView();
+					btnSave.setEnabled(false);
+				}
+			});
+			pnlButtons.add(btnReset);
 
 			pnlCopiesEdit = new JPanel();
 			pnlCopiesEdit
@@ -265,12 +322,31 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			});
 			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
 			
-			pnlCopies.add( add(new JScrollPane(lstCopy)) );
+			pnlCopies.add( getContentPane().add(new JScrollPane(lstCopy)) );
+			
+			displayBook();
 			
 			pack();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void validateInformation(){
+		boolean hasValidationError = "".equals(txtAuthor.getText()) || "".equals(txtPublisher.getText()) || "".equals(txtTitle.getText());
+		if(hasValidationError){
+			// TODO pforster: handle validation error
+			btnSave.setEnabled(false);
+		}else {
+			btnSave.setEnabled(true);
+		}
+	}
+	
+	private void setBookValuesToView() {
+		txtAuthor.setText(book.getAuthor());
+		txtPublisher.setText(book.getPublisher());
+		txtTitle.setText(book.getName());
+		cmbShelf.setSelectedItem(book.getShelf());
 	}
 
 	private void updateRemoveCopyButton(boolean copySelected) {
