@@ -438,6 +438,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 		int[] selectedRows = tblBooks.getSelectedRows();
 
 		for (int selectedRow : selectedRows) {
+			Book book = library.getBooks().get(selectedRow);
+			book.addObserver(library);
 			BookDetail.editBook( library, library.getBooks().get(selectedRow) );
 		}
 	}
