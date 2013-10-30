@@ -11,6 +11,7 @@ import views.Messages;
 
 import domain.Book;
 import domain.Library;
+import domain.Loan;
 
 public class BookTableModel extends AbstractTableModel implements Observer {
 
@@ -118,5 +119,7 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 		
 	}
 
-	
+	public Book getBook(Object identifier) {
+		return this.library.getBooks().get((int) identifier);
+	}
 }

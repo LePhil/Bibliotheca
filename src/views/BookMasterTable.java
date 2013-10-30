@@ -28,8 +28,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	
 	private JCheckBoxMenuItem showUnavailableMenuItem;
 	
-	private BooksTab pnlBooksTab;
-	private LoansTab pnlLoansTab;
+	private BooksTab booksTab;
+	private LoansTab loansTab;
 	
 	private Library library;
 	
@@ -81,14 +81,14 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			///////////////////////////////////////////////////////////////////
 			// BOOKS TAB
 			///////////////////////////////////////////////////////////////////
-			pnlBooksTab = new BooksTab( bookTableModel, library );
-			tbsMain.addTab( Messages.getString("BookMaster.Tab.Books" ), null, pnlBooksTab, null);
+			booksTab = new BooksTab( bookTableModel, library );
+			tbsMain.addTab( Messages.getString("BookMaster.Tab.Books" ), null, booksTab, null);
 			
 			///////////////////////////////////////////////////////////////////
 			// LOANS TAB
 			///////////////////////////////////////////////////////////////////
-			pnlLoansTab = new LoansTab( loanTableModel, library );
-			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), null, pnlLoansTab, null);
+			loansTab = new LoansTab( loanTableModel, library );
+			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), null, loansTab, null);
 			
 			// Menu
 			jMenuBar = new JMenuBar();
@@ -103,7 +103,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 				viewMenu.add(showUnavailableMenuItem);
 				showUnavailableMenuItem.setText(Messages.getString("BookMasterTable.showUnavailableMenuItem.text")); //$NON-NLS-1$
 				showUnavailableMenuItem.setMnemonic(KeyEvent.VK_U);
-				showUnavailableMenuItem.setAction(pnlBooksTab.getToggleShowUnavailableAction());
+				showUnavailableMenuItem.setAction(booksTab.getToggleShowUnavailableAction());
 			}
 						
 			///////////////////////////////////////////////////////////////////
@@ -120,8 +120,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		updateButtons();
-		pnlBooksTab.updateShowUnavailableCheckbox();
-		pnlLoansTab.updateShowDueLoansCheckbox();
+		booksTab.updateShowUnavailableCheckbox();
+		loansTab.updateShowDueLoansCheckbox();
 		updateStatistics();
 	}
 		
@@ -130,8 +130,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	 * @author PCHR
 	 */
 	private void updateStatistics() {
-		pnlBooksTab.updateStatistics();
-		pnlLoansTab.updateStatistics();
+		booksTab.updateStatistics();
+		loansTab.updateStatistics();
 	}
 	
 	/**
@@ -139,8 +139,8 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	 * @author PCHR
 	 */
 	public void updateButtons() {
-		pnlBooksTab.updateListButtons();
-		pnlLoansTab.updateListButtons();
+		booksTab.updateListButtons();
+		loansTab.updateListButtons();
 	}
 
 	public void changedTab() {

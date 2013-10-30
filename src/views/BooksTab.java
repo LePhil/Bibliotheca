@@ -34,8 +34,10 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.BookTableModel;
+import viewModels.LoanTableModel;
 import domain.Book;
 import domain.Library;
+import domain.Loan;
 
 public class BooksTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;
@@ -261,7 +263,6 @@ public class BooksTab extends LibraryTab {
     				@Override
     				public void run() {
     					txtSearch.select(0, 0);
-    					searchText = null;
     				}
     			});
     	    }
@@ -296,18 +297,14 @@ public class BooksTab extends LibraryTab {
 		// 2nd: apply the "showUnavailable" filter if applicable
 		if ( !showUnavailable ) {
 			bookFilters.add( new RowFilter<Object, Object>() {
-		        public boolean include(Entry entry) {
-		        	if (showUnavailable){
-		        		return true;
-		        	}
-		        	System.out.println("Filter");
-		        	// get value of Available column (column 0)
-		        	//TODO: get available copies. Can't do it like this because
-		        	// there's a string in that row.
-		        	//Boolean completed = (Boolean) entry.getValue(0);
-		        	//return ! completed.booleanValue();
-		        	return false;
-		        }
+				@Override
+				public boolean include(RowFilter.Entry<? extends Object, ? extends Object> entry) {
+					BookTableModel bookModel = (BookTableModel) entry.getModel();
+					Book book = bookModel.getBook(entry.getIdentifier());
+					
+					System.out.println(book.getName());
+					return true;
+				}
 		    } );
 		}
 		
