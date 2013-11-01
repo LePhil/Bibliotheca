@@ -154,7 +154,7 @@ public class LoansTab extends LibraryTab {
 			}
 		});
 		
-		chckbxOnlyDueLoans = new JCheckBox( Messages.getString("BookMasterTable.chckbxOnlyDueLoans.text") ); //$NON-NLS-1$
+		chckbxOnlyDueLoans = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlyDueLoans.text")); //$NON-NLS-1$
 		chckbxOnlyDueLoans.setAction( getToggleShowDueLoansAction() );
 		pnlLoansInvTop.add(chckbxOnlyDueLoans);
 		
@@ -278,6 +278,7 @@ public class LoansTab extends LibraryTab {
     				@Override
     				public void run() {
     					txtSearchLoans.select(0, 0);
+    					searchTextLoans = null;
     				}
     			});
     	    }
@@ -296,24 +297,23 @@ public class LoansTab extends LibraryTab {
 		}
 		
 		// 2nd: apply the "showDueLoans" filter if applicable
-		// also, check here if the loan is currently lent.
-		// TODO: PCHR - CHECK IF THIS WORKS. LOOKS GOOD, BUT FEELS BAD
-		loanFilters.add( new RowFilter<Object, Object>() {
-			@Override
-			public boolean include(RowFilter.Entry<? extends Object, ? extends Object> entry) {
-				 LoanTableModel loanModel = (LoanTableModel) entry.getModel();
-				 Loan loan = loanModel.getLoan(entry.getIdentifier());
-				 
-				 if ( loan.isLent() ) {
-					 if (showDueLoans){
-						 return loan.isOverdue();
-					 } else {
-						 return true;
-					 }
-				 }
-				 return false;
-			}
-		} );
+		if ( !showDueLoans) {
+			loanFilters.add( new RowFilter<Object, Object>() {
+		        public boolean include(Entry entry) {
+		        	
+		        	if (showDueLoans){
+		        		return true;
+		        	}
+		        	System.out.println("Filter");
+		        	// get value of Available column (column 0)
+		        	//TODO: get available copies. Can't do it like this because
+		        	// there's a string in that row.
+		        	//Boolean completed = (Boolean) entry.getValue(0);
+		        	//return ! completed.booleanValue();
+		        	return false;
+		        }
+		    } );
+		}
 		
 		// 3rd: apply the filter from the search box.
 		if ( searchTextLoans != null ) {
@@ -334,9 +334,9 @@ public class LoansTab extends LibraryTab {
 		private static final long serialVersionUID = 1L;
 		
 		ToggleShowDueLoansAction() {
-			super( Messages.getString("BookMasterTable.chckbxOnlyDueLoans.text") , null);
+			super("Show Due Loans", null);	//TODO I18N
 			putValue(MNEMONIC_KEY, KeyEvent.VK_D);
-			putValue(SHORT_DESCRIPTION, Messages.getString("BookMasterTable.chckbxOnlyDueLoans.desc") );
+			putValue(SHORT_DESCRIPTION, "Show or Hide Due Loans");	// TODO: I18N
 			putValue(ACCELERATOR_KEY, 
 					KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
 		}
@@ -376,4 +376,5 @@ public class LoansTab extends LibraryTab {
 		Loan selectedLoan = getLibrary().getLoans().get(selectedRow);
 		LoanDetail.editLoan(selectedLoan, getLibrary());
 	}
+
 }
