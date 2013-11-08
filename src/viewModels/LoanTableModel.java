@@ -129,6 +129,6 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 	}
 
 	public Loan getLoan(Object identifier) {
-		return this.library.getLoans().get((int) identifier);
+		return this.library.getLoans().get((Integer) identifier);
 	}
 }

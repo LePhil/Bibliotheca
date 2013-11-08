@@ -121,6 +121,6 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	}
 
 	public Book getBook(Object identifier) {
-		return this.library.getBooks().get((int) identifier);
+		return this.library.getBooks().get((Integer) identifier);
 	}
 }
