@@ -35,7 +35,8 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public boolean isCellEditable(int arg0, int arg1) {
-		return true;
+		return false;
+		// PCHR: We decided not to make the cells editable, as that interferes with the normal clicks on the cells.
 	}
 	
 	@Override

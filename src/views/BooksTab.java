@@ -17,6 +17,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -51,6 +52,8 @@ public class BooksTab extends LibraryTab {
 	
 	private JButton btnShowSelected;
 	private JButton btnAddNewBook;
+	
+	private JComboBox<String> cmbBookTableModes;
 	
 	private Component horizontalStrut;
 	private Component horizontalStrut_1;
@@ -139,8 +142,17 @@ public class BooksTab extends LibraryTab {
 		});
 		
 		chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
-		chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
-		pnlBooksInvTop.add(chckbxOnlyAvailable);
+		//chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
+		//pnlBooksInvTop.add(chckbxOnlyAvailable);
+		
+		cmbBookTableModes = new JComboBox<String>();
+		// cmbBookTableModes.setAction( changeBookTableModes() ); TODO PCHR
+		// TODO PCHR - get strings from Messages
+		cmbBookTableModes.addItem("All");
+		cmbBookTableModes.addItem("Only lent");
+		cmbBookTableModes.addItem("Only overdue");
+		
+		pnlBooksInvTop.add( cmbBookTableModes );
 		
 		horizontalStrut_2 = Box.createHorizontalStrut(20);
 		pnlBooksInvTop.add(horizontalStrut_2);
@@ -207,7 +219,6 @@ public class BooksTab extends LibraryTab {
 		
 		TableColumn titleColumn = tblBooks.getColumnModel().getColumn(1);
 		titleColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
-		titleColumn.setCellEditor(new BookTextCellEditor(getLibrary()));
 
 		TableColumn authorColumn = tblBooks.getColumnModel().getColumn(2);
 		authorColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
@@ -217,6 +228,7 @@ public class BooksTab extends LibraryTab {
 		publisherColumn.setMaxWidth(100);
 		publisherColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
 		
+		// Add Listeners
 		tblBooks.getSelectionModel().addListSelectionListener(
 			new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent evt) {
@@ -229,6 +241,14 @@ public class BooksTab extends LibraryTab {
 				}
 			}
 		);
+		// DoubleClick-Listener TODO PCHR
+		/*
+		tblBooks.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
+		*/
 	}
 	
 	/**
