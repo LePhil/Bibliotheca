@@ -38,7 +38,6 @@ import javax.swing.table.TableRowSorter;
 import viewModels.LoanTableModel;
 import domain.Library;
 import domain.Loan;
-import domain.LoanList;
 
 public class LoansTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;

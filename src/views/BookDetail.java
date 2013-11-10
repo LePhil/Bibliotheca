@@ -22,7 +22,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -57,7 +56,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private JButton btnAdd;
 	private JPanel pnlCopies;
 	private JList<Copy> lstCopy;
-	private JScrollPane scrollPane;
 
 	private Book book;
 	private Library library;
@@ -78,6 +76,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		initialize();
 	}
 
+	//TODO: PCHR: do we really need the library parameter? BookDetail already has the library as a property!
 	public static void editBook(Library library, Book book) {
 		BookDetail editFrame = editFramesDict.get(book);
 		if (editFrame == null) {

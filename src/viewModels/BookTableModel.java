@@ -5,13 +5,10 @@ import java.util.Observer;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.sun.xml.internal.bind.v2.TODO;
-
 import views.Messages;
 
 import domain.Book;
 import domain.Library;
-import domain.Loan;
 
 public class BookTableModel extends AbstractTableModel implements Observer {
 

@@ -2,7 +2,6 @@ package viewModels;
 
 
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 

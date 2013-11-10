@@ -1,6 +1,5 @@
 package views;
 
-import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
@@ -29,7 +28,6 @@ import domain.Library;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -71,25 +69,6 @@ public class BookMaster extends javax.swing.JFrame {
 	private Book editBook;
 	private BooksChangedObserver booksChangedObserver = new BooksChangedObserver();
 	private BookListModel bookListModel;
-	
-	/**
-	 * Just for testing purposes!!!
-	 * TODO: remove main method
-	 */
-	/*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					BookMaster window = new BookMaster();
-					window.bookMaster.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	*/
 
 	/**
 	 * Create the application.
@@ -236,6 +215,7 @@ public class BookMaster extends javax.swing.JFrame {
 		btnShowSelected.setEnabled(bookItemIsSelected);
 	}
 	
+	//TODO: do we still need this? (PCHR)
 	private void updateDetailPanel() {
 		if (editBook!=null) {
 			editBook.deleteObserver(booksChangedObserver);
@@ -263,8 +243,6 @@ public class BookMaster extends javax.swing.JFrame {
 		for (Book selectedBook : selectedBooks) {
 			BookDetail.editBook(library, selectedBook);
 		}
-		//Book editBook=(Book)lstBooks.getSelectedValue();
-		//BookDetail.editBook(editBook);
 	}
 	
 	private void addButtonActionPerformed(ActionEvent evt) {

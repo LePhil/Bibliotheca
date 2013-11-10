@@ -1,8 +1,6 @@
 package views;
 
 import javax.swing.JPanel;
-import javax.swing.table.AbstractTableModel;
-
 import domain.Library;
 
 public class LibraryTab extends JPanel {

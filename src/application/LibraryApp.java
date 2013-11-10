@@ -2,8 +2,8 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,8 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import views.BookMaster;
-import views.BookMasterTable;
+import views.MainView;
 
 import domain.Copy;
 import domain.Customer;
@@ -34,7 +33,7 @@ public class LibraryApp {
 		initLibrary(library);
 		
 		// Create Master Book View
-		new BookMasterTable( library );
+		new MainView( library );
 	}
 
 	private static void initLibrary(Library library) throws ParserConfigurationException, SAXException, IOException, IllegalLoanOperationException {

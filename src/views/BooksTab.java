@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +37,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.BookTableModel;
-import viewModels.LoanTableModel;
 import domain.Book;
 import domain.Library;
-import domain.Loan;
 
 public class BooksTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;
@@ -78,6 +78,7 @@ public class BooksTab extends LibraryTab {
 	
 	// Actions
 	private AbstractAction toggleShowUnavailabeAction;
+	private AbstractAction changeBookTableModeAction;
 	
 	// Filter variables. filters contains all filters that can be applied to the jTable.
 	private List<RowFilter<Object,Object>> bookFilters;
@@ -145,12 +146,16 @@ public class BooksTab extends LibraryTab {
 		//chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
 		//pnlBooksInvTop.add(chckbxOnlyAvailable);
 		
-		cmbBookTableModes = new JComboBox<String>();
-		// cmbBookTableModes.setAction( changeBookTableModes() ); TODO PCHR
-		// TODO PCHR - get strings from Messages
-		cmbBookTableModes.addItem("All");
-		cmbBookTableModes.addItem("Only lent");
-		cmbBookTableModes.addItem("Only overdue");
+		///////////////////////////////////////////////////////////
+		// ComboBox
+		///////////////////////////////////////////////////////////
+		String[] strBookTableModes = {
+			Messages.getString( "BookMastertable.BookTableModes.All" ),
+			Messages.getString( "BookMastertable.BookTableModes.LentOnly" ),
+			Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" )
+		};
+		cmbBookTableModes = new JComboBox<String>( strBookTableModes );
+		cmbBookTableModes.setAction( getChangeBookTableModeAction() );
 		
 		pnlBooksInvTop.add( cmbBookTableModes );
 		
@@ -241,14 +246,15 @@ public class BooksTab extends LibraryTab {
 				}
 			}
 		);
-		// DoubleClick-Listener TODO PCHR
-		/*
+		
 		tblBooks.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
+	        public void mouseClicked(MouseEvent e) {
+	            if (e.getClickCount() == 2) {
+	                int selectedRow = tblBooks.getSelectedRow();
+	                editBook( getLibrary().getBooks().get( selectedRow ) );
+	            }
+	        }
 		});
-		*/
 	}
 	
 	/**
@@ -296,9 +302,13 @@ public class BooksTab extends LibraryTab {
 
 		for (int selectedRow : selectedRows) {
 			Book book = getLibrary().getBooks().get(selectedRow);
-			book.addObserver(getLibrary());
-			BookDetail.editBook( getLibrary(), getLibrary().getBooks().get(selectedRow) );
+			editBook(book);
 		}
+	}
+	
+	private void editBook( Book book ) {
+		book.addObserver(getLibrary());
+		BookDetail.editBook( getLibrary(), book );
 	}
 	
 	private void addButtonActionPerformed(ActionEvent evt) {
@@ -364,6 +374,28 @@ public class BooksTab extends LibraryTab {
 		}
 	}
 	
+	public AbstractAction getChangeBookTableModeAction() {
+		if( changeBookTableModeAction == null ) {
+			changeBookTableModeAction = new ChangeBookTableModeAction();
+		}
+		return changeBookTableModeAction;
+	}
+	private class ChangeBookTableModeAction extends AbstractAction {
+		private int mode;
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			this.mode = cmbBookTableModes.getSelectedIndex();
+			System.out.println( this.mode );
+		}
+		
+		public void actionPerformed(int i) {
+			this.mode = i;
+			System.out.println( this.mode );
+		}
+		
+	}
+	
 	public void updateShowUnavailableCheckbox() {
 		chckbxOnlyAvailable.setSelected( showUnavailable );
 	}
@@ -372,21 +404,6 @@ public class BooksTab extends LibraryTab {
 		// Enables or disables the "Show Selected" buttons
 		// depending on whether a book is selected.
 		btnShowSelected.setEnabled(tblBooks.getSelectedRowCount()>0);
-	}
-	
-	public class BookTextCellEditor extends AbstractBookTableCellEditor {
-		private static final long serialVersionUID = 1L;
-
-		public BookTextCellEditor (Library library) {
-			super(new JTextField(), library);
-		}
-
-		@Override
-		public boolean setBookValue(Book book) {
-			JTextField textField = (JTextField)getComponent();
-			book.setName(textField.getText());
-			return true; //false would disallow leaving the field
-		}
 	}
 	
 	public void updateStatistics() {

@@ -4,9 +4,12 @@ import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.WindowConstants;
 
 import viewModels.BookTableModel;
@@ -18,7 +21,7 @@ import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-public class BookMasterTable extends javax.swing.JFrame implements Observer {
+public class MainView extends javax.swing.JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,7 +29,13 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	private JMenu viewMenu;
 	private JMenuBar jMenuBar;
 	
-	private JCheckBoxMenuItem showUnavailableMenuItem;
+	private JCheckBoxMenuItem showUnavailableMenuItem;	//TODO: remove
+	
+	private JMenu booksSubMenu;
+	private JMenuItem booksShowAll;
+	private JMenuItem booksShowLentOnly;
+	private JMenuItem booksShowOverdueOnly;
+	
 	
 	private BooksTab booksTab;
 	private LoansTab loansTab;
@@ -43,7 +52,7 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 	 * @param library
 	 * @author PCHR
 	 */
-	public BookMasterTable( Library library ) {
+	public MainView( Library library ) {
 		/*
 		 * This View should listen to changes in the book list and the loans list!
 		 */
@@ -90,12 +99,17 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 			loansTab = new LoansTab( loanTableModel, library );
 			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), null, loansTab, null);
 			
-			// Menu
+			///////////////////////////////////////////////////////////////////
+			// CUSTOMERS TAB
+			///////////////////////////////////////////////////////////////////
+			
+			///////////////////////////////////////////////////////////////////
+			// MENU
+			///////////////////////////////////////////////////////////////////
 			jMenuBar = new JMenuBar();
 			setJMenuBar(jMenuBar);
 			
 			viewMenu = new JMenu();
-			jMenuBar.add(viewMenu);
 			viewMenu.setText(Messages.getString("BookMasterTable.viewMenu.text")); //$NON-NLS-1$
 			viewMenu.setMnemonic(KeyEvent.VK_V);
 			{
@@ -105,6 +119,34 @@ public class BookMasterTable extends javax.swing.JFrame implements Observer {
 				showUnavailableMenuItem.setMnemonic(KeyEvent.VK_U);
 				showUnavailableMenuItem.setAction(booksTab.getToggleShowUnavailableAction());
 			}
+			
+			booksSubMenu = new JMenu();
+			booksSubMenu.setText( Messages.getString( "BookMaster.Tab.Books" ) );
+			booksSubMenu.setMnemonic( KeyEvent.VK_B );
+			{
+				booksShowAll = new JMenuItem();
+				booksShowLentOnly = new JMenuItem();
+				booksShowOverdueOnly = new JMenuItem();
+				
+				booksShowAll.setText( Messages.getString( "BookMastertable.BookTableModes.All" ) );
+				booksShowLentOnly.setText( Messages.getString( "BookMastertable.BookTableModes.LentOnly" ) );
+				booksShowOverdueOnly.setText( Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" ) );
+				
+				booksShowAll.setMnemonic( KeyEvent.VK_A );
+				booksShowLentOnly.setMnemonic( KeyEvent.VK_L );
+				booksShowOverdueOnly.setMnemonic( KeyEvent.VK_O );
+				
+				booksShowAll.addActionListener( booksTab.getChangeBookTableModeAction() );
+				booksShowLentOnly.addActionListener( booksTab.getChangeBookTableModeAction() );
+				booksShowOverdueOnly.addActionListener( booksTab.getChangeBookTableModeAction() );
+				
+				booksSubMenu.add(booksShowAll);
+				booksSubMenu.add(booksShowLentOnly);
+				booksSubMenu.add(booksShowOverdueOnly);
+			}
+			
+			viewMenu.add(booksSubMenu);
+			jMenuBar.add(viewMenu);
 						
 			///////////////////////////////////////////////////////////////////
 			// Initialize the buttons, actions, etc.
