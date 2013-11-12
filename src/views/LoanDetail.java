@@ -216,7 +216,14 @@ public class LoanDetail extends JFrame {
 		gbc_txtReturnDate.gridy = 1;
 		pnlLoanCopy.add(txtReturnDate, gbc_txtReturnDate);
 		txtReturnDate.setColumns(10);
-		txtReturnDate.setText(loan.getReturnDate().toString());
+		
+		// PCHR: only show returnDate if copy was acutally returned!
+		if ( !loan.isLent() ) {
+			txtReturnDate.setText(loan.getReturnDate().toString());
+		} else {
+			txtReturnDate.setText("-");
+			txtReturnDate.setEnabled(false);
+		}
 
 		pnlLoans = new JPanel();
 		pnlLoans.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)),

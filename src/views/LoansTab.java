@@ -271,10 +271,7 @@ public class LoansTab extends LibraryTab {
 		tblLoans.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
 	            if (e.getClickCount() == 2) {
-	                int selectedRow = tblLoans.getSelectedRow();
-	        		Loan selectedLoan = getLibrary().getLoans().get(selectedRow);
-	        		LoanDetail.editLoan(selectedLoan, getLibrary());
-	        		//TODO: stackTrace when trying to open an overDue loan!
+	            	showSelectedLoansButtonActionPerformed(null);
 	            }
 	        }
 		});
@@ -425,34 +422,17 @@ public class LoansTab extends LibraryTab {
 		return changeLoanTableModeAction;
 	}
 	private class ChangeLoanTableModeAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			currentTableMode = translateIntToEnum(  cmbLoanTableModes.getSelectedIndex() );
-			System.out.println( currentTableMode );	
+			currentTableMode = loanTableMode.values()[cmbLoanTableModes.getSelectedIndex()];
 			updateFilters();
 		}
-		
 		public void actionPerformed(int i) {
-			currentTableMode = translateIntToEnum(i);
-			System.out.println( currentTableMode );
-			
+			currentTableMode = loanTableMode.values()[i];
 			updateFilters();
 		}
-		
-		// TODO: PCHR: can't we do that faster/easier?
-		public loanTableMode translateIntToEnum( int i ) {
-			switch ( i ) {
-			case 0:
-				return loanTableMode.ALL;
-			case 1:
-				return loanTableMode.LENTONLY;
-			case 2:
-				return loanTableMode.OVERDUEONLY;
-			default:
-				return loanTableMode.ALL;
-			}
-		}
-		
 	}
 	
 	/**
