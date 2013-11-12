@@ -1,9 +1,6 @@
 package viewModels;
 
-import java.util.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -85,7 +82,7 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 					}
 				}
 				earliestReturnCal.add( Calendar.DAY_OF_MONTH, 30 );
-				returnString += " - "+earliestReturnCal.getTime().toGMTString();
+				returnString += " - "+earliestReturnCal.getTime().toString();
 			}
 			break;
 		case 1:

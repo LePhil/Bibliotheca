@@ -4,15 +4,14 @@ import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.WindowConstants;
 
 import viewModels.BookTableModel;
+import viewModels.CustomerTableModel;
 import viewModels.LoanTableModel;
 
 import domain.Library;
@@ -31,20 +30,22 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	
 	private JCheckBoxMenuItem showUnavailableMenuItem;	//TODO: remove
 	
-	private JMenu booksSubMenu;
-	private JMenuItem booksShowAll;
-	private JMenuItem booksShowLentOnly;
-	private JMenuItem booksShowOverdueOnly;
+	private JMenu loansSubMenu;
+	private JMenuItem loansShowAll;
+	private JMenuItem loansShowLentOnly;
+	private JMenuItem loansShowOverdueOnly;
 	
 	
 	private BooksTab booksTab;
 	private LoansTab loansTab;
+	private CustomerTab customerTab;
 	
 	private Library library;
 	
 	// Models
 	private BookTableModel bookTableModel;
 	private LoanTableModel loanTableModel;
+	private CustomerTableModel customerTableModel;
 
 	
 	/**
@@ -91,17 +92,19 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			// BOOKS TAB
 			///////////////////////////////////////////////////////////////////
 			booksTab = new BooksTab( bookTableModel, library );
-			tbsMain.addTab( Messages.getString("BookMaster.Tab.Books" ), null, booksTab, null);
+			tbsMain.addTab( Messages.getString("BookMaster.Tab.Books" ), null, booksTab, null );
 			
 			///////////////////////////////////////////////////////////////////
 			// LOANS TAB
 			///////////////////////////////////////////////////////////////////
 			loansTab = new LoansTab( loanTableModel, library );
-			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), null, loansTab, null);
-			
+			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), null, loansTab, null );
+				
 			///////////////////////////////////////////////////////////////////
 			// CUSTOMERS TAB
 			///////////////////////////////////////////////////////////////////
+			customerTab = new CustomerTab(library);
+			tbsMain.addTab( Messages.getString( "MainView.Tab.Customers"), null, customerTab, null );
 			
 			///////////////////////////////////////////////////////////////////
 			// MENU
@@ -120,9 +123,9 @@ public class MainView extends javax.swing.JFrame implements Observer {
 				showUnavailableMenuItem.setAction(booksTab.getToggleShowUnavailableAction());
 			}
 			
-			booksSubMenu = new JMenu();
-			booksSubMenu.setText( Messages.getString( "BookMaster.Tab.Books" ) );
-			booksSubMenu.setMnemonic( KeyEvent.VK_B );
+			loansSubMenu = new JMenu();
+			loansSubMenu.setText( Messages.getString( "BookMaster.Tab.Loans" ) );
+			loansSubMenu.setMnemonic( KeyEvent.VK_L );
 			{
 				/*
 				booksShowAll = new JMenuItem();
@@ -147,7 +150,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 				*/
 			}
 			
-			viewMenu.add(booksSubMenu);
+			viewMenu.add(loansSubMenu);
 			jMenuBar.add(viewMenu);
 						
 			///////////////////////////////////////////////////////////////////
