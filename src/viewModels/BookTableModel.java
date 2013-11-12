@@ -1,5 +1,10 @@
 package viewModels;
 
+import java.util.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -8,7 +13,9 @@ import javax.swing.table.AbstractTableModel;
 import views.Messages;
 
 import domain.Book;
+import domain.Copy;
 import domain.Library;
+import domain.Loan;
 
 public class BookTableModel extends AbstractTableModel implements Observer {
 
@@ -55,26 +62,46 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Book book = library.getBooks().get(rowIndex);
-		int copies;
+		String returnString;
 		
 		switch (columnIndex) {
 		case 0:
-			copies = library.getCopiesOfBook(book).size();
-			if ( copies == 0 ) {
-				// library.getLentCopiesOfBook(book) <-- sowas... TODO PCHR
-				return "bald";	//TODO PCHR find datum
-			} else {
-				return String.valueOf(copies);
+			List<Copy> copies = library.getCopiesOfBook(book);;
+			List<Loan> lentCopies = library.getLentCopiesOfBook(book);
+			int availCopies = copies.size()-lentCopies.size();
+			Calendar pickupCal, earliestReturnCal = null;
+			
+			// Show available of total copies for this book. (e.g. 2/3)
+			returnString = availCopies+"/"+copies.size();
+			
+			// if there are no more copies available, show the expected date when one will be available again.
+			if ( availCopies == 0 ) {
+				for (Loan loan : lentCopies) {
+					pickupCal = loan.getPickupDate();
+					
+					if ( earliestReturnCal == null ||
+							pickupCal.before(earliestReturnCal)) {
+						earliestReturnCal = (Calendar) pickupCal.clone();
+					}
+				}
+				earliestReturnCal.add( Calendar.DAY_OF_MONTH, 30 );
+				returnString += " - "+earliestReturnCal.getTime().toGMTString();
 			}
+			break;
 		case 1:
-			return book.getName();
+			returnString = book.getName();
+			break;
 		case 2:
-			return book.getAuthor();
+			returnString = book.getAuthor();
+			break;
 		case 3:
-			return book.getPublisher();
+			returnString = book.getPublisher();
+			break;
 		default:
-			return null;
+			returnString = "";
 		}
+		
+		return returnString;
 	}
 	
 	@Override

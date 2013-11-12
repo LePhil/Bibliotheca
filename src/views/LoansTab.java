@@ -366,7 +366,7 @@ public class LoansTab extends LibraryTab {
 			} );
 		}
 		
-		// 3rd: apply the filter from the search box.
+		// 3rd: apply the filter from the search box. (?i) makes regex ignore cases
 		if ( searchTextLoans != null ) {
 			loanFilters.add( RowFilter.regexFilter( "(?i)" + searchTextLoans ) );
 		}
