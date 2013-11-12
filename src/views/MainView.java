@@ -61,6 +61,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		this.library = library;
 		bookTableModel = new BookTableModel( this.library );
 		loanTableModel = new LoanTableModel( this.library );
+		customerTableModel = new CustomerTableModel(library);
 		
 		initialize();
 		library.addObserver( this );
@@ -103,7 +104,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			///////////////////////////////////////////////////////////////////
 			// CUSTOMERS TAB
 			///////////////////////////////////////////////////////////////////
-			customerTab = new CustomerTab(library);
+			customerTab = new CustomerTab(customerTableModel, library);
 			tbsMain.addTab( Messages.getString( "MainView.Tab.Customers"), null, customerTab, null );
 			
 			///////////////////////////////////////////////////////////////////
