@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -16,14 +18,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
@@ -36,8 +35,9 @@ import javax.swing.table.TableRowSorter;
 
 import viewModels.CustomerTableModel;
 
-
+import domain.Customer;
 import domain.Library;
+import domain.Loan;
 
 public class CustomerTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;
@@ -51,6 +51,8 @@ public class CustomerTab extends LibraryTab {
 	
 	private JTable tblCustomers;
 	
+	private JTextField txtSearch;
+	
 	// Buttons
 	private JButton btnAddNewCustomer;
 	private JButton btnShowSelected;
@@ -59,19 +61,31 @@ public class CustomerTab extends LibraryTab {
 	private CustomerTableModel customerTableModel;
 	private TableRowSorter<CustomerTableModel> sorter;
 	
-	// Actions
-	private AbstractAction toggleShowUnavailabeAction;
-	
 	// Filter variables. filters contains all filters that can be applied to the jTable.
 	private List<RowFilter<Object,Object>> customerFilters;
-	private boolean showUnavailable = true;
 	private String searchText;
+	
+	// Actions
+	private ShowSelectedCustomerAction showSelected;
+	private AddCustomerAction addCustomer;
 	
 	CustomerTab(CustomerTableModel customerTableModel, Library library) {
 		super(library);
 		this.customerTableModel = customerTableModel;
 		
 		this.setLayout(new BoxLayout(this,  BoxLayout.Y_AXIS));
+		
+		/////////////////////////////////////////////////
+		// ACTIONS
+		/////////////////////////////////////////////////
+		{
+			// Show/Edit selected customer
+			AbstractAction showCustomer = new ShowSelectedCustomerAction( Messages.getString( "CustomerTab.btnShowSelected.text"), "Show the customer that has been selected in the customer list" );
+			// Close
+			// Add Customer
+			AbstractAction addCustomer = new AddCustomerAction("ASd", "Adds a new customer" );
+		}
+
 		
 		// CustomerStats
 		{
@@ -86,7 +100,7 @@ public class CustomerTab extends LibraryTab {
 		// Inventory (Customer table)
 		{
 			pnlCustomerInventory = new JPanel();
-			pnlCustomerInventory.setBorder(new TitledBorder(null, Messages.getString("CustomerMaster.pnlCustomerInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+			pnlCustomerInventory.setBorder(new TitledBorder(null, Messages.getString("Customertab.pnlCustomerInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 			this.add(pnlCustomerInventory);
 			GridBagLayout gbl_pnlCustomerInventory = new GridBagLayout();
 			gbl_pnlCustomerInventory.columnWidths = new int[] {0};
@@ -109,30 +123,26 @@ public class CustomerTab extends LibraryTab {
 			customerFilters = new ArrayList<RowFilter<Object,Object>>();
 			
 			// Search field i.e. Searchbox
-			//initSearchField();
+			initSearchField();
 			
 			Component horizontalStrut_1 = Box.createHorizontalStrut(20);
 			pnlCustomersInvTop.add(horizontalStrut_1);
 			
-			btnShowSelected = new JButton(Messages.getString("CustomerMaster.btnShowSelected.text")); //$NON-NLS-1$
+			btnShowSelected = new JButton(Messages.getString("CustomerTab.btnShowSelected.text")); //$NON-NLS-1$
 			btnShowSelected.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//showSelectedButtonActionPerformed(e);
+					getShowSelectedCustomerAction().actionPerformed(null);
 				}
 			});
-			
-			//chckbxOnlyAvailable = new JCheckBox(Messages.getString("CustomerMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
-			//chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
-			//pnlCustomersInvTop.add(chckbxOnlyAvailable);
 			
 			Component horizontalStrut_2 = Box.createHorizontalStrut(20);
 			pnlCustomersInvTop.add(horizontalStrut_2);
 			pnlCustomersInvTop.add(btnShowSelected);
 			
-			btnAddNewCustomer = new JButton(Messages.getString("CustomerMaster.btnAddNewCustomer.text")); //$NON-NLS-1$
+			btnAddNewCustomer = new JButton(Messages.getString("CustomerTab.btnAddNewCustomer.text")); //$NON-NLS-1$
 			btnAddNewCustomer.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//addButtonActionPerformed(e);
+					getAddCustomerAction().actionPerformed(null);
 				}
 			});
 			pnlCustomersInvTop.add(btnAddNewCustomer);
@@ -166,6 +176,8 @@ public class CustomerTab extends LibraryTab {
 		}
 		
 		initTable();
+		updateListButtons();
+		updateStatistics();
 	}
 	
 	private void initTable() {
@@ -178,18 +190,16 @@ public class CustomerTab extends LibraryTab {
 		tblCustomers.setRowSorter(sorter);
 		
 		// Handle the filtering over there:
-		//updateFilters();
+		updateFilters();
 		
 		TableColumn customerNoColumn = tblCustomers.getColumnModel().getColumn(0);
 		customerNoColumn.setMinWidth(100);
 		customerNoColumn.setMaxWidth(100);
 		//customerNoColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
 		
-		TableColumn nameColumn = tblCustomers.getColumnModel().getColumn(1);
-		//nameColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+		tblCustomers.getColumnModel().getColumn(1);
 
-		TableColumn addressColumn = tblCustomers.getColumnModel().getColumn(2);
-		//addressColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+		tblCustomers.getColumnModel().getColumn(2);
 		
 		// Add Listeners
 		tblCustomers.getSelectionModel().addListSelectionListener(
@@ -198,7 +208,7 @@ public class CustomerTab extends LibraryTab {
 					SwingUtilities.invokeLater(new Runnable() {  
 						public void run() {
 							// Update the "Show Selected" button
-							// updateListButtons();
+							updateListButtons();
 						}
 					});
 				}
@@ -209,11 +219,116 @@ public class CustomerTab extends LibraryTab {
 		tblCustomers.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
 	            if (e.getClickCount() == 2) {
-	                int selectedRow = tblCustomers.getSelectedRow();
-	                //editCustomer( getLibrary().getBooks().get( selectedRow ) );
+	            	getShowSelectedCustomerAction().actionPerformed(null);
 	            }
 	        }
 		});
 	}
 
+	private void initSearchField() {
+		txtSearch = new JTextField();
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				searchText = txtSearch.getText();
+				updateFilters();
+			}
+		});
+		txtSearch.setText(Messages.getString("BookMasterTable.txtSearch.text")); //$NON-NLS-1$
+		txtSearch.addFocusListener(new java.awt.event.FocusAdapter() {
+			// Mark the whole text when the text field gains focus
+    	    public void focusGained(java.awt.event.FocusEvent evt) {
+    	    	SwingUtilities.invokeLater( new Runnable() {
+
+    				@Override
+    				public void run() {
+    					txtSearch.selectAll();
+    				}
+    			});
+    	    }
+    	    
+    	    // "unmark" everything (=mark nothing) when losing focus
+    	    public void focusLost(java.awt.event.FocusEvent evt) {
+    	    	SwingUtilities.invokeLater( new Runnable() {
+
+    				@Override
+    				public void run() {
+    					txtSearch.select(0, 0);
+    				}
+    			});
+    	    }
+    	});
+		txtSearch.setColumns(10);
+		pnlCustomersInvTop.add(txtSearch);
+	}
+	
+	private void updateFilters() {
+		// 1st, clear all filters, if there are any
+		if ( !customerFilters.isEmpty() ) {
+			customerFilters.clear();
+		}
+
+		// 2nd: apply the filter from the search box.  (?i) makes regex ignore cases
+		if ( searchText != null ) {
+			customerFilters.add( RowFilter.regexFilter( "(?i)" + searchText ) );
+		}
+		
+		sorter.setRowFilter( RowFilter.andFilter(customerFilters) );
+	}
+	
+	public void updateListButtons() {
+		// Enables or disables the "Show Selected" buttons
+		// depending on whether a book is selected.
+		btnShowSelected.setEnabled(tblCustomers.getSelectedRowCount()>0);
+	}
+	
+	public void updateStatistics() {
+		lblNrOfCustomers.setText( Messages.getString("CustomerTab.lblNrOfCustomers.text", String.valueOf(getLibrary().getCustomers().size())) );
+	}
+	
+	/////////////////////////////////////////////////
+	// Action Subclasses
+	/////////////////////////////////////////////////
+	public AbstractAction getShowSelectedCustomerAction() {
+		if( showSelected == null ) {
+			showSelected = new ShowSelectedCustomerAction("", "");
+		}
+		return showSelected;
+	}
+	class ShowSelectedCustomerAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public ShowSelectedCustomerAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_ENTER );
+	    }
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("SHOW CUSTOMER");
+			int selectedRow = tblCustomers.getSelectedRow();
+			Customer selectedCustomer= getLibrary().getCustomers().get(selectedRow);
+			//CustomerDetail.editCustomer(selectedCustomer, getLibrary());
+		}	
+	}
+	public AbstractAction getAddCustomerAction() {
+		if( addCustomer == null ) {
+			addCustomer= new AddCustomerAction("", "");
+		}
+		return addCustomer;
+	}
+	class AddCustomerAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public AddCustomerAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_N );
+	    }
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("NEW CUSTOMER");
+			//int selectedRow = tblCustomers.getSelectedRow();
+			//Customer selectedCustomer= getLibrary().getCustomers().get(selectedRow);
+			//CustomerDetail.editCustomer(selectedCustomer, getLibrary());
+		}
+	}
 }

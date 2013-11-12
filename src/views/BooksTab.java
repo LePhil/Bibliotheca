@@ -53,8 +53,6 @@ public class BooksTab extends LibraryTab {
 	private JButton btnShowSelected;
 	private JButton btnAddNewBook;
 	
-	private JComboBox<String> cmbBookTableModes;
-	
 	private Component horizontalStrut;
 	private Component horizontalStrut_1;
 	private Component horizontalStrut_2;
