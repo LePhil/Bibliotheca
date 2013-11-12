@@ -321,6 +321,7 @@ public class BooksTab extends LibraryTab {
 	
 	private void addButtonActionPerformed(ActionEvent evt) {
 		// TODO: have to tell DetailDialog somehow that it'll be a new book
+		BookDetail.editBook( getLibrary(), null );
 	}
 	
 	/**

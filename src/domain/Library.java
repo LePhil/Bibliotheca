@@ -46,15 +46,18 @@ public class Library extends Observable implements Observer {
 	}
 
 	public Book createAndAddBook(String name) {
-		Book b = new Book(name);
-		books.add(b);
-		
+		return this.addBook( new Book( name ) );
+	}
+	
+	
+	public Book addBook( Book book ) {
+		books.add( book );
 		editedBookPos = -1;
-		addBookIndex = books.indexOf(b);
+		addBookIndex = books.indexOf(book);
 		removeBookIndex = -1;
 		
 		doNotify();
-		return b;
+		return book;
 	}
 	
 	public boolean removeBook( Book book ) {

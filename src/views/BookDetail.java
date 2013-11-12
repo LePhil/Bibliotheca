@@ -65,6 +65,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private JButton btnSave;
 	private JButton btnReset;
 	private Component horizontalGlue;
+	
+	private static Boolean newlyCreated = false;
 
 	/**
 	 * Create the application.
@@ -76,8 +78,12 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		initialize();
 	}
 
-	//TODO: PCHR: do we really need the library parameter? BookDetail already has the library as a property!
 	public static void editBook(Library library, Book book) {
+		if ( book == null ) {
+			System.out.println("CREATE NEW BOOK");
+			book = new Book("");
+			newlyCreated = true;
+		}
 		BookDetail editFrame = editFramesDict.get(book);
 		if (editFrame == null) {
 			editFrame = new BookDetail(library, book);
@@ -249,6 +255,13 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 					book.setPublisher(txtPublisher.getText());
 					book.setShelf((Shelf) cmbShelf.getSelectedItem());
 					btnSave.setEnabled(false);
+					
+					if ( newlyCreated ) {
+						// Saving a book that we just created.
+						// TODO: let everyone else know that there's a new book/copy!
+						//we can only add it now, because before it shouldn't belong to the library, only on saving.
+						library.addBook(book);
+					}
 				}
 			});
 			btnSave.setEnabled(false);
