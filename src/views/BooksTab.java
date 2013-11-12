@@ -12,7 +12,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -84,7 +86,10 @@ public class BooksTab extends LibraryTab {
 	private List<RowFilter<Object,Object>> bookFilters;
 	private boolean showUnavailable = true;
 	private String searchText;
-	
+	private enum bookTableMode {
+		ALL, LENTONLY, OVERDUEONLY;
+	}
+	private bookTableMode currentTableMode;
 
 	BooksTab(BookTableModel bookTableModel, Library library) {
 		super(library);
@@ -143,21 +148,24 @@ public class BooksTab extends LibraryTab {
 		});
 		
 		chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
-		//chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
-		//pnlBooksInvTop.add(chckbxOnlyAvailable);
+		chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
+		pnlBooksInvTop.add(chckbxOnlyAvailable);
 		
 		///////////////////////////////////////////////////////////
 		// ComboBox
 		///////////////////////////////////////////////////////////
+		/*
 		String[] strBookTableModes = {
 			Messages.getString( "BookMastertable.BookTableModes.All" ),
 			Messages.getString( "BookMastertable.BookTableModes.LentOnly" ),
 			Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" )
 		};
+		
 		cmbBookTableModes = new JComboBox<String>( strBookTableModes );
 		cmbBookTableModes.setAction( getChangeBookTableModeAction() );
 		
 		pnlBooksInvTop.add( cmbBookTableModes );
+		*/
 		
 		horizontalStrut_2 = Box.createHorizontalStrut(20);
 		pnlBooksInvTop.add(horizontalStrut_2);
@@ -324,7 +332,7 @@ public class BooksTab extends LibraryTab {
 			bookFilters.clear();
 		}
 		
-		// 2nd: apply the "showUnavailable" filter if applicable
+		// 2nd: apply the showUnavailable filter if applicable
 		if ( !showUnavailable ) {
 			bookFilters.add( new RowFilter<Object, Object>() {
 				@Override
@@ -332,11 +340,40 @@ public class BooksTab extends LibraryTab {
 					BookTableModel bookModel = (BookTableModel) entry.getModel();
 					Book book = bookModel.getBook(entry.getIdentifier());
 					
+					if ( getLibrary().getLentCopiesOfBook(book).size() == getLibrary().getCopiesOfBook( book ).size() ) {
+						// all copies are lent.
+						return false;
+					}
 					System.out.println(book.getName());
 					return true;
 				}
 		    } );
 		}
+		
+		/*
+		// 2nd: apply the "bookTableMode" filter if applicable
+		bookFilters.add( new RowFilter<Object, Object>() {
+			@Override
+			public boolean include(	javax.swing.RowFilter.Entry<? extends Object, ? extends Object> entry ) {
+				BookTableModel bookModel = (BookTableModel) entry.getModel();
+				Book book = bookModel.getBook( entry.getIdentifier() );
+				
+				System.out.println( currentTableMode );
+				
+				if ( currentTableMode == bookTableMode.ALL ) {
+					return true;
+				} else if ( currentTableMode == bookTableMode.LENTONLY ) {
+					// Show, if 
+					if ( getLibrary().getCopiesOfBook( book ) != null ) {
+						
+					}
+				} else if ( currentTableMode == bookTableMode.OVERDUEONLY) {
+					
+				}
+				return false;
+			}
+		} );
+		*/
 		
 		// 3rd: apply the filter from the search box.
 		if ( searchText != null ) {
@@ -367,13 +404,15 @@ public class BooksTab extends LibraryTab {
 		public void actionPerformed(ActionEvent e) {
 			showUnavailable=!showUnavailable;
 			
-			// Re-Filter		
+			// Re-Filter
 			updateFilters();
 			updateListButtons();
 			updateShowUnavailableCheckbox();
 		}
 	}
 	
+	//TODO: remove that comboboxCrap...
+	/*
 	public AbstractAction getChangeBookTableModeAction() {
 		if( changeBookTableModeAction == null ) {
 			changeBookTableModeAction = new ChangeBookTableModeAction();
@@ -381,20 +420,37 @@ public class BooksTab extends LibraryTab {
 		return changeBookTableModeAction;
 	}
 	private class ChangeBookTableModeAction extends AbstractAction {
-		private int mode;
-		
+			
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.mode = cmbBookTableModes.getSelectedIndex();
-			System.out.println( this.mode );
+			currentTableMode = translateIntToEnum(  cmbBookTableModes.getSelectedIndex() );
+			System.out.println( currentTableMode );
+			
+			updateFilters();
 		}
 		
 		public void actionPerformed(int i) {
-			this.mode = i;
-			System.out.println( this.mode );
+			currentTableMode = translateIntToEnum(i);
+			System.out.println( currentTableMode );
+			
+			updateFilters();
 		}
 		
-	}
+		// TODO: PCHR: can't we do that faster/easier?
+		public bookTableMode translateIntToEnum( int i ) {
+			switch ( i ) {
+			case 0:
+				return bookTableMode.ALL;
+			case 1:
+				return bookTableMode.LENTONLY;
+			case 2:
+				return bookTableMode.OVERDUEONLY;
+			default:
+				return bookTableMode.ALL;
+			}
+		}
+		
+	} */
 	
 	public void updateShowUnavailableCheckbox() {
 		chckbxOnlyAvailable.setSelected( showUnavailable );

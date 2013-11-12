@@ -124,6 +124,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			booksSubMenu.setText( Messages.getString( "BookMaster.Tab.Books" ) );
 			booksSubMenu.setMnemonic( KeyEvent.VK_B );
 			{
+				/*
 				booksShowAll = new JMenuItem();
 				booksShowLentOnly = new JMenuItem();
 				booksShowOverdueOnly = new JMenuItem();
@@ -143,6 +144,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 				booksSubMenu.add(booksShowAll);
 				booksSubMenu.add(booksShowLentOnly);
 				booksSubMenu.add(booksShowOverdueOnly);
+				*/
 			}
 			
 			viewMenu.add(booksSubMenu);
