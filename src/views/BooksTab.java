@@ -332,7 +332,7 @@ public class BooksTab extends LibraryTab {
 
 		// 3rd: apply the filter from the search box.
 		if ( searchText != null ) {
-			bookFilters.add( RowFilter.regexFilter( searchText ) );
+			bookFilters.add( RowFilter.regexFilter( "(?i)" + searchText ) );
 		}
 		
 		sorter.setRowFilter( RowFilter.andFilter(bookFilters) );

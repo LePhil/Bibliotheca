@@ -368,7 +368,7 @@ public class LoansTab extends LibraryTab {
 		
 		// 3rd: apply the filter from the search box.
 		if ( searchTextLoans != null ) {
-			loanFilters.add( RowFilter.regexFilter( searchTextLoans ) );
+			loanFilters.add( RowFilter.regexFilter( "(?i)" + searchTextLoans ) );
 		}
 		
 		loanSorter.setRowFilter( RowFilter.andFilter(loanFilters) );
