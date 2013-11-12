@@ -18,6 +18,7 @@ import viewModels.CopyListModel;
 
 import domain.*;
 import java.awt.GridLayout;
+import java.awt.FlowLayout;
 
 public class CustomerDetail extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -52,6 +53,8 @@ public class CustomerDetail extends JFrame {
 	
 	private static boolean newlyCreated = false;
 	private JPanel panel;
+	private JPanel panel_1;
+	private JPanel panel_2;
 	
 	public CustomerDetail( Library library, Customer customer ) {
 		super();
@@ -106,7 +109,7 @@ public class CustomerDetail extends JFrame {
 			gbl_pnlInformation.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
 			gbl_pnlInformation.columnWeights = new double[] { 0.0, 0.0, 1.0,
 					0.0, Double.MIN_VALUE };
-			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,
+			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 					Double.MIN_VALUE };
 			pnlInformation.setLayout(gbl_pnlInformation);
 			
@@ -220,7 +223,6 @@ public class CustomerDetail extends JFrame {
 			// ZIP
 			lblZip = new JLabel(Messages.getString("CustomerDetail.Zip"));
 			GridBagConstraints gbc_lblZip = new GridBagConstraints();
-			gbc_lblZip.anchor = GridBagConstraints.NORTH;
 			gbc_lblZip.insets = new Insets(0, 0, 5, 5);
 			gbc_lblZip.gridx = 1;
 			gbc_lblZip.gridy = 4;
@@ -229,7 +231,6 @@ public class CustomerDetail extends JFrame {
 			{
 				panel = new JPanel();
 				GridBagConstraints gbc_panel = new GridBagConstraints();
-				gbc_panel.anchor = GridBagConstraints.NORTH;
 				gbc_panel.insets = new Insets(0, 0, 5, 5);
 				gbc_panel.fill = GridBagConstraints.HORIZONTAL;
 				gbc_panel.gridx = 2;
@@ -281,6 +282,35 @@ public class CustomerDetail extends JFrame {
 					panel.add(txtCity, gbc_txtCity);
 					txtCity.setColumns(10);
 				}
+			}
+			
+			panel_2 = new JPanel();
+			FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
+			flowLayout.setAlignment(FlowLayout.RIGHT);
+			GridBagConstraints gbc_panel_2 = new GridBagConstraints();
+			gbc_panel_2.insets = new Insets(0, 0, 0, 5);
+			gbc_panel_2.fill = GridBagConstraints.BOTH;
+			gbc_panel_2.gridx = 2;
+			gbc_panel_2.gridy = 5;
+			pnlInformation.add(panel_2, gbc_panel_2);
+			
+			btnReset = new JButton(Messages.getString("CustomerDetail.btnReset.text")); //$NON-NLS-1$
+			panel_2.add(btnReset);
+			
+			// Buttons
+			{
+				panel_1 = new JPanel();
+				getContentPane().add(panel_1);
+				panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+				
+				btnDelete = new JButton(Messages.getString("CustomerDetail.btnDelete.text")); //$NON-NLS-1$
+				panel_1.add(btnDelete);
+				
+				btnSave = new JButton(Messages.getString("CustomerDetail.btnSave.text")); //$NON-NLS-1$
+				panel_1.add(btnSave);
+				
+				btnCancel = new JButton(Messages.getString("CustomerDetail.btnCancel.text")); //$NON-NLS-1$
+				panel_1.add(btnCancel);
 			}
 			
 			fillForm();
