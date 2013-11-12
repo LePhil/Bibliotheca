@@ -108,35 +108,99 @@ public class CustomerDetail extends JFrame {
 			/////////////////////////////////////////////////
 			// FIELDS
 			/////////////////////////////////////////////////
-			lblName = new JLabel(
-					Messages.getString("BookDetail.lblTitle.text")); //$NON-NLS-1$
-			GridBagConstraints gbc_lblName = new GridBagConstraints();
-			gbc_lblName.anchor = GridBagConstraints.EAST;
-			gbc_lblName.insets = new Insets(0, 0, 5, 5);
-			gbc_lblName.gridx = 1;
-			gbc_lblName.gridy = 0;
-			pnlInformation.add(lblName, gbc_lblName);
+			// CUSTOMER NO
+			{
+				lblCustomerNo = new JLabel( Messages.getString("BookDetail.lblTitle.text") );
+				GridBagConstraints gbc_lblCustomerNo = new GridBagConstraints();
+				gbc_lblCustomerNo.anchor = GridBagConstraints.EAST;
+				gbc_lblCustomerNo.insets = new Insets(0, 0, 5, 5);
+				gbc_lblCustomerNo.gridx = 1;
+				gbc_lblCustomerNo.gridy = 0;
+				pnlInformation.add(lblCustomerNo, gbc_lblCustomerNo);
+				
+				txtCustomerNo = new JTextField();
+				txtCustomerNo.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						//validateInformation();
+					}
+				});
+				GridBagConstraints gbc_txtCustomerNo = new GridBagConstraints();
+				gbc_txtCustomerNo.insets = new Insets(0, 0, 5, 5);
+				gbc_txtCustomerNo.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtCustomerNo.gridx = 2;
+				gbc_txtCustomerNo.gridy = 0;
+				pnlInformation.add(txtCustomerNo, gbc_txtCustomerNo);
+				txtCustomerNo.setColumns(10);
+			}
 			
-			txtName = new JTextField();
-			txtName.addKeyListener(new KeyAdapter() {
-				@Override
-				public void keyReleased(KeyEvent e) {
-					//validateInformation();
-				}
-			});
-			GridBagConstraints gbc_txtName = new GridBagConstraints();
-			gbc_txtName.insets = new Insets(0, 0, 5, 5);
-			gbc_txtName.fill = GridBagConstraints.HORIZONTAL;
-			gbc_txtName.gridx = 2;
-			gbc_txtName.gridy = 0;
-			pnlInformation.add(txtName, gbc_txtName);
-			txtName.setColumns(10);
+			// NAME
+			{
+				lblName = new JLabel( Messages.getString("BookDetail.lblTitle.text") );
+				GridBagConstraints gbc_lblName = new GridBagConstraints();
+				gbc_lblName.anchor = GridBagConstraints.EAST;
+				gbc_lblName.insets = new Insets(0, 0, 5, 5);
+				gbc_lblName.gridx = 1;
+				gbc_lblName.gridy = 1;
+				pnlInformation.add(lblName, gbc_lblName);
+				
+				txtName = new JTextField();
+				txtName.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						//validateInformation();
+					}
+				});
+				GridBagConstraints gbc_txtName = new GridBagConstraints();
+				gbc_txtName.insets = new Insets(0, 0, 5, 5);
+				gbc_txtName.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtName.gridx = 2;
+				gbc_txtName.gridy = 1;
+				pnlInformation.add(txtName, gbc_txtName);
+				txtName.setColumns(10);
+			}
+			
+			// Address
+			{
+				lblAddress = new JLabel( Messages.getString("BookDetail.lblTitle.text") );
+				GridBagConstraints gbc_lblAddress = new GridBagConstraints();
+				gbc_lblAddress.anchor = GridBagConstraints.EAST;
+				gbc_lblAddress.insets = new Insets(0, 0, 5, 5);
+				gbc_lblAddress.gridx = 1;
+				gbc_lblAddress.gridy = 2;
+				pnlInformation.add(lblAddress, gbc_lblAddress);
+				
+				txtAddress = new JTextField();
+				txtAddress.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						//validateInformation();
+					}
+				});
+				GridBagConstraints gbc_txtAddress = new GridBagConstraints();
+				gbc_txtAddress.insets = new Insets(0, 0, 5, 5);
+				gbc_txtAddress.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtAddress.gridx = 2;
+				gbc_txtAddress.gridy = 2;
+				pnlInformation.add(txtAddress, gbc_txtAddress);
+				txtAddress.setColumns(10);
+			}
+			
+			fillForm();
 			
 		} catch ( Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Fill all textFields with the corresponding values from the model.
+	 */
+	private void fillForm() {
+		txtCustomerNo.setText("0");
+		txtName.setText( customer.getName()+" "+customer.getSurname() );
+		txtAddress.setText( customer.getStreet()+"\n"+customer.getZip() );
+	}
 	/////////////////////////////////////////////////
 	// Action Subclasses
 	/////////////////////////////////////////////////
@@ -158,7 +222,7 @@ public class CustomerDetail extends JFrame {
 	}
 	/**
 	 * Saves the (changed) entries for the currently opened customer.
-	 * @author PFORSTER, PCHR
+	 * @author PCHR
 	 */
 	class SaveAction extends AbstractAction {
 		private static final long serialVersionUID = 1L;
@@ -192,7 +256,7 @@ public class CustomerDetail extends JFrame {
 	}
 	/**
 	 * Reset the form
-	 * @author PFORSTER, PCHR
+	 * @author PCHR
 	 */
 	class ResetAction extends AbstractAction {
 		private static final long serialVersionUID = 1L;
@@ -203,7 +267,7 @@ public class CustomerDetail extends JFrame {
 			putValue( MNEMONIC_KEY, KeyEvent.VK_R );
 		}
 		public void actionPerformed(ActionEvent e) {
-			//setBookValuesToView();
+			fillForm();
 			btnSave.setEnabled(false);
 		}
 	}

@@ -307,7 +307,7 @@ public class CustomerTab extends LibraryTab {
 			System.out.println("SHOW CUSTOMER");
 			int selectedRow = tblCustomers.getSelectedRow();
 			Customer selectedCustomer= getLibrary().getCustomers().get(selectedRow);
-			//CustomerDetail.editCustomer(selectedCustomer, getLibrary());
+			CustomerDetail.editCustomer(getLibrary(), selectedCustomer);
 		}	
 	}
 	public AbstractAction getAddCustomerAction() {
