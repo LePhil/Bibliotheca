@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -33,6 +34,9 @@ import domain.Library;
 import domain.Shelf;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+
+import com.sun.corba.se.spi.orbutil.fsm.Action;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -63,6 +67,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private static Dictionary<Book, BookDetail> editFramesDict = new Hashtable<Book, BookDetail>();
 	private JPanel pnlButtons;
 	private JButton btnSave;
+	private JButton btnCancel;
 	private JButton btnReset;
 	private Component horizontalGlue;
 	
@@ -87,7 +92,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		BookDetail editFrame = editFramesDict.get(book);
 		if (editFrame == null) {
 			editFrame = new BookDetail(library, book);
-			// editFrame.setBook(book);
 			editFramesDict.put(book, editFrame);
 		}
 		editFrame.setVisible(true);
@@ -127,6 +131,24 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			getContentPane().setLayout(
 					new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 
+			
+			/////////////////////////////////////////////////
+			// ACTIONS
+			/////////////////////////////////////////////////
+			// Close (via Esc-Key (?), Button)
+			AbstractAction cancel = new CloseAction( Messages.getString( "BookDetail.btnCancel.text"), "Revert Changes, close dialog" );
+			// Save (via S, Button)
+			AbstractAction save = new SaveAction( Messages.getString( "BookDetail.btnNewButton.text"), "Save changes" );
+			// Reset (via R, Button)
+			AbstractAction reset = new ResetAction(Messages.getString( "BookDetail.btnNewButton_1.text"), "Revert changes" );
+			// Remove Copy (via D, Button)
+			AbstractAction remove = new RemoveCopyAction( Messages.getString("BookDetail.btnRemove.text"), "Remove selected copies" );
+			// Add Copy (via A, Button)
+			AbstractAction addCopy = new AddCopyAction( Messages.getString("BookDetail.btnAdd.text"), "Add a copy of this book" );
+			
+			/////////////////////////////////////////////////
+			// INFORMATION PANEL
+			/////////////////////////////////////////////////
 			pnlInformation = new JPanel();
 			pnlInformation
 					.setBorder(new TitledBorder(
@@ -247,35 +269,25 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			horizontalGlue = Box.createHorizontalGlue();
 			pnlButtons.add(horizontalGlue);
 			
-			btnSave = new JButton(Messages.getString("BookDetail.btnNewButton.text")); //$NON-NLS-1$
-			btnSave.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					book.setAuthor(txtAuthor.getText());
-					book.setName(txtTitle.getText());
-					book.setPublisher(txtPublisher.getText());
-					book.setShelf((Shelf) cmbShelf.getSelectedItem());
-					btnSave.setEnabled(false);
-					
-					if ( newlyCreated ) {
-						// Saving a book that we just created.
-						// TODO: let everyone else know that there's a new book/copy!
-						//we can only add it now, because before it shouldn't belong to the library, only on saving.
-						library.addBook(book);
-					}
-				}
-			});
+			///////////////////////////////////////////////////
+			// BUTTONS
+			///////////////////////////////////////////////////
+			// SAVE
+			btnSave = new JButton( save );
 			btnSave.setEnabled(false);
 			pnlButtons.add(btnSave);
 			
-			btnReset = new JButton(Messages.getString("BookDetail.btnNewButton_1.text")); //$NON-NLS-1$
-			btnReset.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					setBookValuesToView();
-					btnSave.setEnabled(false);
-				}
-			});
+			// RESET
+			btnReset = new JButton( reset ); //$NON-NLS-1$
 			pnlButtons.add(btnReset);
-
+			
+			// CANCEL
+			btnCancel = new JButton( cancel );
+			pnlButtons.add( btnCancel );
+		
+			/////////////////////////////////////////////////
+			// COPY AREA
+			/////////////////////////////////////////////////
 			pnlCopiesEdit = new JPanel();
 			pnlCopiesEdit
 					.setBorder(new TitledBorder(
@@ -297,29 +309,19 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			Component hglCopiesEdit = Box.createHorizontalGlue();
 			pnlAction.add(hglCopiesEdit);
 
-			btnRemove = new JButton(
-					Messages.getString("BookDetail.btnRemove.text")); //$NON-NLS-1$
+			///////////////////////////////////////////////////
+			// COPY-BUTTONS
+			///////////////////////////////////////////////////
+			// REMOVE
+			btnRemove = new JButton( remove );
 			btnRemove.setEnabled(false);
-			btnRemove.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					library.removeCopy(lstCopy.getSelectedValue());
-					lstCopy.setModel(new CopyListModel(library
-							.getCopiesOfBook(book)));
-				}
-			});
 			pnlAction.add(btnRemove);
 
 			Component horizontalStrut = Box.createHorizontalStrut(5);
 			pnlAction.add(horizontalStrut);
-
-			btnAdd = new JButton(Messages.getString("BookDetail.btnAdd.text")); //$NON-NLS-1$
-			btnAdd.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					library.createAndAddCopy(book);
-					lstCopy.setModel(new CopyListModel(library
-							.getCopiesOfBook(book)));
-				}
-			});
+			
+			// ADD
+			btnAdd = new JButton( addCopy );
 			pnlAction.add(btnAdd);
 
 			pnlCopies = new JPanel();
@@ -369,4 +371,109 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	public void update(Observable o, Object arg) {
 		displayBook();
 	}
+	
+	/////////////////////////////////////////////////
+	// Action Subclasses
+	/////////////////////////////////////////////////
+	/**
+	 * Closes the current dialog.
+	 * TODO: Close dialog, disregard changes. Don't save!
+	 * @author PCHR
+	 */
+	class CloseAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public CloseAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_C );
+	    }
+	    public void actionPerformed(ActionEvent e) {
+	    	System.out.println("CLOSE DIALOG NOW.");
+	    }
+	}
+	/**
+	 * Saves the (changed) entries for the currently opened book.
+	 * @author PFORSTER, PCHR
+	 */
+	class SaveAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public SaveAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_S );
+	    }
+	    public void actionPerformed(ActionEvent e) {
+	    	book.setAuthor(txtAuthor.getText());
+			book.setName(txtTitle.getText());
+			book.setPublisher(txtPublisher.getText());
+			book.setShelf((Shelf) cmbShelf.getSelectedItem());
+			btnSave.setEnabled(false);
+			
+			if ( newlyCreated ) {
+				// Saving a book that we just created.
+				// we can only add it now, because before it shouldn't
+				// belong to the library, only on saving.
+				library.addBook(book);
+				
+				if ( library.getCopiesOfBook( book ).size() == 0 ) {
+					library.createAndAddCopy( book );
+				}
+			}
+	    }
+	}
+	/**
+	 * Reset the form
+	 * @author PFORSTER, PCHR
+	 */
+	class ResetAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public ResetAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_R );
+	    }
+		public void actionPerformed(ActionEvent e) {
+			setBookValuesToView();
+			btnSave.setEnabled(false);
+		}
+	}
+	// Copy:
+	/**
+	 * Add a copy to the currently opened book
+	 * @author PFORSTER, PCHR
+	 */
+	class AddCopyAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public AddCopyAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_A );
+	    }
+		public void actionPerformed(ActionEvent e) {
+			library.createAndAddCopy(book);
+			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+			// TODO: throws a stackTrace (ArrayIndexOutOfBoundsException)
+		}
+	}
+	/**
+	 * Remove the currently selected copies from the currently opened book.
+	 * @author PFORSTER, PCHR
+	 */
+	class RemoveCopyAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public RemoveCopyAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_D );
+	    }
+		public void actionPerformed(ActionEvent e) {
+			library.removeCopy(lstCopy.getSelectedValue());
+			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+		}
+	}
+	
 }
