@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -69,6 +72,7 @@ public class LoansTab extends LibraryTab {
 	private JTable tblLoans;
 	private JTextField txtSearchLoans;
 	private JCheckBox chckbxOnlyDueLoans;
+	private JComboBox<String> cmbLoanTableModes;
 	
 	GridBagConstraints gbc_scrollPaneLoans;
 	private JScrollPane scrollPaneLoans;
@@ -81,9 +85,14 @@ public class LoansTab extends LibraryTab {
 	private List<RowFilter<Object,Object>> loanFilters;
 	private boolean showDueLoans = true;
 	private String searchTextLoans;
+	private enum loanTableMode {
+		ALL, LENTONLY, OVERDUEONLY;
+	}
+	private loanTableMode currentTableMode;
 	
 	// Actions:
 	private AbstractAction toggleShowDueLoansAction;
+	private AbstractAction changeLoanTableModeAction;
 
 	public LoansTab(LoanTableModel loanTableModel, Library library) {
 		super(library);
@@ -157,6 +166,20 @@ public class LoansTab extends LibraryTab {
 		chckbxOnlyDueLoans.setAction( getToggleShowDueLoansAction() );
 		pnlLoansInvTop.add(chckbxOnlyDueLoans);
 		
+		///////////////////////////////////////////////////////////
+		// ComboBox
+		///////////////////////////////////////////////////////////
+		String[] strLoanTableModes = {
+			Messages.getString( "BookMastertable.BookTableModes.All" ),
+			Messages.getString( "BookMastertable.BookTableModes.LentOnly" ),
+			Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" )
+		};
+		
+		cmbLoanTableModes = new JComboBox<String>( strLoanTableModes );
+		cmbLoanTableModes.setAction( getChangeLoanTableModeAction() );
+		
+		pnlLoansInvTop.add( cmbLoanTableModes );
+		
 		horizontalStrut_6 = Box.createHorizontalStrut(20);
 		pnlLoansInvTop.add(horizontalStrut_6);
 		pnlLoansInvTop.add(btnShowSelectedLoans);
@@ -210,7 +233,7 @@ public class LoansTab extends LibraryTab {
 		tblLoans.setRowSorter(loanSorter);
 		
 		// Handle the filtering over there:
-		updateLoanFilters();
+		updateFilters();
 		
 		TableColumn statusColumn = tblLoans.getColumnModel().getColumn(0);
 		statusColumn.setMinWidth(50);
@@ -243,6 +266,18 @@ public class LoansTab extends LibraryTab {
 				}
 			}
 		);
+		
+		// On DoubleClick on an entry, show it in the detail view
+		tblLoans.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	            if (e.getClickCount() == 2) {
+	                int selectedRow = tblLoans.getSelectedRow();
+	        		Loan selectedLoan = getLibrary().getLoans().get(selectedRow);
+	        		LoanDetail.editLoan(selectedLoan, getLibrary());
+	        		//TODO: stackTrace when trying to open an overDue loan!
+	            }
+	        }
+		});
 	}
 	
 	/**
@@ -254,7 +289,7 @@ public class LoansTab extends LibraryTab {
 			@Override
 			public void keyTyped(KeyEvent e) {
 				searchTextLoans = txtSearchLoans.getText();
-				updateLoanFilters();
+				updateFilters();
 			}
 		});
 		txtSearchLoans.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
@@ -288,7 +323,7 @@ public class LoansTab extends LibraryTab {
 	/**
 	 *  @author PCHR
 	 */
-	private void updateLoanFilters() {
+	private void updateFilters() {
 		// 1st, clear all filters, if there are any
 		if ( !loanFilters.isEmpty() ) {
 			loanFilters.clear();
@@ -297,6 +332,7 @@ public class LoansTab extends LibraryTab {
 		// 2nd: apply the "showDueLoans" filter if applicable
 		// also, check here if the loan is currently lent.
 		// TODO: PCHR - CHECK IF THIS WORKS. LOOKS GOOD, BUT FEELS BAD
+		/*
 		loanFilters.add( new RowFilter<Object, Object>() {
 			@Override
 			public boolean include(RowFilter.Entry<? extends Object, ? extends Object> entry) {
@@ -313,6 +349,25 @@ public class LoansTab extends LibraryTab {
 				 return false;
 			}
 		} );
+		*/
+		
+		// 2nd: apply the "loanTableMode" filter if applicable (e.g. if not ALL)
+		if ( currentTableMode != loanTableMode.ALL ) {
+			loanFilters.add( new RowFilter<Object, Object>() {
+				@Override
+				public boolean include(	javax.swing.RowFilter.Entry<? extends Object, ? extends Object> entry ) {
+					LoanTableModel loanModel = (LoanTableModel) entry.getModel();
+					Loan loan = loanModel.getLoan( entry.getIdentifier() );
+					
+					if ( currentTableMode == loanTableMode.LENTONLY ) {
+						return loan.isLent();	
+					} else if ( currentTableMode == loanTableMode.OVERDUEONLY) {
+						return loan.isOverdue();
+					}
+					return true;
+				}
+			} );
+		}
 		
 		// 3rd: apply the filter from the search box.
 		if ( searchTextLoans != null ) {
@@ -344,7 +399,7 @@ public class LoansTab extends LibraryTab {
 			showDueLoans=!showDueLoans;
 			
 			// Re-Filter		
-			updateLoanFilters();
+			updateFilters();
 			updateListButtons();
 			updateShowDueLoansCheckbox();
 		}
@@ -358,6 +413,46 @@ public class LoansTab extends LibraryTab {
 	
 	public void updateShowDueLoansCheckbox() {
 		chckbxOnlyDueLoans.setSelected( showDueLoans );
+	}
+	
+	///////////////////////////////////////
+	// Combobox stuff
+	///////////////////////////////////////
+	public AbstractAction getChangeLoanTableModeAction() {
+		if( changeLoanTableModeAction == null ) {
+			changeLoanTableModeAction = new ChangeLoanTableModeAction();
+		}
+		return changeLoanTableModeAction;
+	}
+	private class ChangeLoanTableModeAction extends AbstractAction {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			currentTableMode = translateIntToEnum(  cmbLoanTableModes.getSelectedIndex() );
+			System.out.println( currentTableMode );	
+			updateFilters();
+		}
+		
+		public void actionPerformed(int i) {
+			currentTableMode = translateIntToEnum(i);
+			System.out.println( currentTableMode );
+			
+			updateFilters();
+		}
+		
+		// TODO: PCHR: can't we do that faster/easier?
+		public loanTableMode translateIntToEnum( int i ) {
+			switch ( i ) {
+			case 0:
+				return loanTableMode.ALL;
+			case 1:
+				return loanTableMode.LENTONLY;
+			case 2:
+				return loanTableMode.OVERDUEONLY;
+			default:
+				return loanTableMode.ALL;
+			}
+		}
+		
 	}
 	
 	/**

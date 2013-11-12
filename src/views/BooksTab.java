@@ -80,16 +80,11 @@ public class BooksTab extends LibraryTab {
 	
 	// Actions
 	private AbstractAction toggleShowUnavailabeAction;
-	private AbstractAction changeBookTableModeAction;
 	
 	// Filter variables. filters contains all filters that can be applied to the jTable.
 	private List<RowFilter<Object,Object>> bookFilters;
 	private boolean showUnavailable = true;
 	private String searchText;
-	private enum bookTableMode {
-		ALL, LENTONLY, OVERDUEONLY;
-	}
-	private bookTableMode currentTableMode;
 
 	BooksTab(BookTableModel bookTableModel, Library library) {
 		super(library);
@@ -150,22 +145,6 @@ public class BooksTab extends LibraryTab {
 		chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
 		chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
 		pnlBooksInvTop.add(chckbxOnlyAvailable);
-		
-		///////////////////////////////////////////////////////////
-		// ComboBox
-		///////////////////////////////////////////////////////////
-		/*
-		String[] strBookTableModes = {
-			Messages.getString( "BookMastertable.BookTableModes.All" ),
-			Messages.getString( "BookMastertable.BookTableModes.LentOnly" ),
-			Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" )
-		};
-		
-		cmbBookTableModes = new JComboBox<String>( strBookTableModes );
-		cmbBookTableModes.setAction( getChangeBookTableModeAction() );
-		
-		pnlBooksInvTop.add( cmbBookTableModes );
-		*/
 		
 		horizontalStrut_2 = Box.createHorizontalStrut(20);
 		pnlBooksInvTop.add(horizontalStrut_2);
@@ -255,6 +234,7 @@ public class BooksTab extends LibraryTab {
 			}
 		);
 		
+		// On DoubleClick on an entry, show it in the detail view
 		tblBooks.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
 	            if (e.getClickCount() == 2) {
@@ -320,7 +300,6 @@ public class BooksTab extends LibraryTab {
 	}
 	
 	private void addButtonActionPerformed(ActionEvent evt) {
-		// TODO: have to tell DetailDialog somehow that it'll be a new book
 		BookDetail.editBook( getLibrary(), null );
 	}
 	
@@ -350,32 +329,7 @@ public class BooksTab extends LibraryTab {
 				}
 		    } );
 		}
-		
-		/*
-		// 2nd: apply the "bookTableMode" filter if applicable
-		bookFilters.add( new RowFilter<Object, Object>() {
-			@Override
-			public boolean include(	javax.swing.RowFilter.Entry<? extends Object, ? extends Object> entry ) {
-				BookTableModel bookModel = (BookTableModel) entry.getModel();
-				Book book = bookModel.getBook( entry.getIdentifier() );
-				
-				System.out.println( currentTableMode );
-				
-				if ( currentTableMode == bookTableMode.ALL ) {
-					return true;
-				} else if ( currentTableMode == bookTableMode.LENTONLY ) {
-					// Show, if 
-					if ( getLibrary().getCopiesOfBook( book ) != null ) {
-						
-					}
-				} else if ( currentTableMode == bookTableMode.OVERDUEONLY) {
-					
-				}
-				return false;
-			}
-		} );
-		*/
-		
+
 		// 3rd: apply the filter from the search box.
 		if ( searchText != null ) {
 			bookFilters.add( RowFilter.regexFilter( searchText ) );
@@ -411,47 +365,6 @@ public class BooksTab extends LibraryTab {
 			updateShowUnavailableCheckbox();
 		}
 	}
-	
-	//TODO: remove that comboboxCrap...
-	/*
-	public AbstractAction getChangeBookTableModeAction() {
-		if( changeBookTableModeAction == null ) {
-			changeBookTableModeAction = new ChangeBookTableModeAction();
-		}
-		return changeBookTableModeAction;
-	}
-	private class ChangeBookTableModeAction extends AbstractAction {
-			
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			currentTableMode = translateIntToEnum(  cmbBookTableModes.getSelectedIndex() );
-			System.out.println( currentTableMode );
-			
-			updateFilters();
-		}
-		
-		public void actionPerformed(int i) {
-			currentTableMode = translateIntToEnum(i);
-			System.out.println( currentTableMode );
-			
-			updateFilters();
-		}
-		
-		// TODO: PCHR: can't we do that faster/easier?
-		public bookTableMode translateIntToEnum( int i ) {
-			switch ( i ) {
-			case 0:
-				return bookTableMode.ALL;
-			case 1:
-				return bookTableMode.LENTONLY;
-			case 2:
-				return bookTableMode.OVERDUEONLY;
-			default:
-				return bookTableMode.ALL;
-			}
-		}
-		
-	} */
 	
 	public void updateShowUnavailableCheckbox() {
 		chckbxOnlyAvailable.setSelected( showUnavailable );
