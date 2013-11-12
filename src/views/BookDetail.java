@@ -475,5 +475,4 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
 		}
 	}
-	
 }
