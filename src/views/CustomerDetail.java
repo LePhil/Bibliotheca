@@ -17,6 +17,7 @@ import javax.swing.border.TitledBorder;
 import viewModels.CopyListModel;
 
 import domain.*;
+import java.awt.GridLayout;
 
 public class CustomerDetail extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -35,15 +36,22 @@ public class CustomerDetail extends JFrame {
 	// Labels
 	private JLabel lblCustomerNo;
 	private JLabel lblName;
-	private JLabel lblAddress;
+	private JLabel lblSurname;
+	private JLabel lblStreet;
+	private JLabel lblZip;
+	private JLabel lblCity;
 	
 	// Textfields
 	private JTextField txtCustomerNo;
 	private JTextField txtName;
-	private JTextField txtAddress;
+	private JTextField txtSurname;
+	private JTextField txtStreet;
+	private JTextField txtZip;
+	private JTextField txtCity;
 	
 	
 	private static boolean newlyCreated = false;
+	private JPanel panel;
 	
 	public CustomerDetail( Library library, Customer customer ) {
 		super();
@@ -90,18 +98,15 @@ public class CustomerDetail extends JFrame {
 			// INFORMATION PANEL
 			/////////////////////////////////////////////////
 			JPanel pnlInformation = new JPanel();
-			pnlInformation.setBorder(new TitledBorder(
-					new LineBorder(new Color(0, 0, 0)),
-					Messages.getString("BookDetail.pnlInformation.borderTitle"), TitledBorder.LEADING, //$NON-NLS-1$
-					TitledBorder.TOP, null, null));
+			pnlInformation.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Customer Details", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			getContentPane().add(pnlInformation);
 			
 			GridBagLayout gbl_pnlInformation = new GridBagLayout();
 			gbl_pnlInformation.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-			gbl_pnlInformation.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
+			gbl_pnlInformation.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
 			gbl_pnlInformation.columnWeights = new double[] { 0.0, 0.0, 1.0,
 					0.0, Double.MIN_VALUE };
-			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0,
+			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, 1.0,
 					Double.MIN_VALUE };
 			pnlInformation.setLayout(gbl_pnlInformation);
 			
@@ -110,7 +115,7 @@ public class CustomerDetail extends JFrame {
 			/////////////////////////////////////////////////
 			// CUSTOMER NO
 			{
-				lblCustomerNo = new JLabel( Messages.getString("BookDetail.lblTitle.text") );
+				lblCustomerNo = new JLabel( Messages.getString("CustomerDetail.CustomerNo") );
 				GridBagConstraints gbc_lblCustomerNo = new GridBagConstraints();
 				gbc_lblCustomerNo.anchor = GridBagConstraints.EAST;
 				gbc_lblCustomerNo.insets = new Insets(0, 0, 5, 5);
@@ -122,7 +127,7 @@ public class CustomerDetail extends JFrame {
 				txtCustomerNo.addKeyListener(new KeyAdapter() {
 					@Override
 					public void keyReleased(KeyEvent e) {
-						//validateInformation();
+						validateInformation();
 					}
 				});
 				GridBagConstraints gbc_txtCustomerNo = new GridBagConstraints();
@@ -136,7 +141,7 @@ public class CustomerDetail extends JFrame {
 			
 			// NAME
 			{
-				lblName = new JLabel( Messages.getString("BookDetail.lblTitle.text") );
+				lblName = new JLabel( Messages.getString("CustomerDetail.Name") );
 				GridBagConstraints gbc_lblName = new GridBagConstraints();
 				gbc_lblName.anchor = GridBagConstraints.EAST;
 				gbc_lblName.insets = new Insets(0, 0, 5, 5);
@@ -148,7 +153,7 @@ public class CustomerDetail extends JFrame {
 				txtName.addKeyListener(new KeyAdapter() {
 					@Override
 					public void keyReleased(KeyEvent e) {
-						//validateInformation();
+						validateInformation();
 					}
 				});
 				GridBagConstraints gbc_txtName = new GridBagConstraints();
@@ -160,30 +165,122 @@ public class CustomerDetail extends JFrame {
 				txtName.setColumns(10);
 			}
 			
-			// Address
+			// SURNAME
 			{
-				lblAddress = new JLabel( Messages.getString("BookDetail.lblTitle.text") );
-				GridBagConstraints gbc_lblAddress = new GridBagConstraints();
-				gbc_lblAddress.anchor = GridBagConstraints.EAST;
-				gbc_lblAddress.insets = new Insets(0, 0, 5, 5);
-				gbc_lblAddress.gridx = 1;
-				gbc_lblAddress.gridy = 2;
-				pnlInformation.add(lblAddress, gbc_lblAddress);
+				lblSurname = new JLabel(Messages.getString("CustomerDetail.Surname"));
+				GridBagConstraints gbc_lblSurname = new GridBagConstraints();
+				gbc_lblSurname.anchor = GridBagConstraints.EAST;
+				gbc_lblSurname.insets = new Insets(0, 0, 5, 5);
+				gbc_lblSurname.gridx = 1;
+				gbc_lblSurname.gridy = 2;
+				pnlInformation.add(lblSurname, gbc_lblSurname);
 				
-				txtAddress = new JTextField();
-				txtAddress.addKeyListener(new KeyAdapter() {
+				txtSurname = new JTextField();
+				txtSurname.addKeyListener(new KeyAdapter() {
 					@Override
 					public void keyReleased(KeyEvent e) {
-						//validateInformation();
+						validateInformation();
 					}
 				});
-				GridBagConstraints gbc_txtAddress = new GridBagConstraints();
-				gbc_txtAddress.insets = new Insets(0, 0, 5, 5);
-				gbc_txtAddress.fill = GridBagConstraints.HORIZONTAL;
-				gbc_txtAddress.gridx = 2;
-				gbc_txtAddress.gridy = 2;
-				pnlInformation.add(txtAddress, gbc_txtAddress);
-				txtAddress.setColumns(10);
+				GridBagConstraints gbc_txtSurname = new GridBagConstraints();
+				gbc_txtSurname.insets = new Insets(0, 0, 5, 5);
+				gbc_txtSurname.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtSurname.gridx = 2;
+				gbc_txtSurname.gridy = 2;
+				pnlInformation.add(txtSurname, gbc_txtSurname);
+				txtSurname.setColumns(10);
+			}
+			
+			// Street
+			{
+				lblStreet = new JLabel( Messages.getString("CustomerDetail.Street") );
+				GridBagConstraints gbc_lblStreet = new GridBagConstraints();
+				gbc_lblStreet.anchor = GridBagConstraints.EAST;
+				gbc_lblStreet.insets = new Insets(0, 0, 5, 5);
+				gbc_lblStreet.gridx = 1;
+				gbc_lblStreet.gridy = 3;
+				pnlInformation.add(lblStreet, gbc_lblStreet);
+				
+				txtStreet= new JTextField();
+				txtStreet.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						validateInformation();
+					}
+				});
+				GridBagConstraints gbc_txtStreet = new GridBagConstraints();
+				gbc_txtStreet.insets = new Insets(0, 0, 5, 5);
+				gbc_txtStreet.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtStreet.gridx = 2;
+				gbc_txtStreet.gridy = 3;
+				pnlInformation.add(txtStreet, gbc_txtStreet);
+				txtStreet.setColumns(10);
+			}
+			
+			// ZIP
+			lblZip = new JLabel(Messages.getString("CustomerDetail.Zip"));
+			GridBagConstraints gbc_lblZip = new GridBagConstraints();
+			gbc_lblZip.anchor = GridBagConstraints.NORTH;
+			gbc_lblZip.insets = new Insets(0, 0, 5, 5);
+			gbc_lblZip.gridx = 1;
+			gbc_lblZip.gridy = 4;
+			pnlInformation.add(lblZip, gbc_lblZip);
+			
+			{
+				panel = new JPanel();
+				GridBagConstraints gbc_panel = new GridBagConstraints();
+				gbc_panel.anchor = GridBagConstraints.NORTH;
+				gbc_panel.insets = new Insets(0, 0, 5, 5);
+				gbc_panel.fill = GridBagConstraints.HORIZONTAL;
+				gbc_panel.gridx = 2;
+				gbc_panel.gridy = 4;
+				pnlInformation.add(panel, gbc_panel);
+				GridBagLayout gbl_panel = new GridBagLayout();
+				gbl_panel.columnWidths = new int[]{100, 0, 0, 0};
+				gbl_panel.rowHeights = new int[]{0, 0};
+				gbl_panel.columnWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
+				gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+				panel.setLayout(gbl_panel);
+				
+				// ZIP Part 2
+				{
+					txtZip = new JTextField();
+					txtZip.addKeyListener(new KeyAdapter() {
+						@Override
+						public void keyReleased(KeyEvent e) {
+							validateInformation();
+						}
+					});
+					GridBagConstraints gbc_txtZip = new GridBagConstraints();
+					gbc_txtZip.insets = new Insets(0, 0, 0, 5);
+					gbc_txtZip.fill = GridBagConstraints.HORIZONTAL;
+					gbc_txtZip.gridx = 0;
+					gbc_txtZip.gridy = 0;
+					panel.add(txtZip, gbc_txtZip);
+					txtZip.setColumns(3);
+					
+					// CITY
+					lblCity = new JLabel(Messages.getString("CustomerDetail.City")); //$NON-NLS-1$
+					GridBagConstraints gbc_lblCity = new GridBagConstraints();
+					gbc_lblCity.insets = new Insets(0, 0, 0, 5);
+					gbc_lblCity.gridx = 1;
+					gbc_lblCity.gridy = 0;
+					panel.add(lblCity, gbc_lblCity);
+						
+					txtCity = new JTextField();
+					txtCity.addKeyListener(new KeyAdapter() {
+						@Override
+						public void keyReleased(KeyEvent e) {
+							validateInformation();
+						}
+					});
+					GridBagConstraints gbc_txtCity = new GridBagConstraints();
+					gbc_txtCity.fill = GridBagConstraints.HORIZONTAL;
+					gbc_txtCity.gridx = 2;
+					gbc_txtCity.gridy = 0;
+					panel.add(txtCity, gbc_txtCity);
+					txtCity.setColumns(10);
+				}
 			}
 			
 			fillForm();
@@ -195,11 +292,23 @@ public class CustomerDetail extends JFrame {
 	
 	/**
 	 * Fill all textFields with the corresponding values from the model.
+	 * @author PCHR
 	 */
 	private void fillForm() {
 		txtCustomerNo.setText("0");
-		txtName.setText( customer.getName()+" "+customer.getSurname() );
-		txtAddress.setText( customer.getStreet()+"\n"+customer.getZip() );
+		txtName.setText( customer.getName() );
+		txtSurname.setText( customer.getSurname() );
+		txtStreet.setText( customer.getStreet() );
+		txtZip.setText( ""+customer.getZip() );
+		txtCity.setText( customer.getCity() );
+	}
+	/**
+	 * Checks if the entered data is valid.
+	 * @author PCHR
+	 */
+	private void validateInformation() {
+		// TODO: validateInformation
+		
 	}
 	/////////////////////////////////////////////////
 	// Action Subclasses
