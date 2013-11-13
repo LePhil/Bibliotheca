@@ -50,11 +50,12 @@ public class CustomerDetail extends JFrame {
 	private JTextField txtZip;
 	private JTextField txtCity;
 	
-	
 	private static boolean newlyCreated = false;
 	private JPanel panel;
 	private JPanel panel_1;
 	private JPanel panel_2;
+	
+	private static CustomerDetail editFrame;
 	
 	public CustomerDetail( Library library, Customer customer ) {
 		super();
@@ -66,11 +67,11 @@ public class CustomerDetail extends JFrame {
 	public static void editCustomer(Library library, Customer customer ) {
 		if ( customer == null ) {
 			// create new customer!
-			customer = new Customer("", "");
+			customer = new Customer( library.getLatestCustomerNo()+1, "", "" );
 			newlyCreated = true;
 		}
 		
-		CustomerDetail editFrame = editFramesDict.get(customer);
+		editFrame = editFramesDict.get(customer);
 		if ( editFrame == null ) {
 			editFrame = new CustomerDetail(library, customer);
 			editFramesDict.put( customer, editFrame );
@@ -90,12 +91,13 @@ public class CustomerDetail extends JFrame {
 			// ACTIONS
 			/////////////////////////////////////////////////
 			// Close (via Esc-Key (?), Button)
-			AbstractAction cancel = new CloseAction( Messages.getString( "BookDetail.btnCancel.text"), "Revert Changes, close dialog" );
+			AbstractAction cancel = new CloseAction( Messages.getString( "CustomerDetail.btnCancel.text"), "Revert Changes, close dialog" );
 			// Save (via S, Button)
-			AbstractAction save = new SaveAction( Messages.getString( "BookDetail.btnNewButton.text"), "Save changes" );
+			AbstractAction save = new SaveAction( Messages.getString( "CustomerDetail.btnSave.text"), "Save changes" );
 			// Reset (via R, Button)
-			AbstractAction reset = new ResetAction(Messages.getString( "BookDetail.btnNewButton_1.text"), "Revert changes" );
+			AbstractAction reset = new ResetAction( Messages.getString( "CustomerDetail.btnReset.text"), "Revert changes" );
 			// Delete customer (via D, Button)
+			AbstractAction delete = new DeleteAction( Messages.getString( "CustomerDetail.btnDelete.text"), "Delete this customer" );
 			
 			/////////////////////////////////////////////////
 			// INFORMATION PANEL
@@ -140,6 +142,7 @@ public class CustomerDetail extends JFrame {
 				gbc_txtCustomerNo.gridy = 0;
 				pnlInformation.add(txtCustomerNo, gbc_txtCustomerNo);
 				txtCustomerNo.setColumns(10);
+				txtCustomerNo.setEnabled(false);
 			}
 			
 			// NAME
@@ -303,13 +306,17 @@ public class CustomerDetail extends JFrame {
 				getContentPane().add(panel_1);
 				panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 				
-				btnDelete = new JButton(Messages.getString("CustomerDetail.btnDelete.text")); //$NON-NLS-1$
+				//btnDelete = new JButton(Messages.getString("CustomerDetail.btnDelete.text")); //$NON-NLS-1$
+				btnDelete = new JButton( delete );
 				panel_1.add(btnDelete);
 				
-				btnSave = new JButton(Messages.getString("CustomerDetail.btnSave.text")); //$NON-NLS-1$
+				//btnSave = new JButton(Messages.getString("CustomerDetail.btnSave.text")); //$NON-NLS-1$
+				btnSave = new JButton( save );
 				panel_1.add(btnSave);
+				btnSave.setEnabled(false);
 				
-				btnCancel = new JButton(Messages.getString("CustomerDetail.btnCancel.text")); //$NON-NLS-1$
+				//btnCancel = new JButton(Messages.getString("CustomerDetail.btnCancel.text")); //$NON-NLS-1$
+				btnCancel = new JButton( cancel );
 				panel_1.add(btnCancel);
 			}
 			
@@ -325,12 +332,22 @@ public class CustomerDetail extends JFrame {
 	 * @author PCHR
 	 */
 	private void fillForm() {
-		txtCustomerNo.setText("0");
-		txtName.setText( customer.getName() );
-		txtSurname.setText( customer.getSurname() );
-		txtStreet.setText( customer.getStreet() );
-		txtZip.setText( ""+customer.getZip() );
-		txtCity.setText( customer.getCity() );
+		if ( newlyCreated ) {
+			txtCustomerNo.setText( ""+customer.getCustomerNo() );
+			txtName.setText( "" );
+			txtSurname.setText( "" );
+			txtStreet.setText( "" );
+			txtZip.setText( "" );
+			txtCity.setText( "" );
+		} else {
+			txtCustomerNo.setText( ""+customer.getCustomerNo() );
+			txtName.setText( customer.getName() );
+			txtSurname.setText( customer.getSurname() );
+			txtStreet.setText( customer.getStreet() );
+			txtZip.setText( ""+customer.getZip() );
+			txtCity.setText( customer.getCity() );
+		}
+		btnReset.setEnabled(false);
 	}
 	/**
 	 * Checks if the entered data is valid.
@@ -338,8 +355,24 @@ public class CustomerDetail extends JFrame {
 	 */
 	private void validateInformation() {
 		// TODO: validateInformation
+		// TODO: set btnSave to enabled if validation passed
+		boolean validated = true;
 		
+		if ( txtName.getText().length() == 0 ||
+			 txtSurname.getText().length() == 0 ||
+			 txtStreet.getText().length() == 0 ||
+			 txtZip.getText().length() == 0 ||
+			 txtCity.getText().length() == 0 ) {
+			validated = false;
+		}
+		
+		if ( Integer.valueOf( txtZip.getText() ) == null ) {
+			validated = false;
+		}
+		
+		btnSave.setEnabled( validated );
 	}
+	
 	/////////////////////////////////////////////////
 	// Action Subclasses
 	/////////////////////////////////////////////////
@@ -357,6 +390,7 @@ public class CustomerDetail extends JFrame {
 		}
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("CLOSE DIALOG NOW.");
+			editFrame.setVisible(false);
 		}
 	}
 	/**
@@ -373,23 +407,22 @@ public class CustomerDetail extends JFrame {
 		}
 		public void actionPerformed(ActionEvent e) {
 			
-			/*book.setAuthor(txtAuthor.getText());
-			book.setName(txtTitle.getText());
-			book.setPublisher(txtPublisher.getText());
-			book.setShelf((Shelf) cmbShelf.getSelectedItem());
+			customer.setCity( txtCity.getText() );
+			customer.setName( txtName.getText() );
+			customer.setSurname( txtSurname.getText() );
+			customer.setStreet( txtStreet.getText() );
+			customer.setZip( Integer.valueOf( txtZip.getText() ) );
+			customer.setCity( txtCity.getText() );
+			
 			btnSave.setEnabled(false);
-			*/
+			btnReset.setEnabled(false);
 			
 			if ( newlyCreated ) {
 				// Saving a book that we just created.
 				// we can only add it now, because before it shouldn't
 				// belong to the library, only on saving.
 				
-				//library.addBook(book);
-				
-				//if ( library.getCopiesOfBook( book ).size() == 0 ) {
-				//	library.createAndAddCopy( book );
-				//}
+				//library.addCustomer( customer );
 			}
 		}
 	}
@@ -408,6 +441,24 @@ public class CustomerDetail extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			fillForm();
 			btnSave.setEnabled(false);
+		}
+	}
+	/**
+	 * Deletes this customer.
+	 * TODO: check if customer has open loans. Prompt question "really wanna do this?"
+	 * @author PCHR
+	 */
+	class DeleteAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public DeleteAction( String text, String desc ) {
+			super( text );
+			putValue( SHORT_DESCRIPTION, desc );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_D );
+		}
+		public void actionPerformed(ActionEvent e) {
+			// TODO
+			System.out.println("DELETE CUSTOMER");
 		}
 	}
 }

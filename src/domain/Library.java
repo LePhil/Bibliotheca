@@ -19,6 +19,11 @@ public class Library extends Observable implements Observer {
 	private int editedLoanPos;
 	private int addLoanIndex;
 	private int removeLoanIndex;
+	
+	private int editedCustomerPos;
+	private int addCustomerIndex;
+	private int removeCustomerIndex;
+	private int latestCustomer;
 
 	public Library() {
 		copies = new ArrayList<Copy>();
@@ -39,10 +44,16 @@ public class Library extends Observable implements Observer {
 	}
 
 	public Customer createAndAddCustomer(String name, String surname) {
-		Customer c = new Customer(name, surname);
+		Customer c = new Customer(++latestCustomer, name, surname);
 		customers.add(c);
 		doNotify();
 		return c;
+	}
+	
+	public Customer addCustomer( Customer customer ) {
+		Customer addedCustomer = this.createAndAddCustomer(customer.getName(), customer.getSurname());
+		addedCustomer.setAdress(customer.getStreet(), customer.getZip(), customer.getCity() );
+		return addedCustomer;
 	}
 
 	public Book createAndAddBook(String name) {
@@ -224,6 +235,11 @@ public class Library extends Observable implements Observer {
 	
 	public int getloansIndex(Loan loan) {
 		return loans.indexOf(loan);
+	}
+	
+	//CUSTOMER
+	public int getLatestCustomerNo() {
+		return this.latestCustomer;
 	}
 
 }

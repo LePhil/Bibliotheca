@@ -54,7 +54,7 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 		
 		switch (columnIndex) {
 		case 0:
-			returnString = "";
+			returnString = ""+customer.getCustomerNo();
 			break;
 		case 1:
 			returnString = customer.getName()+" "+customer.getSurname();

@@ -326,9 +326,7 @@ public class CustomerTab extends LibraryTab {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("NEW CUSTOMER");
-			//int selectedRow = tblCustomers.getSelectedRow();
-			//Customer selectedCustomer= getLibrary().getCustomers().get(selectedRow);
-			//CustomerDetail.editCustomer(selectedCustomer, getLibrary());
+			CustomerDetail.editCustomer( getLibrary(), null );
 		}
 	}
 }

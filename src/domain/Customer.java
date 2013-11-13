@@ -2,10 +2,17 @@ package domain;
 
 public class Customer {
 	
+	private int customerNo;
 	private String name, surname, street, city;
 	private int zip;
 
-	public Customer(String name, String surname) {
+	public Customer( int customerNo, String name, String surname ) {
+		this.customerNo = customerNo;
+		this.name = name;
+		this.surname = surname;
+	}
+	public Customer( String name, String surname ) {
+		this.customerNo = -1;
 		this.name = name;
 		this.surname = surname;
 	}
@@ -54,6 +61,10 @@ public class Customer {
 
 	public void setZip(int zip) {
 		this.zip = zip;
+	}
+	
+	public int getCustomerNo() {
+		return this.customerNo;
 	}
 	
 	@Override
