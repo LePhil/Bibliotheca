@@ -50,7 +50,7 @@ public class CustomerDetail extends JFrame {
 	private JTextField txtZip;
 	private JTextField txtCity;
 	
-	private static boolean newlyCreated = false;
+	private static boolean newlyCreated;
 	private JPanel panel;
 	private JPanel panel_1;
 	private JPanel panel_2;
@@ -65,6 +65,8 @@ public class CustomerDetail extends JFrame {
 	}
 	
 	public static void editCustomer(Library library, Customer customer ) {
+		newlyCreated = false;
+		
 		if ( customer == null ) {
 			// create new customer!
 			customer = new Customer( library.getLatestCustomerNo()+1, "", "" );
@@ -332,6 +334,7 @@ public class CustomerDetail extends JFrame {
 	 * @author PCHR
 	 */
 	private void fillForm() {
+		System.out.println(newlyCreated);
 		if ( newlyCreated ) {
 			txtCustomerNo.setText( ""+customer.getCustomerNo() );
 			txtName.setText( "" );
@@ -339,6 +342,8 @@ public class CustomerDetail extends JFrame {
 			txtStreet.setText( "" );
 			txtZip.setText( "" );
 			txtCity.setText( "" );
+			
+			btnDelete.setEnabled(false);
 		} else {
 			txtCustomerNo.setText( ""+customer.getCustomerNo() );
 			txtName.setText( customer.getName() );
@@ -366,8 +371,10 @@ public class CustomerDetail extends JFrame {
 			validated = false;
 		}
 		
-		if ( Integer.valueOf( txtZip.getText() ) == null ) {
-			validated = false;
+		try {
+		  Integer.parseInt( txtZip.getText() );
+		} catch (NumberFormatException  e) {
+		  validated = false;
 		}
 		
 		btnSave.setEnabled( validated );
@@ -422,7 +429,10 @@ public class CustomerDetail extends JFrame {
 				// we can only add it now, because before it shouldn't
 				// belong to the library, only on saving.
 				
-				//library.addCustomer( customer );
+				// TODO: throws error. Fix.
+				library.addCustomer( customer );
+				
+				newlyCreated = false;
 			}
 		}
 	}
@@ -457,8 +467,20 @@ public class CustomerDetail extends JFrame {
 			putValue( MNEMONIC_KEY, KeyEvent.VK_D );
 		}
 		public void actionPerformed(ActionEvent e) {
-			// TODO
-			System.out.println("DELETE CUSTOMER");
+			//default icon, custom title
+			int delete = JOptionPane.showConfirmDialog(
+			    editFrame,
+			    Messages.getString("CustomerDetail.deleteDlg.message"),
+			    Messages.getString("CustomerDetail.deleteDlg.title"),
+			    JOptionPane.YES_NO_OPTION);
+			
+			if ( delete == 0 ) {
+				if ( library.removeCustomer( customer ) ) {
+					// SUCCESS
+				} else {
+					// FAIL, DAMN.
+				}
+			}
 		}
 	}
 }

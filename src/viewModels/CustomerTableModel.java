@@ -41,6 +41,7 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public int getRowCount() {
+		System.out.println( "getRowCount: "+library.getCustomers().size() );
 		return library.getCustomers().size();
 	}
 	@Override

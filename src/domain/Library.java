@@ -241,5 +241,10 @@ public class Library extends Observable implements Observer {
 	public int getLatestCustomerNo() {
 		return this.latestCustomer;
 	}
+	
+	public boolean removeCustomer( Customer customer ) {
+		// TODO: remove customer.
+		return this.customers.remove( customer );
+	}
 
 }
