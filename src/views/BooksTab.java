@@ -185,7 +185,6 @@ public class BooksTab extends LibraryTab {
 		updateListButtons();
 		updateShowUnavailableCheckbox();
 		updateStatistics();
-		
 	}
 	
 	private void initTable() {
@@ -234,7 +233,7 @@ public class BooksTab extends LibraryTab {
 		tblBooks.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
 	            if (e.getClickCount() == 2) {
-	                int selectedRow = tblBooks.getSelectedRow();
+	            	int selectedRow = tblBooks.convertRowIndexToModel( tblBooks.getSelectedRow() );
 	                editBook( getLibrary().getBooks().get( selectedRow ) );
 	            }
 	        }
@@ -283,9 +282,9 @@ public class BooksTab extends LibraryTab {
 	
 	private void showSelectedButtonActionPerformed(ActionEvent evt) {
 		int[] selectedRows = tblBooks.getSelectedRows();
-
+		
 		for (int selectedRow : selectedRows) {
-			Book book = getLibrary().getBooks().get(selectedRow);
+			Book book = getLibrary().getBooks().get( tblBooks.convertRowIndexToModel( selectedRow ) );
 			editBook(book);
 		}
 	}

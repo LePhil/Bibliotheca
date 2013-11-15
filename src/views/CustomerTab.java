@@ -181,7 +181,7 @@ public class CustomerTab extends LibraryTab {
 	}
 	
 	private void initTable() {
-		tblCustomers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		tblCustomers.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		scrollPane.setViewportView(tblCustomers);
 		tblCustomers.setModel(customerTableModel);
 		
@@ -306,6 +306,10 @@ public class CustomerTab extends LibraryTab {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("SHOW CUSTOMER");
 			int selectedRow = tblCustomers.getSelectedRow();
+			
+			//Convert to model
+			selectedRow = tblCustomers.convertRowIndexToModel( selectedRow );
+			System.out.println(selectedRow);
 			Customer selectedCustomer= getLibrary().getCustomers().get(selectedRow);
 			CustomerDetail.editCustomer(getLibrary(), selectedCustomer);
 		}	

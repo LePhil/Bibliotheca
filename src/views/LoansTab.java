@@ -446,8 +446,12 @@ public class LoansTab extends LibraryTab {
 	}
 	
 	private void showSelectedLoansButtonActionPerformed(ActionEvent event){
-		int selectedRow = tblLoans.getSelectedRow();
-		Loan selectedLoan = getLibrary().getLoans().get(selectedRow);
-		LoanDetail.editLoan(selectedLoan, getLibrary());
+		int[] selectedRows = tblLoans.getSelectedRows();
+		
+		for (int selectedRow : selectedRows) {
+			selectedRow = tblLoans.convertRowIndexToModel( selectedRow );
+			Loan selectedLoan = getLibrary().getLoans().get(selectedRow);
+			LoanDetail.editLoan(selectedLoan, getLibrary());
+		}
 	}
 }
