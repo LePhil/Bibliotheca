@@ -1,5 +1,7 @@
 package viewModels;
 
+import java.util.Calendar;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -8,7 +10,9 @@ import javax.swing.table.AbstractTableModel;
 import views.Messages;
 
 import domain.Book;
+import domain.Copy;
 import domain.Library;
+import domain.Loan;
 
 public class BookTableModel extends AbstractTableModel implements Observer {
 
@@ -27,14 +31,13 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	}
 	
 	public void propagateUpdate(int pos) {
-		System.out.println("it's happening!");
 		fireTableDataChanged();
 	}
 	
 	@Override
 	public boolean isCellEditable(int arg0, int arg1) {
-		//TODO return true if we have a CellEditor
 		return false;
+		// PCHR: We decided not to make the cells editable, as that interferes with the normal clicks on the cells.
 	}
 	
 	@Override
@@ -56,25 +59,46 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Book book = library.getBooks().get(rowIndex);
-		int copies;
+		String returnString;
 		
 		switch (columnIndex) {
 		case 0:
-			copies = library.getCopiesOfBook(book).size();
-			if ( copies == 0 ) {
-				return "bald";	//TODO find datum
-			} else {
-				return String.valueOf(copies);
+			List<Copy> copies = library.getCopiesOfBook(book);;
+			List<Loan> lentCopies = library.getLentCopiesOfBook(book);
+			int availCopies = copies.size()-lentCopies.size();
+			Calendar pickupCal, earliestReturnCal = null;
+			
+			// Show available of total copies for this book. (e.g. 2/3)
+			returnString = availCopies+"/"+copies.size();
+			
+			// if there are no more copies available, show the expected date when one will be available again.
+			if ( availCopies == 0 ) {
+				for (Loan loan : lentCopies) {
+					pickupCal = loan.getPickupDate();
+					
+					if ( earliestReturnCal == null ||
+							pickupCal.before(earliestReturnCal)) {
+						earliestReturnCal = (Calendar) pickupCal.clone();
+					}
+				}
+				earliestReturnCal.add( Calendar.DAY_OF_MONTH, 30 );
+				returnString += " - "+earliestReturnCal.getTime().toString();
 			}
+			break;
 		case 1:
-			return book.getName();
+			returnString = book.getName();
+			break;
 		case 2:
-			return book.getAuthor();
+			returnString = book.getAuthor();
+			break;
 		case 3:
-			return book.getPublisher();
+			returnString = book.getPublisher();
+			break;
 		default:
-			return null;
+			returnString = "";
 		}
+		
+		return returnString;
 	}
 	
 	@Override
@@ -89,17 +113,34 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 			return Object.class;
 		}
 	}
-	
-	//public int getBookIndex(Book book) {
-	//	return library.getBooks().get(book);
-	//}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		System.out.println("UPDATE IN BOOKTABLEMODEL CALLED");
-		//int bookPos = library.getBooks().getEditedBookPos();
+		int pos = library.getEditedBookPos();
 		
+		if ( pos >= 0 ) {
+			// edit happened, redraw edited book
+			fireTableRowsUpdated(pos, pos);
+		} else {
+			pos = library.getRemovedBookIndex();
+			
+			if (pos>=0){
+				//remove happend
+				fireTableRowsDeleted(pos, pos);
+			}else{
+				pos = library.getInsertedBookIndex();
+				if (pos >= 0){
+					//insert happend
+					fireTableRowsInserted(pos, pos);
+				}else{
+					fireTableDataChanged();
+				}
+			}
+		}
 	}
 
-	
+	public Book getBook(Object identifier) {
+		return this.library.getBooks().get((Integer) identifier);
+	}
 }

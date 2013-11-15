@@ -2,9 +2,11 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
+import javax.swing.UIManager;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,8 +16,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import views.BookMaster;
-import views.BookMasterTable;
+import views.MainView;
 
 import domain.Copy;
 import domain.Customer;
@@ -33,8 +34,11 @@ public class LibraryApp {
 		
 		initLibrary(library);
 		
+		// Much beautiful. Wow. Very shiny.
+		UIManager.setLookAndFeel(new NimbusLookAndFeel());
+		
 		// Create Master Book View
-		new BookMasterTable( library );
+		new MainView( library );
 	}
 
 	private static void initLibrary(Library library) throws ParserConfigurationException, SAXException, IOException, IllegalLoanOperationException {
@@ -144,7 +148,7 @@ public class LibraryApp {
 	}
 
 	private static Customer getCustomer(Library library, int position) {
-		return library.getCustomers().get(position % library.getCustomers().size());
+		return library.getCustomerList().getCustomers().get(position % library.getCustomerList().getCustomers().size());
 	}
 
 	private static String getTextContentOf(Node element, String name) {
