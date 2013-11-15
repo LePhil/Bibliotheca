@@ -138,7 +138,6 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 				}
 			}
 		}
-		
 	}
 
 	public Book getBook(Object identifier) {

@@ -56,6 +56,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	public MainView( Library library ) {
 		/*
 		 * This View should listen to changes in the book list and the loans list!
+		 * Also: customerList
 		 */
 		super();
 		this.library = library;

@@ -360,7 +360,6 @@ public class CustomerDetail extends JFrame {
 	 */
 	private void validateInformation() {
 		// TODO: validateInformation
-		// TODO: set btnSave to enabled if validation passed
 		boolean validated = true;
 		
 		if ( txtName.getText().length() == 0 ||
@@ -413,13 +412,24 @@ public class CustomerDetail extends JFrame {
 			putValue( MNEMONIC_KEY, KeyEvent.VK_S );
 		}
 		public void actionPerformed(ActionEvent e) {
-			
-			customer.setCity( txtCity.getText() );
-			customer.setName( txtName.getText() );
-			customer.setSurname( txtSurname.getText() );
-			customer.setStreet( txtStreet.getText() );
-			customer.setZip( Integer.valueOf( txtZip.getText() ) );
-			customer.setCity( txtCity.getText() );
+			if ( customer.getCity() != txtCity.getText() ) {
+				customer.setCity( txtCity.getText() );
+			}
+			if ( customer.getName() != txtName.getText() ) {
+				customer.setName( txtName.getText() );
+			}
+			if ( customer.getSurname() != txtSurname.getText() ) {
+				customer.setSurname( txtSurname.getText() );
+			}
+			if ( customer.getStreet() != txtStreet.getText() ) {
+				customer.setStreet( txtStreet.getText() );
+			}
+			if ( customer.getZip() != Integer.valueOf( txtZip.getText() ) ) {
+				customer.setZip( Integer.valueOf( txtZip.getText() ) );
+			}
+			if ( customer.getCity() != txtCity.getText() ) {
+				customer.setCity( txtCity.getText() );
+			}
 			
 			btnSave.setEnabled(false);
 			btnReset.setEnabled(false);
@@ -429,10 +439,10 @@ public class CustomerDetail extends JFrame {
 				// we can only add it now, because before it shouldn't
 				// belong to the library, only on saving.
 				
-				// TODO: throws error. Fix.
-				library.addCustomer( customer );
+				library.getCustomerList().addCustomer( customer );
 				
 				newlyCreated = false;
+				btnDelete.setEnabled(true);
 			}
 		}
 	}
@@ -469,16 +479,24 @@ public class CustomerDetail extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			//default icon, custom title
 			int delete = JOptionPane.showConfirmDialog(
-			    editFrame,
-			    Messages.getString("CustomerDetail.deleteDlg.message"),
-			    Messages.getString("CustomerDetail.deleteDlg.title"),
-			    JOptionPane.YES_NO_OPTION);
+				editFrame,
+				Messages.getString("CustomerDetail.deleteDlg.message"),
+				Messages.getString("CustomerDetail.deleteDlg.title"),
+				JOptionPane.YES_NO_OPTION
+			);
 			
 			if ( delete == 0 ) {
-				if ( library.removeCustomer( customer ) ) {
+				if ( library.getCustomerList().removeCustomer( customer ) ) {
 					// SUCCESS
+					editFrame.setVisible(false);
 				} else {
-					// FAIL, DAMN.
+					// FAILED.
+					try {
+						throw new Exception( "Yeah, deleting that guy didn't really work. Sorry about that, please restart the application." );
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		}

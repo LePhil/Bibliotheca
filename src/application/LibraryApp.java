@@ -148,7 +148,7 @@ public class LibraryApp {
 	}
 
 	private static Customer getCustomer(Library library, int position) {
-		return library.getCustomers().get(position % library.getCustomers().size());
+		return library.getCustomerList().getCustomers().get(position % library.getCustomerList().getCustomers().size());
 	}
 
 	private static String getTextContentOf(Node element, String name) {

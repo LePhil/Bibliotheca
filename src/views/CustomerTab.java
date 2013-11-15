@@ -197,8 +197,8 @@ public class CustomerTab extends LibraryTab {
 		customerNoColumn.setMaxWidth(100);
 		//customerNoColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
 		
+		// TODO: was haben wir hier versucht? Oo
 		tblCustomers.getColumnModel().getColumn(1);
-
 		tblCustomers.getColumnModel().getColumn(2);
 		
 		// Add Listeners
@@ -283,7 +283,8 @@ public class CustomerTab extends LibraryTab {
 	}
 	
 	public void updateStatistics() {
-		lblNrOfCustomers.setText( Messages.getString("CustomerTab.lblNrOfCustomers.text", String.valueOf(getLibrary().getCustomers().size())) );
+		// TODO: statistics don't get updated!
+		lblNrOfCustomers.setText( Messages.getString("CustomerTab.lblNrOfCustomers.text", String.valueOf(getLibrary().getCustomerList().getCustomers().size())) );
 	}
 	
 	/////////////////////////////////////////////////
@@ -310,7 +311,7 @@ public class CustomerTab extends LibraryTab {
 			//Convert to model
 			selectedRow = tblCustomers.convertRowIndexToModel( selectedRow );
 			System.out.println(selectedRow);
-			Customer selectedCustomer= getLibrary().getCustomers().get(selectedRow);
+			Customer selectedCustomer= getLibrary().getCustomerList().getCustomers().get(selectedRow);
 			CustomerDetail.editCustomer(getLibrary(), selectedCustomer);
 		}	
 	}

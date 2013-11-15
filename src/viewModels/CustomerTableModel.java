@@ -7,21 +7,27 @@ import javax.swing.table.AbstractTableModel;
 
 import views.Messages;
 import domain.Customer;
+import domain.CustomerList;
 import domain.Library;
 
 public class CustomerTableModel extends AbstractTableModel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	Library library;
+	CustomerList customers;
+	
 	private String[] columns = {
 		Messages.getString("CustomerMasterTable.ColumnHeader.CustomerNo"),
 		Messages.getString("CustomerMasterTable.ColumnHeader.Name"),
 		Messages.getString("CustomerMasterTable.ColumnHeader.Address")
 	};
 	
-	public CustomerTableModel(Library library) {
+	public CustomerTableModel( Library library ) {
 		this.library = library;
-		this.library.addObserver(this);
+		//this.library.addObserver(this);
+		this.customers = library.getCustomerList();
+		
+		this.customers.addObserver( this );
 	}
 	
 	public void propagateUpdate(int pos) {
@@ -41,8 +47,8 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public int getRowCount() {
-		System.out.println( "getRowCount: "+library.getCustomers().size() );
-		return library.getCustomers().size();
+		System.out.println( "CustomerTableModel: getRowCount = "+customers.getCustomers().size() );
+		return customers.getCustomers().size();
 	}
 	@Override
 	public int getColumnCount() {
@@ -50,7 +56,7 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	}
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Customer customer = library.getCustomers().get(rowIndex);
+		Customer customer = customers.getCustomers().get(rowIndex);
 		String returnString;
 		
 		switch (columnIndex) {
@@ -86,9 +92,36 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		System.out.println("UPDATE IN CUSTOMERTABLEMODEL!");
+		
+		int pos = customers.getEditedCustomerPos();
+			
+		if ( pos >= 0 ) {
+			System.out.println("Customer was edited: "+pos);
+			// Customer was edited
+			fireTableRowsUpdated( pos, pos );
+		} else {
+			pos = customers.getRemovedCustomerIndex();
+			System.out.println("pos: "+pos);
+			if ( pos >= 0 ) {
+				System.out.println("Customer was removed: "+pos);
+				// Customer was removed
+				fireTableRowsDeleted( pos, pos );
+			} else {
+				pos = customers.getAddedCustomerIndex();
+				
+				if ( pos >= 0 ) {
+					System.out.println("Customer was added: "+pos);
+					// Customer was added
+					fireTableRowsInserted( pos, pos );
+					fireTableDataChanged();
+				} else {
+					// Nothing of our concern. Maybe a TODO?
+				}
+			}
+		}
 	}
 	
 	public Customer getCustomer(Object identifier) {
-		return this.library.getCustomers().get((Integer) identifier);
+		return this.customers.getCustomers().get((Integer) identifier);
 	}
 }

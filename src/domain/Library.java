@@ -12,6 +12,8 @@ public class Library extends Observable implements Observer {
 	private List<Loan> loans;
 	private List<Book> books;
 	
+	private CustomerList customerList;
+	
 	private int editedBookPos;
 	private int addBookIndex;
 	private int removeBookIndex;
@@ -28,6 +30,10 @@ public class Library extends Observable implements Observer {
 	public Library() {
 		copies = new ArrayList<Copy>();
 		customers = new ArrayList<Customer>();
+		
+		//TODO: try out this way.
+		setCustomerList(new CustomerList());
+		
 		loans = new ArrayList<Loan>();
 		books = new ArrayList<Book>();
 	}
@@ -43,26 +49,13 @@ public class Library extends Observable implements Observer {
 		}
 	}
 
-	public Customer createAndAddCustomer(String name, String surname) {
-		Customer c = new Customer(++latestCustomer, name, surname);
-		customers.add(c);
-		doNotify();
-		return c;
-	}
-	
-	public Customer addCustomer( Customer customer ) {
-		Customer addedCustomer = this.createAndAddCustomer(customer.getName(), customer.getSurname());
-		addedCustomer.setAdress(customer.getStreet(), customer.getZip(), customer.getCity() );
-		return addedCustomer;
-	}
-
 	public Book createAndAddBook(String name) {
 		return this.addBook( new Book( name ) );
 	}
 	
-	
 	public Book addBook( Book book ) {
 		books.add( book );
+		
 		editedBookPos = -1;
 		addBookIndex = books.indexOf(book);
 		removeBookIndex = -1;
@@ -198,7 +191,6 @@ public class Library extends Observable implements Observer {
 
 	@Override
 	public void update(Observable book, Object arg) {
-		
 		editedBookPos = books.indexOf(book);
 		addBookIndex = -1;
 		removeBookIndex = -1;
@@ -218,7 +210,6 @@ public class Library extends Observable implements Observer {
 	public int getBookIndex(Book book) {
 		return books.indexOf(book);
 	}
-
 	
 	//LOANS
 	public int getEditedLoanPos() {
@@ -239,12 +230,68 @@ public class Library extends Observable implements Observer {
 	
 	//CUSTOMER
 	public int getLatestCustomerNo() {
-		return this.latestCustomer;
+		return customerList.getLatestCustomerNo();
 	}
 	
+	/*
 	public boolean removeCustomer( Customer customer ) {
-		// TODO: remove customer.
-		return this.customers.remove( customer );
+		boolean result = this.customers.remove( customer );
+		
+		editedCustomerPos = -1;
+		addCustomerIndex = -1;
+		removeCustomerIndex = customers.indexOf( customer );
+		
+		doNotify();
+		return result;
+	}
+	*/
+	
+	// used to fill the list by the application from XML
+	public Customer createAndAddCustomer(String name, String surname) {
+		//Customer c = new Customer(++latestCustomer, name, surname);
+		//customers.add(c);
+		
+		//editedCustomerPos = -1;
+		//addCustomerIndex = customers.indexOf( c );
+		//removeCustomerIndex = -1;
+		
+		//doNotify();
+		return customerList.createAndAddCustomer( name, surname );
+	}
+	
+	/*
+	public Customer addCustomer( Customer customer ) {
+		customers.add( customer );
+		
+		//Customer addedCustomer = this.createAndAddCustomer(customer.getName(), customer.getSurname());
+		//addedCustomer.setAdress(customer.getStreet(), customer.getZip(), customer.getCity() );
+		
+		editedCustomerPos = -1;
+		addCustomerIndex = customers.indexOf( customer );
+		removeCustomerIndex = -1;
+		
+		doNotify();
+		return customers.get( addCustomerIndex );
+	}
+	
+	public int getEditedCustomerPos() {
+		return this.editedCustomerPos;
+	}
+	
+	public int getRemovedCustomerIndex() {
+		return this.removeCustomerIndex;
+	}
+	
+	public int getAddedCustomerIndex() {
+		return this.addCustomerIndex;
+	}
+	*/
+
+	public CustomerList getCustomerList() {
+		return customerList;
 	}
 
+	public void setCustomerList(CustomerList customerList) {
+		this.customerList = customerList;
+	}
 }
