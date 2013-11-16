@@ -19,14 +19,12 @@ import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
@@ -71,7 +69,6 @@ public class LoansTab extends LibraryTab {
 	
 	private JTable tblLoans;
 	private JTextField txtSearchLoans;
-	private JCheckBox chckbxOnlyDueLoans;
 	private JComboBox<String> cmbLoanTableModes;
 	
 	GridBagConstraints gbc_scrollPaneLoans;
@@ -83,7 +80,6 @@ public class LoansTab extends LibraryTab {
 	
 	// Filter variables. filters contains all filters that can be applied to the jTable.
 	private List<RowFilter<Object,Object>> loanFilters;
-	private boolean showDueLoans = true;
 	private String searchTextLoans;
 	private enum loanTableMode {
 		ALL, LENTONLY, OVERDUEONLY;
@@ -91,7 +87,6 @@ public class LoansTab extends LibraryTab {
 	private loanTableMode currentTableMode;
 	
 	// Actions:
-	private AbstractAction toggleShowDueLoansAction;
 	private AbstractAction changeLoanTableModeAction;
 
 	public LoansTab(LoanTableModel loanTableModel, Library library) {
@@ -161,10 +156,6 @@ public class LoansTab extends LibraryTab {
 				showSelectedLoansButtonActionPerformed(e);
 			}
 		});
-		
-		chckbxOnlyDueLoans = new JCheckBox( Messages.getString("BookMasterTable.chckbxOnlyDueLoans.text") ); //$NON-NLS-1$
-		chckbxOnlyDueLoans.setAction( getToggleShowDueLoansAction() );
-		pnlLoansInvTop.add(chckbxOnlyDueLoans);
 		
 		///////////////////////////////////////////////////////////
 		// ComboBox
@@ -326,28 +317,6 @@ public class LoansTab extends LibraryTab {
 			loanFilters.clear();
 		}
 		
-		// 2nd: apply the "showDueLoans" filter if applicable
-		// also, check here if the loan is currently lent.
-		// TODO: PCHR - CHECK IF THIS WORKS. LOOKS GOOD, BUT FEELS BAD
-		/*
-		loanFilters.add( new RowFilter<Object, Object>() {
-			@Override
-			public boolean include(RowFilter.Entry<? extends Object, ? extends Object> entry) {
-				 LoanTableModel loanModel = (LoanTableModel) entry.getModel();
-				 Loan loan = loanModel.getLoan(entry.getIdentifier());
-				 
-				 if ( loan.isLent() ) {
-					 if (showDueLoans){
-						 return loan.isOverdue();
-					 } else {
-						 return true;
-					 }
-				 }
-				 return false;
-			}
-		} );
-		*/
-		
 		// 2nd: apply the "loanTableMode" filter if applicable (e.g. if not ALL)
 		if ( currentTableMode != loanTableMode.ALL ) {
 			loanFilters.add( new RowFilter<Object, Object>() {
@@ -374,42 +343,10 @@ public class LoansTab extends LibraryTab {
 		loanSorter.setRowFilter( RowFilter.andFilter(loanFilters) );
 	}
 	
-	private AbstractAction getToggleShowDueLoansAction() {
-		if(toggleShowDueLoansAction == null) {
-			toggleShowDueLoansAction = new ToggleShowDueLoansAction();
-		}
-		return toggleShowDueLoansAction;
-	}
-	
-	private class ToggleShowDueLoansAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-		
-		ToggleShowDueLoansAction() {
-			super( Messages.getString("BookMasterTable.chckbxOnlyDueLoans.text") , null);
-			putValue(MNEMONIC_KEY, KeyEvent.VK_D);
-			putValue(SHORT_DESCRIPTION, Messages.getString("BookMasterTable.chckbxOnlyDueLoans.desc") );
-			putValue(ACCELERATOR_KEY, 
-					KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
-		}
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			showDueLoans=!showDueLoans;
-			
-			// Re-Filter		
-			updateFilters();
-			updateListButtons();
-			updateShowDueLoansCheckbox();
-		}
-	}
-	
 	public void updateListButtons() {
 		// Enables or disables the "Show Selected" buttons
 		// depending on whether a book/loan is selected.
 		btnShowSelectedLoans.setEnabled( tblLoans.getSelectedRowCount()>0);
-	}
-	
-	public void updateShowDueLoansCheckbox() {
-		chckbxOnlyDueLoans.setSelected( showDueLoans );
 	}
 	
 	///////////////////////////////////////

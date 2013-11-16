@@ -490,9 +490,9 @@ public class CustomerDetail extends JFrame {
 				} else {
 					// FAILED.
 					try {
+						// TODO: show a better dialog.
 						throw new Exception( "Yeah, deleting that guy didn't really work. Sorry about that, please restart the application." );
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}

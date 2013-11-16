@@ -7,8 +7,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -65,12 +68,19 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 
 	private static Dictionary<Book, BookDetail> editFramesDict = new Hashtable<Book, BookDetail>();
 	private JPanel pnlButtons;
+	
+	// Buttons
 	private JButton btnSave;
 	private JButton btnCancel;
 	private JButton btnReset;
+	private JButton btnDelete;
+	
+	
 	private Component horizontalGlue;
 	
-	private static Boolean newlyCreated = false;
+	private static Boolean newlyCreated;
+	
+	private static BookDetail editFrame;
 
 	/**
 	 * Create the application.
@@ -84,31 +94,21 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	}
 
 	public static void editBook(Library library, Book book) {
+		newlyCreated = false;
+		
 		if ( book == null ) {
 			System.out.println("CREATE NEW BOOK");
 			book = new Book("");
 			newlyCreated = true;
 		}
-		BookDetail editFrame = editFramesDict.get(book);
+		
+		editFrame = editFramesDict.get(book);
 		if (editFrame == null) {
 			editFrame = new BookDetail(library, book);
 			editFramesDict.put(book, editFrame);
 		}
 		editFrame.setVisible(true);
 	}
-
-	// TODO pforster remove
-	// private void setBook(Book newBook) {
-	// if (book != null) {
-	// // replacing currently editing Book
-	// book.deleteObserver(this);
-	// }
-	// this.book = newBook;
-	// displayBook();
-	// if (newBook != null) {
-	// newBook.addObserver(this);
-	// }
-	// }
 
 	private void displayBook() {
 		if (book == null) {
@@ -130,7 +130,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			setBounds(100, 100, 466, 281);
 			getContentPane().setLayout(
 					new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
-
 			
 			/////////////////////////////////////////////////
 			// ACTIONS
@@ -138,13 +137,16 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			// Close (via Esc-Key (?), Button)
 			AbstractAction cancel = new CloseAction( Messages.getString( "BookDetail.btnCancel.text"), "Revert Changes, close dialog" );
 			// Save (via S, Button)
-			AbstractAction save = new SaveAction( Messages.getString( "BookDetail.btnNewButton.text"), "Save changes" );
+			AbstractAction save = new SaveAction( Messages.getString( "BookDetail.btnSave.text"), "Save changes" );
 			// Reset (via R, Button)
-			AbstractAction reset = new ResetAction(Messages.getString( "BookDetail.btnNewButton_1.text"), "Revert changes" );
-			// Remove Copy (via D, Button)
-			AbstractAction remove = new RemoveCopyAction( Messages.getString("BookDetail.btnRemove.text"), "Remove selected copies" );
+			AbstractAction reset = new ResetAction(Messages.getString( "BookDetail.btnReset.text"), "Revert changes" );
+			// Remove Book (via D, Button)
+			AbstractAction delete = new DeleteAction( Messages.getString("BookDetail.btnRemove.text"), "Remove this book" );
+			
 			// Add Copy (via A, Button)
 			AbstractAction addCopy = new AddCopyAction( Messages.getString("BookDetail.btnAdd.text"), "Add a copy of this book" );
+			// Remove Selected Copies (via Button)
+			AbstractAction removeCopy = new RemoveCopyAction( Messages.getString("BookDetail.btnRemoveCopy.text"), "Remove selected copies" );
 			
 			/////////////////////////////////////////////////
 			// INFORMATION PANEL
@@ -272,19 +274,26 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			///////////////////////////////////////////////////
 			// BUTTONS
 			///////////////////////////////////////////////////
+			// DELETE
+			btnDelete = new JButton( delete );
+			btnDelete.setEnabled( !newlyCreated );
+			pnlButtons.add( btnDelete );
+			
+			// RESET
+			btnReset = new JButton( reset ); //$NON-NLS-1$
+			btnReset.setEnabled( false );
+			pnlButtons.add(btnReset);
+			
 			// SAVE
 			btnSave = new JButton( save );
 			btnSave.setEnabled(false);
 			pnlButtons.add(btnSave);
 			
-			// RESET
-			btnReset = new JButton( reset ); //$NON-NLS-1$
-			pnlButtons.add(btnReset);
-			
 			// CANCEL
 			btnCancel = new JButton( cancel );
+			btnCancel.setEnabled( true );
 			pnlButtons.add( btnCancel );
-		
+			
 			/////////////////////////////////////////////////
 			// COPY AREA
 			/////////////////////////////////////////////////
@@ -312,8 +321,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			///////////////////////////////////////////////////
 			// COPY-BUTTONS
 			///////////////////////////////////////////////////
-			// REMOVE
-			btnRemove = new JButton( remove );
+			// DELETE
+			btnRemove = new JButton( removeCopy );
 			btnRemove.setEnabled(false);
 			pnlAction.add(btnRemove);
 
@@ -354,6 +363,9 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		}else {
 			btnSave.setEnabled(true);
 		}
+		
+		// in any way, enable the reset button
+		btnReset.setEnabled( true );
 	}
 	
 	private void setBookValuesToView() {
@@ -389,6 +401,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	    }
 	    public void actionPerformed(ActionEvent e) {
 	    	System.out.println("CLOSE DIALOG NOW.");
+	    	editFrame.setVisible(false);
 	    }
 	}
 	/**
@@ -422,6 +435,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			}
 	    }
 	}
+	
 	/**
 	 * Reset the form
 	 * @author PFORSTER, PCHR
@@ -436,7 +450,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	    }
 		public void actionPerformed(ActionEvent e) {
 			setBookValuesToView();
-			btnSave.setEnabled(false);
+			btnReset.setEnabled( false );
+			btnSave.setEnabled( false );
 		}
 	}
 	// Copy:
@@ -468,11 +483,59 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		public RemoveCopyAction( String text, String desc ) {
 	        super( text );
 	        putValue( SHORT_DESCRIPTION, desc );
-	        putValue( MNEMONIC_KEY, KeyEvent.VK_D );
+	        //putValue( MNEMONIC_KEY, KeyEvent.VK_R );
 	    }
 		public void actionPerformed(ActionEvent e) {
 			library.removeCopy(lstCopy.getSelectedValue());
 			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+		}
+	}
+	/**
+	 * Delete the currently opened book, if there are no currently lent copies.
+	 * @author PCHR
+	 */
+	class DeleteAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public DeleteAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_D );
+	    }
+		public void actionPerformed(ActionEvent e) {
+			boolean canDelete = false;
+			canDelete = library.getLentCopiesOfBook(book).size() == 0;
+			// TODO: maybe even disable the button if there are lent out copies...?
+			
+			if ( canDelete ) {
+				int delete = JOptionPane.showConfirmDialog(
+					editFrame,
+					Messages.getString("BookDetail.deleteDlg.message"),
+					Messages.getString("BookDetail.deleteDlg.title"),
+					JOptionPane.YES_NO_OPTION
+				);
+				
+				if ( delete == 0 ) {
+					// Delete all copies of this book. TODO: necessary? Should we keep the copies but set a flag to "deleted" or something?
+					//for (Copy copy : library.getCopiesOfBook( book ) ) {
+					//	library.removeCopy( copy );
+					//}
+					if ( books.removeBook( book ) ) {
+						// SUCCESS
+						editFrame.setVisible(false);
+					} else {
+						try {
+							// TODO: show a better dialog.
+							throw new Exception( "Yeah, deleting that book didn't really work. Sorry about that, please restart the application." );
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+				// TODO: make sure that past loans of that book keep existing. (or not?)
+			} else {
+				// TODO: throw a tantrum.
+			}
 		}
 	}
 }

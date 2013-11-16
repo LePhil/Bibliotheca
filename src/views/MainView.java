@@ -4,6 +4,7 @@ import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -16,9 +17,14 @@ import viewModels.LoanTableModel;
 
 import domain.Library;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import java.awt.FlowLayout;
 
 public class MainView extends javax.swing.JFrame implements Observer {
 
@@ -46,7 +52,10 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	private BookTableModel bookTableModel;
 	private LoanTableModel loanTableModel;
 	private CustomerTableModel customerTableModel;
+	private JPanel pnlMainButtons;
+	private JButton btnCloseApp;
 
+	private static MainView mainFrame;
 	
 	/**
 	 * Create the application.
@@ -64,6 +73,8 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		loanTableModel = new LoanTableModel( this.library );
 		customerTableModel = new CustomerTableModel( library.getCustomerList() );
 		
+		mainFrame = this;
+		
 		initialize();
 		library.addObserver( this );
 		setLocationRelativeTo(null);
@@ -78,17 +89,34 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	private void initialize() {
 		try {
 			
+			///////////////////////////////////////////////////////////////////
+			// ACTIONS
+			///////////////////////////////////////////////////////////////////
+			// CLOSE
+			AbstractAction close = new CloseAction( Messages.getString( "MainView.btnExit.text"), "Close the application, disregard all unsaved changes" );
+
+			///////////////////////////////////////////////////////////////////
+			// INITIAL SETUP
+			///////////////////////////////////////////////////////////////////
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			this.setTitle(Messages.getString("BookMaster.frmTodoTitle.title")); //$NON-NLS-1$
 			this.setBounds(100, 100, 700, 550);
 			
+			pnlMainButtons = new JPanel();
+			FlowLayout fl_pnlMainButtons = (FlowLayout) pnlMainButtons.getLayout();
+			fl_pnlMainButtons.setAlignment(FlowLayout.RIGHT);
+			getContentPane().add(pnlMainButtons, BorderLayout.SOUTH);
+			
+			btnCloseApp = new JButton( close );
+			pnlMainButtons.add(btnCloseApp);
+			
 			tbsMain = new JTabbedPane(JTabbedPane.TOP);
+			getContentPane().add(tbsMain, BorderLayout.CENTER);
 			tbsMain.addChangeListener(new ChangeListener() {
 		        public void stateChanged(ChangeEvent e) {
 		            changedTab();
 		        }
 		    });
-			this.getContentPane().add(tbsMain, BorderLayout.CENTER);
 			
 			///////////////////////////////////////////////////////////////////
 			// BOOKS TAB
@@ -101,7 +129,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			///////////////////////////////////////////////////////////////////
 			loansTab = new LoansTab( loanTableModel, library );
 			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), null, loansTab, null );
-				
+			
 			///////////////////////////////////////////////////////////////////
 			// CUSTOMERS TAB
 			///////////////////////////////////////////////////////////////////
@@ -112,7 +140,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			// MENU
 			///////////////////////////////////////////////////////////////////
 			jMenuBar = new JMenuBar();
-			setJMenuBar(jMenuBar);
+			getContentPane().add(jMenuBar, BorderLayout.NORTH);
 			
 			viewMenu = new JMenu();
 			viewMenu.setText(Messages.getString("BookMasterTable.viewMenu.text")); //$NON-NLS-1$
@@ -122,12 +150,15 @@ public class MainView extends javax.swing.JFrame implements Observer {
 				viewMenu.add(showUnavailableMenuItem);
 				showUnavailableMenuItem.setText(Messages.getString("BookMasterTable.showUnavailableMenuItem.text")); //$NON-NLS-1$
 				showUnavailableMenuItem.setMnemonic(KeyEvent.VK_U);
-				showUnavailableMenuItem.setAction(booksTab.getToggleShowUnavailableAction());
 			}
 			
 			loansSubMenu = new JMenu();
 			loansSubMenu.setText( Messages.getString( "BookMaster.Tab.Loans" ) );
 			loansSubMenu.setMnemonic( KeyEvent.VK_L );
+			
+			viewMenu.add(loansSubMenu);
+			jMenuBar.add(viewMenu);
+			showUnavailableMenuItem.setAction(booksTab.getToggleShowUnavailableAction());
 			{
 				/*
 				booksShowAll = new JMenuItem();
@@ -151,9 +182,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 				booksSubMenu.add(booksShowOverdueOnly);
 				*/
 			}
-			
-			viewMenu.add(loansSubMenu);
-			jMenuBar.add(viewMenu);
 						
 			///////////////////////////////////////////////////////////////////
 			// Initialize the buttons, actions, etc.
@@ -168,9 +196,9 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
+		System.out.println("UPDATE ON MAINVIEW CALLED!");
 		updateButtons();
 		booksTab.updateShowUnavailableCheckbox();
-		loansTab.updateShowDueLoansCheckbox();
 		updateStatistics();
 	}
 		
@@ -200,6 +228,27 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			break;
 		case 1: // Loans
 			break;
+		}
+	}
+	/////////////////////////////////////////////////
+	// Action Subclasses
+	/////////////////////////////////////////////////
+	/**
+	 * Closes the current dialog.
+	 * TODO: Close dialog, disregard changes. Don't save!
+	 * @author PCHR
+	 */
+	class CloseAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public CloseAction( String text, String desc ) {
+			super( text );
+			putValue( SHORT_DESCRIPTION, desc );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_ESCAPE );
+		}
+		public void actionPerformed(ActionEvent e) {
+			mainFrame.setVisible(false);
+			// TODO (or maybe in each dialog): call cancel action so unsaved changes get lost. Or if we'll have enough time: check if there are unsaved changes and warn before closing.
+			// TODO: close all other opened dialogs now as well.
 		}
 	}
 }

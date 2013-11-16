@@ -14,6 +14,7 @@ import domain.BookList;
 import domain.Copy;
 import domain.Library;
 import domain.Loan;
+import domain.Shelf;
 
 public class BookTableModel extends AbstractTableModel implements Observer {
 
@@ -25,7 +26,8 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 		Messages.getString("BookMasterTable.ColumnHeader.Available"),
 		Messages.getString("BookMasterTable.ColumnHeader.Title"),
 		Messages.getString("BookMasterTable.ColumnHeader.Author"),
-		Messages.getString("BookMasterTable.ColumnHeader.Publisher")
+		Messages.getString("BookMasterTable.ColumnHeader.Publisher"),
+		Messages.getString("BookMasterTable.ColumnHeader.Shelf")
 	};
 	
 	public BookTableModel(Library library){
@@ -98,6 +100,8 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 		case 3:
 			returnString = book.getPublisher();
 			break;
+		case 4:
+			return book.getShelf();
 		default:
 			returnString = "";
 		}
@@ -113,6 +117,8 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 		case 2:
 		case 3:
 			return String.class;
+		case 4:
+			return Shelf.class;
 		default:
 			return Object.class;
 		}
