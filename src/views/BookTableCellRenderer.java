@@ -10,7 +10,6 @@ import domain.Book;
 import domain.Library;
 
 public class BookTableCellRenderer extends DefaultTableCellRenderer {
-	
 	private static final long serialVersionUID = 1L;
 	private Library library;
 	
@@ -21,7 +20,7 @@ public class BookTableCellRenderer extends DefaultTableCellRenderer {
 	@Override
 	public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected,	boolean hasFocus, int row, int column) {
 		Component cellRenderer = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column);
-		Book book = library.getBooks().get(table.convertRowIndexToModel(row));
+		Book book = library.getBookList().getBooks().get(table.convertRowIndexToModel(row));
 		Boolean available = library.getCopiesOfBook(book).size() != 1;
 		Color fgColor = Color.BLACK,
 			  bgColor = Color.WHITE;

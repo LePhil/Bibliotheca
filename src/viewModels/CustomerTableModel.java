@@ -8,12 +8,10 @@ import javax.swing.table.AbstractTableModel;
 import views.Messages;
 import domain.Customer;
 import domain.CustomerList;
-import domain.Library;
 
 public class CustomerTableModel extends AbstractTableModel implements Observer {
 
 	private static final long serialVersionUID = 1L;
-	Library library;
 	CustomerList customers;
 	
 	private String[] columns = {
@@ -22,10 +20,8 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 		Messages.getString("CustomerMasterTable.ColumnHeader.Address")
 	};
 	
-	public CustomerTableModel( Library library ) {
-		this.library = library;
-		//this.library.addObserver(this);
-		this.customers = library.getCustomerList();
+	public CustomerTableModel( CustomerList customers) {
+		this.customers = customers;
 		
 		this.customers.addObserver( this );
 	}
@@ -91,26 +87,22 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("UPDATE IN CUSTOMERTABLEMODEL!");
 		
 		int pos = customers.getEditedCustomerPos();
 			
 		if ( pos >= 0 ) {
-			System.out.println("Customer was edited: "+pos);
 			// Customer was edited
 			fireTableRowsUpdated( pos, pos );
 		} else {
 			pos = customers.getRemovedCustomerIndex();
-			System.out.println("pos: "+pos);
+
 			if ( pos >= 0 ) {
-				System.out.println("Customer was removed: "+pos);
 				// Customer was removed
 				fireTableRowsDeleted( pos, pos );
 			} else {
 				pos = customers.getAddedCustomerIndex();
 				
 				if ( pos >= 0 ) {
-					System.out.println("Customer was added: "+pos);
 					// Customer was added
 					fireTableRowsInserted( pos, pos );
 					fireTableDataChanged();

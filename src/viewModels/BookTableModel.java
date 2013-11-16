@@ -10,6 +10,7 @@ import javax.swing.table.AbstractTableModel;
 import views.Messages;
 
 import domain.Book;
+import domain.BookList;
 import domain.Copy;
 import domain.Library;
 import domain.Loan;
@@ -17,7 +18,9 @@ import domain.Loan;
 public class BookTableModel extends AbstractTableModel implements Observer {
 
 	private static final long serialVersionUID = 1L;
-	Library library;
+	private BookList books;
+	private Library library;
+	
 	private String[] columns = {
 		Messages.getString("BookMasterTable.ColumnHeader.Available"),
 		Messages.getString("BookMasterTable.ColumnHeader.Title"),
@@ -26,8 +29,9 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	};
 	
 	public BookTableModel(Library library){
+		this.books = library.getBookList();
 		this.library = library;
-		this.library.addObserver(this);
+		books.addObserver(this);
 	}
 	
 	public void propagateUpdate(int pos) {
@@ -48,7 +52,7 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public int getRowCount() {
-		return library.getBooks().size();
+		return books.getBooks().size();
 	}
 
 	@Override
@@ -58,7 +62,7 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Book book = library.getBooks().get(rowIndex);
+		Book book = books.getBooks().get(rowIndex);
 		String returnString;
 		
 		switch (columnIndex) {
@@ -117,19 +121,19 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		System.out.println("UPDATE IN BOOKTABLEMODEL CALLED");
-		int pos = library.getEditedBookPos();
+		int pos = books.getEditedBookPos();
 		
 		if ( pos >= 0 ) {
 			// edit happened, redraw edited book
 			fireTableRowsUpdated(pos, pos);
 		} else {
-			pos = library.getRemovedBookIndex();
+			pos = books.getRemovedBookIndex();
 			
 			if (pos>=0){
 				//remove happend
 				fireTableRowsDeleted(pos, pos);
 			}else{
-				pos = library.getInsertedBookIndex();
+				pos = books.getInsertedBookIndex();
 				if (pos >= 0){
 					//insert happend
 					fireTableRowsInserted(pos, pos);
@@ -141,6 +145,6 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	}
 
 	public Book getBook(Object identifier) {
-		return this.library.getBooks().get((Integer) identifier);
+		return books.getBooks().get((Integer) identifier);
 	}
 }

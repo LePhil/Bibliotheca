@@ -14,10 +14,8 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import viewModels.CopyListModel;
 
 import domain.*;
-import java.awt.GridLayout;
 import java.awt.FlowLayout;
 
 public class CustomerDetail extends JFrame {
@@ -26,7 +24,7 @@ public class CustomerDetail extends JFrame {
 	private static Dictionary<Customer, CustomerDetail> editFramesDict = new Hashtable<Customer, CustomerDetail>();
 	
 	private Customer customer;
-	private Library library;
+	private CustomerList customers;
 	
 	// Buttons
 	private JButton btnSave;
@@ -57,25 +55,25 @@ public class CustomerDetail extends JFrame {
 	
 	private static CustomerDetail editFrame;
 	
-	public CustomerDetail( Library library, Customer customer ) {
+	public CustomerDetail( CustomerList customers, Customer customer ) {
 		super();
-		this.library = library;
+		this.customers = customers;
 		this.customer = customer;
 		initialize();
 	}
 	
-	public static void editCustomer(Library library, Customer customer ) {
+	public static void editCustomer(CustomerList customers, Customer customer ) {
 		newlyCreated = false;
 		
 		if ( customer == null ) {
 			// create new customer!
-			customer = new Customer( library.getLatestCustomerNo()+1, "", "" );
+			customer = new Customer( customers.getLatestCustomerNo()+1, "", "" );
 			newlyCreated = true;
 		}
 		
 		editFrame = editFramesDict.get(customer);
 		if ( editFrame == null ) {
-			editFrame = new CustomerDetail(library, customer);
+			editFrame = new CustomerDetail( customers, customer );
 			editFramesDict.put( customer, editFrame );
 		}
 		
@@ -439,7 +437,7 @@ public class CustomerDetail extends JFrame {
 				// we can only add it now, because before it shouldn't
 				// belong to the library, only on saving.
 				
-				library.getCustomerList().addCustomer( customer );
+				customers.addCustomer( customer );
 				
 				newlyCreated = false;
 				btnDelete.setEnabled(true);
@@ -486,7 +484,7 @@ public class CustomerDetail extends JFrame {
 			);
 			
 			if ( delete == 0 ) {
-				if ( library.getCustomerList().removeCustomer( customer ) ) {
+				if ( customers.removeCustomer( customer ) ) {
 					// SUCCESS
 					editFrame.setVisible(false);
 				} else {

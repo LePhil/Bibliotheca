@@ -109,13 +109,13 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 			// edit happened, redraw edited book
 			fireTableRowsUpdated(pos, pos);
 		} else {
-			pos = library.getRemovedBookIndex();
+			pos = library.getBookList().getRemovedBookIndex();
 			
 			if (pos>=0){
 				//remove happend
 				fireTableRowsDeleted(pos, pos);
 			}else{
-				pos = library.getInsertedBookIndex();
+				pos = library.getBookList().getInsertedBookIndex();
 				if (pos >= 0){
 					//insert happend
 					fireTableRowsInserted(pos, pos);

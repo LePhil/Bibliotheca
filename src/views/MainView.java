@@ -62,7 +62,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		this.library = library;
 		bookTableModel = new BookTableModel( this.library );
 		loanTableModel = new LoanTableModel( this.library );
-		customerTableModel = new CustomerTableModel(library);
+		customerTableModel = new CustomerTableModel( library.getCustomerList() );
 		
 		initialize();
 		library.addObserver( this );
@@ -181,6 +181,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	private void updateStatistics() {
 		booksTab.updateStatistics();
 		loansTab.updateStatistics();
+		customerTab.updateStatistics();
 	}
 	
 	/**
@@ -190,6 +191,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	public void updateButtons() {
 		booksTab.updateListButtons();
 		loansTab.updateListButtons();
+		customerTab.updateListButtons();
 	}
 
 	public void changedTab() {

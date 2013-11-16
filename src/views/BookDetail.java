@@ -7,7 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Observable;
@@ -29,13 +28,12 @@ import javax.swing.border.TitledBorder;
 
 import viewModels.CopyListModel;
 import domain.Book;
+import domain.BookList;
 import domain.Copy;
 import domain.Library;
 import domain.Shelf;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-
-import com.sun.corba.se.spi.orbutil.fsm.Action;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -63,6 +61,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 
 	private Book book;
 	private Library library;
+	private BookList books;
 
 	private static Dictionary<Book, BookDetail> editFramesDict = new Hashtable<Book, BookDetail>();
 	private JPanel pnlButtons;
@@ -79,6 +78,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	public BookDetail(Library library, Book book) {
 		super();
 		this.library = library;
+		this.books = library.getBookList();
 		this.book = book;
 		initialize();
 	}
@@ -414,7 +414,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				// Saving a book that we just created.
 				// we can only add it now, because before it shouldn't
 				// belong to the library, only on saving.
-				library.addBook(book);
+				books.addBook(book);
 				
 				if ( library.getCopiesOfBook( book ).size() == 0 ) {
 					library.createAndAddCopy( book );

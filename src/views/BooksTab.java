@@ -19,7 +19,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -234,7 +233,7 @@ public class BooksTab extends LibraryTab {
 	        public void mouseClicked(MouseEvent e) {
 	            if (e.getClickCount() == 2) {
 	            	int selectedRow = tblBooks.convertRowIndexToModel( tblBooks.getSelectedRow() );
-	                editBook( getLibrary().getBooks().get( selectedRow ) );
+	                editBook( getLibrary().getBookList().getBooks().get( selectedRow ) );
 	            }
 	        }
 		});
@@ -284,7 +283,7 @@ public class BooksTab extends LibraryTab {
 		int[] selectedRows = tblBooks.getSelectedRows();
 		
 		for (int selectedRow : selectedRows) {
-			Book book = getLibrary().getBooks().get( tblBooks.convertRowIndexToModel( selectedRow ) );
+			Book book = getLibrary().getBookList().getBooks().get( tblBooks.convertRowIndexToModel( selectedRow ) );
 			editBook(book);
 		}
 	}
@@ -373,7 +372,7 @@ public class BooksTab extends LibraryTab {
 	
 	public void updateStatistics() {
 		// Books stats
-		lblNrOfBooks.setText( Messages.getString("BookMaster.lblNrOfBooks.text", String.valueOf(getLibrary().getBooks().size())) );
+		lblNrOfBooks.setText( Messages.getString("BookMaster.lblNrOfBooks.text", String.valueOf(getLibrary().getBookList().getBooks().size())) );
 		lblNrOfCopies.setText( Messages.getString("BookMaster.lblNrOfCopies.text", String.valueOf(getLibrary().getCopies().size())) );
 	}
 }

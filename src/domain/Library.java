@@ -13,10 +13,7 @@ public class Library extends Observable implements Observer {
 	private List<Book> books;
 	
 	private CustomerList customerList;
-	
-	private int editedBookPos;
-	private int addBookIndex;
-	private int removeBookIndex;
+	private BookList bookList;
 	
 	private int editedLoanPos;
 	private int addLoanIndex;
@@ -29,10 +26,9 @@ public class Library extends Observable implements Observer {
 
 	public Library() {
 		copies = new ArrayList<Copy>();
-		customers = new ArrayList<Customer>();
-		
-		//TODO: try out this way.
-		setCustomerList(new CustomerList());
+
+		setBookList( new BookList() );
+		setCustomerList( new CustomerList() );
 		
 		loans = new ArrayList<Loan>();
 		books = new ArrayList<Book>();
@@ -49,33 +45,6 @@ public class Library extends Observable implements Observer {
 		}
 	}
 
-	public Book createAndAddBook(String name) {
-		return this.addBook( new Book( name ) );
-	}
-	
-	public Book addBook( Book book ) {
-		books.add( book );
-		
-		editedBookPos = -1;
-		addBookIndex = books.indexOf(book);
-		removeBookIndex = -1;
-		
-		doNotify();
-		return book;
-	}
-	
-	public boolean removeBook( Book book ) {
-		book.deleteObserver(this);
-		boolean succeeded = books.remove(book);
-		
-		editedBookPos = -1;
-		addBookIndex = -1;
-		removeBookIndex = books.indexOf(book);
-		
-		doNotify();
-		return succeeded;
-	}
-
 	public Copy createAndAddCopy(Book title) {
 		Copy c = new Copy(title);
 		copies.add(c);
@@ -86,19 +55,6 @@ public class Library extends Observable implements Observer {
 	public void removeCopy(Copy copy){
 		int index = copies.indexOf(copy);
 		copies.remove(index);
-	}
-
-	public Integer getEditedBookPos() {
-		return editedBookPos;
-	}
-	
-	public Book findByBookTitle(String title) {
-		for (Book b : books) {
-			if (b.getName().equals(title)) {
-				return b;
-			}
-		}
-		return null;
 	}
 
 	public boolean isCopyLent(Copy copy) {
@@ -176,10 +132,6 @@ public class Library extends Observable implements Observer {
 		return loans;
 	}
 
-	public List<Book> getBooks() {
-		return books;
-	}
-
 	public List<Customer> getCustomers() {
 		return customers;
 	}
@@ -190,25 +142,9 @@ public class Library extends Observable implements Observer {
 	}
 
 	@Override
-	public void update(Observable book, Object arg) {
-		editedBookPos = books.indexOf(book);
-		addBookIndex = -1;
-		removeBookIndex = -1;
-		
+	public void update(Observable o, Object arg) {
 		setChanged();
-		notifyObservers( book );
-	}
-	
-	public int getInsertedBookIndex() {
-		return addBookIndex;
-	}
-	
-	public int getRemovedBookIndex() {
-		return removeBookIndex;
-	}
-	 
-	public int getBookIndex(Book book) {
-		return books.indexOf(book);
+		notifyObservers( o );
 	}
 	
 	//LOANS
@@ -229,63 +165,10 @@ public class Library extends Observable implements Observer {
 	}
 	
 	//CUSTOMER
-	public int getLatestCustomerNo() {
-		return customerList.getLatestCustomerNo();
-	}
-	
-	/*
-	public boolean removeCustomer( Customer customer ) {
-		boolean result = this.customers.remove( customer );
-		
-		editedCustomerPos = -1;
-		addCustomerIndex = -1;
-		removeCustomerIndex = customers.indexOf( customer );
-		
-		doNotify();
-		return result;
-	}
-	*/
-	
 	// used to fill the list by the application from XML
 	public Customer createAndAddCustomer(String name, String surname) {
-		//Customer c = new Customer(++latestCustomer, name, surname);
-		//customers.add(c);
-		
-		//editedCustomerPos = -1;
-		//addCustomerIndex = customers.indexOf( c );
-		//removeCustomerIndex = -1;
-		
-		//doNotify();
 		return customerList.createAndAddCustomer( name, surname );
 	}
-	
-	/*
-	public Customer addCustomer( Customer customer ) {
-		customers.add( customer );
-		
-		//Customer addedCustomer = this.createAndAddCustomer(customer.getName(), customer.getSurname());
-		//addedCustomer.setAdress(customer.getStreet(), customer.getZip(), customer.getCity() );
-		
-		editedCustomerPos = -1;
-		addCustomerIndex = customers.indexOf( customer );
-		removeCustomerIndex = -1;
-		
-		doNotify();
-		return customers.get( addCustomerIndex );
-	}
-	
-	public int getEditedCustomerPos() {
-		return this.editedCustomerPos;
-	}
-	
-	public int getRemovedCustomerIndex() {
-		return this.removeCustomerIndex;
-	}
-	
-	public int getAddedCustomerIndex() {
-		return this.addCustomerIndex;
-	}
-	*/
 
 	public CustomerList getCustomerList() {
 		return customerList;
@@ -293,5 +176,13 @@ public class Library extends Observable implements Observer {
 
 	public void setCustomerList(CustomerList customerList) {
 		this.customerList = customerList;
+	}
+
+	public BookList getBookList() {
+		return bookList;
+	}
+
+	public void setBookList(BookList bookList) {
+		this.bookList = bookList;
 	}
 }

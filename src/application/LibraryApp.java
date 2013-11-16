@@ -3,8 +3,6 @@ package application;
 import java.io.File;
 import java.io.IOException;
 import java.util.GregorianCalendar;
-import java.util.Locale;
-
 import javax.swing.UIManager;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import javax.xml.parsers.DocumentBuilder;
@@ -53,8 +51,8 @@ public class LibraryApp {
 		createBooksAndLoans(library);
 	
 		System.out.println("Initialisation of the library was successful!\n");
-		System.out.println("Books in library: " + library.getBooks().size());
-		System.out.println("Customers: " + library.getCustomers().size() + "\n");
+		System.out.println("Books in library: " + library.getBookList().getBooks().size());
+		System.out.println("Customers: " + library.getCustomerList().getCustomers().size() + "\n");
 		System.out.println("Copies in library: " + library.getCopies().size());
 		System.out.println("Copies currently on loan: " + library.getLentOutBooks().size());
 		int lentBooksPercentage = (int)(((double)library.getLentOutBooks().size()) / library.getCopies().size() * 100);
@@ -66,29 +64,29 @@ public class LibraryApp {
 	}
 
 	private static void createBooksAndLoans(Library library) throws IllegalLoanOperationException {
-		for(int i = 0; i < library.getBooks().size(); i++) {
+		for(int i = 0; i < library.getBookList().getBooks().size(); i++) {
 			switch(i%4) {
 			case 0:
-				Copy c1 = library.createAndAddCopy(library.getBooks().get(i));
+				Copy c1 = library.createAndAddCopy(library.getBookList().getBooks().get(i));
 				c1.setCondition(Copy.Condition.GOOD);
 				createLoansForCopy(library,c1,i,5);
-				Copy c2 = library.createAndAddCopy(library.getBooks().get(i));
+				Copy c2 = library.createAndAddCopy(library.getBookList().getBooks().get(i));
 				c2.setCondition(Copy.Condition.DAMAGED);
 				createLoansForCopy(library,c2,i,2);
-				Copy c3 = library.createAndAddCopy(library.getBooks().get(i));
+				Copy c3 = library.createAndAddCopy(library.getBookList().getBooks().get(i));
 				c3.setCondition(Copy.Condition.WASTE);
 				break;
 			case 1:
-				Copy c4 = library.createAndAddCopy(library.getBooks().get(i));
+				Copy c4 = library.createAndAddCopy(library.getBookList().getBooks().get(i));
 				createLoansForCopy(library,c4,i,4);
-				library.createAndAddCopy(library.getBooks().get(i));
+				library.createAndAddCopy(library.getBookList().getBooks().get(i));
 				break;
 			case 2:
-				Copy c5 = library.createAndAddCopy(library.getBooks().get(i));
+				Copy c5 = library.createAndAddCopy(library.getBookList().getBooks().get(i));
 				createLoansForCopy(library,c5,i,2);
 				break;
 			case 3:
-				Copy c6 = library.createAndAddCopy(library.getBooks().get(i));
+				Copy c6 = library.createAndAddCopy(library.getBookList().getBooks().get(i));
 				createOverdueLoanForCopy(library,c6,i);
 				break;
 			}
@@ -100,7 +98,7 @@ public class LibraryApp {
 		NodeList titles = doc2.getElementsByTagName("title");
 		for(int i = 0; i < titles.getLength(); i++) {
 			Node title = titles.item(i);
-			Book b = library.createAndAddBook(getTextContentOf(title, "name"));
+			Book b = library.getBookList().createAndAddBook(getTextContentOf(title, "name"));
 			b.setAuthor(getTextContentOf(title, "author"));
 			b.setPublisher(getTextContentOf(title, "publisher"));
 			b.setShelf(Shelf.A1);

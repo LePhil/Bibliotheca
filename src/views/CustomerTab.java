@@ -37,7 +37,6 @@ import viewModels.CustomerTableModel;
 
 import domain.Customer;
 import domain.Library;
-import domain.Loan;
 
 public class CustomerTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;
@@ -312,7 +311,7 @@ public class CustomerTab extends LibraryTab {
 			selectedRow = tblCustomers.convertRowIndexToModel( selectedRow );
 			System.out.println(selectedRow);
 			Customer selectedCustomer= getLibrary().getCustomerList().getCustomers().get(selectedRow);
-			CustomerDetail.editCustomer(getLibrary(), selectedCustomer);
+			CustomerDetail.editCustomer(getLibrary().getCustomerList(), selectedCustomer);
 		}	
 	}
 	public AbstractAction getAddCustomerAction() {
@@ -331,7 +330,7 @@ public class CustomerTab extends LibraryTab {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("NEW CUSTOMER");
-			CustomerDetail.editCustomer( getLibrary(), null );
+			CustomerDetail.editCustomer( getLibrary().getCustomerList(), null );
 		}
 	}
 }
