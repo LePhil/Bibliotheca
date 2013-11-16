@@ -53,30 +53,24 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Customer customer = customers.getCustomers().get(rowIndex);
-		String returnString;
 		
 		switch (columnIndex) {
 		case 0:
-			returnString = ""+customer.getCustomerNo();
-			break;
+			return customer.getCustomerNo();
 		case 1:
-			returnString = customer.getName()+" "+customer.getSurname();
-			break;
+			return customer.getName()+" "+customer.getSurname();
 		case 2:
-			returnString = customer.getStreet()+" "+customer.getZip()+" "+customer.getCity();
-			break;
+			return customer.getStreet()+" "+customer.getZip()+" "+customer.getCity();
 		default:
-			returnString = "";
-			break;
+			return "";
 		}
-		
-		return returnString;
 	}
 	
 	@Override
 	public Class getColumnClass (int columnIndex) {
 		switch (columnIndex) {
 		case 0:
+			return Integer.class;
 		case 1:
 		case 2:
 			return String.class;
