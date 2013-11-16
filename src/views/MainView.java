@@ -228,6 +228,8 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			break;
 		case 1: // Loans
 			break;
+		case 2:	// Customers
+			break;
 		}
 	}
 	/////////////////////////////////////////////////
@@ -246,9 +248,8 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			putValue( MNEMONIC_KEY, KeyEvent.VK_ESCAPE );
 		}
 		public void actionPerformed(ActionEvent e) {
-			mainFrame.setVisible(false);
+			System.exit(0);
 			// TODO (or maybe in each dialog): call cancel action so unsaved changes get lost. Or if we'll have enough time: check if there are unsaved changes and warn before closing.
-			// TODO: close all other opened dialogs now as well.
 		}
 	}
 }
