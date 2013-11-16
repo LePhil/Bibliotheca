@@ -55,22 +55,6 @@ public class LoanDetail extends JFrame {
 	private JScrollPane scrollPane;
 	private JPanel pnlCustomer;
 
-	// /**
-	// * Launch the application.
-	// */
-	// public static void main(String[] args) {
-	// EventQueue.invokeLater(new Runnable() {
-	// public void run() {
-	// try {
-	// LoanDetail window = new LoanDetail();
-	// window.frame.setVisible(true);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// });
-	// }
-
 	/**
 	 * Create the application.
 	 */
@@ -93,7 +77,7 @@ public class LoanDetail extends JFrame {
 		LoanDetail loanFrame = loanFramesDict.get(loan);
 		if (loanFrame == null) {
 			loanFrame = new LoanDetail(loan, loans, library);
-			// editFrame.setBook(book);
+			//editFrame.setBook(book);
 			loanFramesDict.put(loan, loanFrame);
 		}
 		loanFrame.setVisible(true);
@@ -154,7 +138,7 @@ public class LoanDetail extends JFrame {
 		gbc_cmbCustomer.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cmbCustomer.gridx = 2;
 		gbc_cmbCustomer.gridy = 1;
-		for(Customer customer : library.getCustomers()){
+		for(Customer customer : library.getCustomerList().getCustomers()){
 			cmbCustomer.addItem(customer);
 		}
 		cmbCustomer.setSelectedItem(loan.getCustomer());
