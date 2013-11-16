@@ -16,7 +16,7 @@ public class LoanList extends Observable implements Observer {
 	}
 
 	public void addLoan(Loan loan) {
-		// TODO pforster
+		loanList.add( loan );
 
 	}
 
@@ -28,12 +28,11 @@ public class LoanList extends Observable implements Observer {
 	}
 
 	public void removeLoanAt(int index) {
-		// TODO pforster
+		loanList.remove(index);
 	}
 
 	public boolean removeLoan(Loan loan) {
-		// TODO pforster
-		return false;
+		return loanList.remove(loan);
 	}
 
 	public int getLength() {

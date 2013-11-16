@@ -14,7 +14,11 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	private static final long serialVersionUID = 1L;
 
-	private String[] columns = { "Exemplar-ID", "Titel", "Author" };
+	private String[] columns = {
+		"Exemplar-ID",
+		"Titel",
+		"Author"
+	};
 
 	private LoanList loanList;
 

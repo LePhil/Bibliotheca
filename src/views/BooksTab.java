@@ -198,6 +198,7 @@ public class BooksTab extends LibraryTab {
 		// Handle the filtering over there:
 		updateFilters();
 		
+		// TableColumns
 		TableColumn availabilityColumn = tblBooks.getColumnModel().getColumn(0);
 		availabilityColumn.setMinWidth(100);
 		availabilityColumn.setMaxWidth(100);
@@ -213,6 +214,11 @@ public class BooksTab extends LibraryTab {
 		publisherColumn.setMinWidth(100);
 		publisherColumn.setMaxWidth(100);
 		publisherColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+		
+		TableColumn shelfColumn = tblBooks.getColumnModel().getColumn(4);
+		shelfColumn.setMinWidth(50);
+		shelfColumn.setMaxWidth(50);
+		shelfColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
 		
 		// Add Listeners
 		tblBooks.getSelectionModel().addListSelectionListener(
