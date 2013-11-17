@@ -64,10 +64,6 @@ public class CustomerTab extends LibraryTab {
 	private List<RowFilter<Object,Object>> customerFilters;
 	private String searchText;
 	
-	// Actions
-	private ShowSelectedCustomerAction showSelected;
-	private AddCustomerAction addCustomer;
-	
 	CustomerTab(CustomerTableModel customerTableModel, Library library) {
 		super(library);
 		this.customerTableModel = customerTableModel;
@@ -77,13 +73,10 @@ public class CustomerTab extends LibraryTab {
 		/////////////////////////////////////////////////
 		// ACTIONS
 		/////////////////////////////////////////////////
-		{
-			// Show/Edit selected customer
-			AbstractAction showCustomer = new ShowSelectedCustomerAction( Messages.getString( "CustomerTab.btnShowSelected.text"), "Show the customer that has been selected in the customer list" );
-			// Close
-			// Add Customer
-			AbstractAction addCustomer = new AddCustomerAction("ASd", "Adds a new customer" );
-		}
+		// Show/Edit selected customer
+		AbstractAction showCustomer = new ShowSelectedCustomerAction( Messages.getString( "CustomerTab.btnShowSelected.text"), "Show the customer that has been selected in the customer list" );
+		// Add Customer
+		AbstractAction addCustomer = new AddCustomerAction( Messages.getString("CustomerTab.btnAddNewCustomer.text"), "Adds a new customer" );
 
 		
 		// CustomerStats
@@ -127,23 +120,13 @@ public class CustomerTab extends LibraryTab {
 			Component horizontalStrut_1 = Box.createHorizontalStrut(20);
 			pnlCustomersInvTop.add(horizontalStrut_1);
 			
-			btnShowSelected = new JButton(Messages.getString("CustomerTab.btnShowSelected.text")); //$NON-NLS-1$
-			btnShowSelected.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					getShowSelectedCustomerAction().actionPerformed(null);
-				}
-			});
+			btnShowSelected = new JButton( showCustomer );
 			
 			Component horizontalStrut_2 = Box.createHorizontalStrut(20);
 			pnlCustomersInvTop.add(horizontalStrut_2);
 			pnlCustomersInvTop.add(btnShowSelected);
 			
-			btnAddNewCustomer = new JButton(Messages.getString("CustomerTab.btnAddNewCustomer.text")); //$NON-NLS-1$
-			btnAddNewCustomer.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					getAddCustomerAction().actionPerformed(null);
-				}
-			});
+			btnAddNewCustomer = new JButton( addCustomer );
 			pnlCustomersInvTop.add(btnAddNewCustomer);
 			
 			pnlCustomersInvBottom = new JPanel();
@@ -218,7 +201,7 @@ public class CustomerTab extends LibraryTab {
 		tblCustomers.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
 	            if (e.getClickCount() == 2) {
-	            	getShowSelectedCustomerAction().actionPerformed(null);
+	            	new ShowSelectedCustomerAction("", "").actionPerformed(null);
 	            }
 	        }
 		});
@@ -289,12 +272,6 @@ public class CustomerTab extends LibraryTab {
 	/////////////////////////////////////////////////
 	// Action Subclasses
 	/////////////////////////////////////////////////
-	public AbstractAction getShowSelectedCustomerAction() {
-		if( showSelected == null ) {
-			showSelected = new ShowSelectedCustomerAction("", "");
-		}
-		return showSelected;
-	}
 	class ShowSelectedCustomerAction extends AbstractAction {
 		private static final long serialVersionUID = 1L;
 		public ShowSelectedCustomerAction( String text, String desc ) {
@@ -313,12 +290,6 @@ public class CustomerTab extends LibraryTab {
 			Customer selectedCustomer= getLibrary().getCustomerList().getCustomers().get(selectedRow);
 			CustomerDetail.editCustomer(getLibrary().getCustomerList(), selectedCustomer);
 		}	
-	}
-	public AbstractAction getAddCustomerAction() {
-		if( addCustomer == null ) {
-			addCustomer= new AddCustomerAction("", "");
-		}
-		return addCustomer;
 	}
 	class AddCustomerAction extends AbstractAction {
 		private static final long serialVersionUID = 1L;

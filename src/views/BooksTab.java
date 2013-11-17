@@ -36,8 +36,11 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.BookTableModel;
+import views.LoansTab.AddLoanAction;
+import views.LoansTab.ShowSelectedLoanAction;
 import domain.Book;
 import domain.Library;
+import domain.Loan;
 
 public class BooksTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;
@@ -87,6 +90,15 @@ public class BooksTab extends LibraryTab {
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
+		/////////////////////////////////////////////////
+		// ACTIONS
+		/////////////////////////////////////////////////
+		// Show/Edit selected books
+		AbstractAction showSelected = new ShowSelectedBookAction( Messages.getString("BookMaster.btnShowSelected.text"), "Show the books that have been selected in the list" );
+		// Add Book
+		AbstractAction addBook = new AddBookAction( Messages.getString("BookMaster.btnAddNewBook.text"), "Adds a new book" );
+
+		
 		pnlBookInventoryStats = new JPanel();
 		pnlBookInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlBookInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 		this.add(pnlBookInventoryStats);
@@ -130,12 +142,7 @@ public class BooksTab extends LibraryTab {
 		horizontalStrut_1 = Box.createHorizontalStrut(20);
 		pnlBooksInvTop.add(horizontalStrut_1);
 		
-		btnShowSelected = new JButton(Messages.getString("BookMaster.btnShowSelected.text")); //$NON-NLS-1$
-		btnShowSelected.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showSelectedButtonActionPerformed(e);
-			}
-		});
+		btnShowSelected = new JButton( showSelected );
 		
 		chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
 		chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
@@ -145,12 +152,7 @@ public class BooksTab extends LibraryTab {
 		pnlBooksInvTop.add(horizontalStrut_2);
 		pnlBooksInvTop.add(btnShowSelected);
 		
-		btnAddNewBook = new JButton(Messages.getString("BookMaster.btnAddNewBook.text")); //$NON-NLS-1$
-		btnAddNewBook.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				addButtonActionPerformed(e);
-			}
-		});
+		btnAddNewBook = new JButton( addBook );
 		pnlBooksInvTop.add(btnAddNewBook);
 		
 		pnlBooksInvBottom = new JPanel();
@@ -285,22 +287,9 @@ public class BooksTab extends LibraryTab {
 		pnlBooksInvTop.add(txtSearch);
 	}
 	
-	private void showSelectedButtonActionPerformed(ActionEvent evt) {
-		int[] selectedRows = tblBooks.getSelectedRows();
-		
-		for (int selectedRow : selectedRows) {
-			Book book = getLibrary().getBookList().getBooks().get( tblBooks.convertRowIndexToModel( selectedRow ) );
-			editBook(book);
-		}
-	}
-	
 	private void editBook( Book book ) {
 		book.addObserver(getLibrary());
 		BookDetail.editBook( getLibrary(), book );
-	}
-	
-	private void addButtonActionPerformed(ActionEvent evt) {
-		BookDetail.editBook( getLibrary(), null );
 	}
 	
 	/**
@@ -380,5 +369,46 @@ public class BooksTab extends LibraryTab {
 		// Books stats
 		lblNrOfBooks.setText( Messages.getString("BookMaster.lblNrOfBooks.text", String.valueOf(getLibrary().getBookList().getBooks().size())) );
 		lblNrOfCopies.setText( Messages.getString("BookMaster.lblNrOfCopies.text", String.valueOf(getLibrary().getCopies().size())) );
+	}
+	
+	///////////////////////////////////////
+	// ACTIONS
+	///////////////////////////////////////
+	// Show selected Books
+	class ShowSelectedBookAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+
+		public ShowSelectedBookAction(String text, String desc) {
+			super(text);
+			putValue(SHORT_DESCRIPTION, desc);
+			putValue(MNEMONIC_KEY, KeyEvent.VK_ENTER);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("SHOW BOOKS");
+			int[] selectedRows = tblBooks.getSelectedRows();
+			
+			for (int selectedRow : selectedRows) {
+				Book book = getLibrary().getBookList().getBooks().get( tblBooks.convertRowIndexToModel( selectedRow ) );
+				editBook(book);
+			}
+		}
+	}
+	// Add a book
+	class AddBookAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+
+		public AddBookAction(String text, String desc) {
+			super(text);
+			putValue(SHORT_DESCRIPTION, desc);
+			putValue(MNEMONIC_KEY, KeyEvent.VK_N);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("NEW BOOK");
+			editBook( null );
+		}
 	}
 }

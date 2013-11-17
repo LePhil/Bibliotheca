@@ -37,6 +37,9 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.LoanTableModel;
+import views.CustomerTab.AddCustomerAction;
+import views.CustomerTab.ShowSelectedCustomerAction;
+import domain.Customer;
 import domain.Library;
 import domain.Loan;
 
@@ -98,6 +101,14 @@ public class LoansTab extends LibraryTab {
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
+		/////////////////////////////////////////////////
+		// ACTIONS
+		/////////////////////////////////////////////////
+		// Show/Edit selected loans
+		AbstractAction showSelected = new ShowSelectedLoanAction( Messages.getString("BookMaster.btnShowSelectedLoans.text"), "Show the loans that have been selected in the list" );
+		// Add Loan
+		AbstractAction addLoan = new AddLoanAction( Messages.getString("BookMaster.btnAddNewLoan.text"), "Adds a new loan" );
+	
 		// Inventory
 		{
 			pnlLoansInventoryStats = new JPanel();
@@ -150,7 +161,7 @@ public class LoansTab extends LibraryTab {
 		horizontalStrut_5 = Box.createHorizontalStrut(20);
 		pnlLoansInvTop.add(horizontalStrut_5);
 		
-		btnShowSelectedLoans = new JButton(Messages.getString("BookMaster.btnShowSelectedLoans.text")); //$NON-NLS-1$
+		btnShowSelectedLoans = new JButton( showSelected );
 		btnShowSelectedLoans.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showSelectedLoansButtonActionPerformed(e);
@@ -175,12 +186,7 @@ public class LoansTab extends LibraryTab {
 		pnlLoansInvTop.add(horizontalStrut_6);
 		pnlLoansInvTop.add(btnShowSelectedLoans);
 		
-		btnAddNewLoan= new JButton(Messages.getString("BookMaster.btnAddNewLoan.text")); //$NON-NLS-1$
-		btnAddNewLoan.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//addLoanButtonActionPerformed(e);
-			}
-		});
+		btnAddNewLoan= new JButton( addLoan ); //$NON-NLS-1$
 		pnlLoansInvTop.add(btnAddNewLoan);
 		pnlLoansInvBottom = new JPanel();
 		
@@ -371,17 +377,10 @@ public class LoansTab extends LibraryTab {
 			updateFilters();
 		}
 	}
-	
-	/**
-	 * Updates the labels that contain statistical information.
-	 * @author PCHR
-	 */
-	public void updateStatistics() {
-		lblNrOfCurrentLoans.setText( Messages.getString( "BookMasterTable.lblNrOfCurrentLoans.text", String.valueOf( getLibrary().getLentOutBooks().size() ) ) );
-		lblNrOfDueLoans.setText( Messages.getString( "BookMasterTable.lblNrOfDueLoans.text", String.valueOf( getLibrary().getOverdueLoans().size() ) ) );
-		lblNrOfLoans.setText( Messages.getString( "BookMasterTable.lblNrOfLoans.text", String.valueOf( getLibrary().getLoans().size() ) ) );
-	}
-	
+	///////////////////////////////////////
+	// ACTIONS
+	///////////////////////////////////////
+	// Show selected Loans
 	private void showSelectedLoansButtonActionPerformed(ActionEvent event){
 		int[] selectedRows = tblLoans.getSelectedRows();
 		
@@ -390,5 +389,46 @@ public class LoansTab extends LibraryTab {
 			Loan selectedLoan = getLibrary().getLoans().get(selectedRow);
 			LoanDetail.editLoan(selectedLoan, getLibrary());
 		}
+	}
+	class ShowSelectedLoanAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public ShowSelectedLoanAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_ENTER );
+	    }
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("SHOW LOANS");
+			int[] selectedRows = tblLoans.getSelectedRows();
+			
+			for (int selectedRow : selectedRows) {
+				Loan loan = getLibrary().getLoans().get( tblLoans.convertRowIndexToModel( selectedRow ) );
+				LoanDetail.editLoan(loan, getLibrary() );
+			}
+		}	
+	}
+	class AddLoanAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public AddLoanAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_N );
+	    }
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("NEW LOAN");
+			LoanDetail.editLoan( null, getLibrary() );
+		}
+	}
+
+	/**
+	 * Updates the labels that contain statistical information.
+	 * @author PCHR
+	 */
+	public void updateStatistics() {
+		lblNrOfCurrentLoans.setText( Messages.getString( "BookMasterTable.lblNrOfCurrentLoans.text", String.valueOf( getLibrary().getLentOutBooks().size() ) ) );
+		lblNrOfDueLoans.setText( Messages.getString( "BookMasterTable.lblNrOfDueLoans.text", String.valueOf( getLibrary().getOverdueLoans().size() ) ) );
+		lblNrOfLoans.setText( Messages.getString( "BookMasterTable.lblNrOfLoans.text", String.valueOf( getLibrary().getLoans().size() ) ) );
 	}
 }
