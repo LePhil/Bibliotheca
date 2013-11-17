@@ -5,10 +5,13 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -42,7 +45,8 @@ public class LoanDetail extends JFrame {
 	
 	// Buttons
 	private JButton btnCopy;
-	private JButton btnCancel; //TODO: add cancel-button
+	private JButton btnCancel;
+	private JButton btnSave;
 	
 	// Labels
 	private JLabel lblCustomerId;
@@ -71,6 +75,7 @@ public class LoanDetail extends JFrame {
 	
 	private static boolean newlyCreated;
 	private static LoanDetail editFrame;
+	private JPanel panel;
 
 	/**
 	 * Create the application.
@@ -126,9 +131,9 @@ public class LoanDetail extends JFrame {
 			// ACTIONS
 			/////////////////////////////////////////////////
 			// Close (via Esc-Key (?), Button)
-			//AbstractAction cancel = new CloseAction( Messages.getString( "CustomerDetail.btnCancel.text"), "Revert Changes, close dialog" );
+			AbstractAction cancel = new CloseAction( Messages.getString( "CustomerDetail.btnCancel.text"), "Revert Changes, close dialog" );
 			// Save (via S, Button)
-			//AbstractAction save = new SaveAction( Messages.getString( "CustomerDetail.btnSave.text"), "Save changes" );
+			AbstractAction save = new SaveAction( Messages.getString( "CustomerDetail.btnSave.text"), "Save changes" );
 			// Delete customer (via D, Button)
 			//AbstractAction delete = new DeleteAction( Messages.getString( "CustomerDetail.btnDelete.text"), "Delete this customer" );
 					
@@ -137,7 +142,7 @@ public class LoanDetail extends JFrame {
 			/////////////////////////////////////////////////
 			pnlCustomer = new JPanel();
 			pnlCustomer.setBorder(new TitledBorder(new LineBorder(
-					new Color(0, 0, 0)), "Kundenauswahl", TitledBorder.LEADING,
+					new Color(0, 0, 0)), Messages.getString( "LoanDetail.CustomerSelection.text" ), TitledBorder.LEADING,
 					TitledBorder.TOP, null, null));
 			getContentPane().add(pnlCustomer);
 			GridBagLayout gbl_pnlCustomer = new GridBagLayout();
@@ -148,7 +153,7 @@ public class LoanDetail extends JFrame {
 			gbl_pnlCustomer.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 			pnlCustomer.setLayout(gbl_pnlCustomer);
 	
-			lblCustomerId = new JLabel("Kennung");
+			lblCustomerId = new JLabel(Messages.getString("LoanDetail.lblCustomerId.text")); //$NON-NLS-1$
 			GridBagConstraints gbc_lblCustomerId = new GridBagConstraints();
 			gbc_lblCustomerId.insets = new Insets(0, 0, 5, 5);
 			gbc_lblCustomerId.anchor = GridBagConstraints.EAST;
@@ -167,7 +172,7 @@ public class LoanDetail extends JFrame {
 			// TODO pforster: welche nummer ist die Kennnummer?
 			txtCustomerId.setText("156");
 	
-			lblCustomer = new JLabel("Kunde");
+			lblCustomer = new JLabel(Messages.getString("LoanDetail.lblCustomer.text")); //$NON-NLS-1$
 			GridBagConstraints gbc_lblCustomer = new GridBagConstraints();
 			gbc_lblCustomer.anchor = GridBagConstraints.EAST;
 			gbc_lblCustomer.insets = new Insets(0, 0, 0, 5);
@@ -189,9 +194,7 @@ public class LoanDetail extends JFrame {
 			
 	
 			pnlLoanCopy = new JPanel();
-			pnlLoanCopy.setBorder(new TitledBorder(new LineBorder(
-					new Color(0, 0, 0)), "Neues Exemplar ausleihen",
-					TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			pnlLoanCopy.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), Messages.getString( "LoanDetail.loanNewTitle.text" ), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			getContentPane().add(pnlLoanCopy);
 			GridBagLayout gbl_pnlLoanCopy = new GridBagLayout();
 			gbl_pnlLoanCopy.columnWidths = new int[] { 0, 0, 0, 0, 0, 0 };
@@ -201,7 +204,7 @@ public class LoanDetail extends JFrame {
 			gbl_pnlLoanCopy.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 			pnlLoanCopy.setLayout(gbl_pnlLoanCopy);
 	
-			JLabel lblCopyId = new JLabel("Exemplar-ID");
+			JLabel lblCopyId = new JLabel(Messages.getString("LoanDetail.lblCopyId.text")); //$NON-NLS-1$
 			GridBagConstraints gbc_lblCopyId = new GridBagConstraints();
 			gbc_lblCopyId.insets = new Insets(0, 0, 5, 5);
 			gbc_lblCopyId.anchor = GridBagConstraints.EAST;
@@ -217,16 +220,21 @@ public class LoanDetail extends JFrame {
 			gbc_txtCopyId.gridy = 0;
 			pnlLoanCopy.add(txtCopyId, gbc_txtCopyId);
 			txtCopyId.setColumns(10);
-			txtCopyId.setText(loan.getCopy().getInventoryNumber() + "");
+			
+			if ( loan.getCopy() != null ) {
+				txtCopyId.setText( loan.getCopy().getInventoryNumber() + "" );
+			} else {
+				txtCopyId.setText( "" );
+			}
 	
-			btnCopy = new JButton("Exemplar");
+			btnCopy = new JButton(Messages.getString("LoanDetail.btnCopy.text")); //$NON-NLS-1$
 			GridBagConstraints gbc_btnCopy = new GridBagConstraints();
 			gbc_btnCopy.insets = new Insets(0, 0, 5, 5);
 			gbc_btnCopy.gridx = 3;
 			gbc_btnCopy.gridy = 0;
 			pnlLoanCopy.add(btnCopy, gbc_btnCopy);
 	
-			lblReturnDate = new JLabel("Zurück Am");
+			lblReturnDate = new JLabel(Messages.getString("LoanDetail.lblReturnDate.text")); //$NON-NLS-1$
 			GridBagConstraints gbc_lblReturnDate = new GridBagConstraints();
 			gbc_lblReturnDate.anchor = GridBagConstraints.EAST;
 			gbc_lblReturnDate.insets = new Insets(0, 0, 0, 5);
@@ -253,9 +261,7 @@ public class LoanDetail extends JFrame {
 			}
 	
 			pnlLoans = new JPanel();
-			pnlLoans.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)),
-					"Ausleihen von Peter Possum", TitledBorder.LEADING,
-					TitledBorder.TOP, null, null));
+			pnlLoans.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Loans of $PARAM", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			getContentPane().add(pnlLoans);
 			GridBagLayout gbl_pnlLoans = new GridBagLayout();
 			gbl_pnlLoans.columnWidths = new int[] { 0, 0 };
@@ -295,6 +301,9 @@ public class LoanDetail extends JFrame {
 			}
 			scrollPane.setViewportView(customerLoanTable);
 			pnlCustomerLoans.add(scrollPane);
+			
+			panel = new JPanel();
+			getContentPane().add(panel);
 		} catch ( Exception e) {
 			e.printStackTrace();
 		}
@@ -326,6 +335,93 @@ public class LoanDetail extends JFrame {
 		// customerLoanTable.getColumnModel().getColumn(1);
 		// TableColumn copyAuthorColumn =
 		// customerLoanTable.getColumnModel().getColumn(2);
+	}
+	
+	/////////////////////////////////////////////////
+	// Action Subclasses
+	/////////////////////////////////////////////////
+	/**
+	 * Closes the current dialog.
+	 * TODO: Close dialog, disregard changes. Don't save!
+	 * @author PCHR
+	 */
+	class CloseAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public CloseAction( String text, String desc ) {
+			super( text );
+			putValue( SHORT_DESCRIPTION, desc );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_C );
+		}
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("CLOSE DIALOG NOW.");
+			editFrame.setVisible(false);
+		}
+	}
+	/**
+	 * Saves the (changed) entries for the currently opened loan.
+	 * @author PCHR
+	 */
+	class SaveAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public SaveAction( String text, String desc ) {
+			super( text );
+			putValue( SHORT_DESCRIPTION, desc );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_S );
+		}
+		public void actionPerformed(ActionEvent e) {
+			/*
+			if ( customer.getCity() != txtCity.getText() ) {
+				customer.setCity( txtCity.getText() );
+			}
+			if ( customer.getName() != txtName.getText() ) {
+				customer.setName( txtName.getText() );
+			}
+			if ( customer.getSurname() != txtSurname.getText() ) {
+				customer.setSurname( txtSurname.getText() );
+			}
+			if ( customer.getStreet() != txtStreet.getText() ) {
+				customer.setStreet( txtStreet.getText() );
+			}
+			if ( customer.getZip() != Integer.valueOf( txtZip.getText() ) ) {
+				customer.setZip( Integer.valueOf( txtZip.getText() ) );
+			}
+			if ( customer.getCity() != txtCity.getText() ) {
+				customer.setCity( txtCity.getText() );
+			}
+			
+			btnSave.setEnabled(false);
+			btnReset.setEnabled(false);
+			*/
+			
+			if ( newlyCreated ) {
+				// Saving a loan that we just created.
+				// we can only add it now, because before it shouldn't
+				// belong to the library, only on saving.
+				
+				loans.addLoan( loan );
+				
+				newlyCreated = false;
+				//btnDelete.setEnabled(true);
+			}
+		}
+	}
+	/**
+	 * Reset the form
+	 * @author PCHR
+	 */
+	class ResetAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public ResetAction( String text, String desc ) {
+			super( text );
+			putValue( SHORT_DESCRIPTION, desc );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_R );
+		}
+		public void actionPerformed(ActionEvent e) {
+			//fillForm();
+			//btnSave.setEnabled(false);
+		}
 	}
 
 }

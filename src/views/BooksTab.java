@@ -288,7 +288,6 @@ public class BooksTab extends LibraryTab {
 	}
 	
 	private void editBook( Book book ) {
-		book.addObserver(getLibrary());
 		BookDetail.editBook( getLibrary(), book );
 	}
 	
