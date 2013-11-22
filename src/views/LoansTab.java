@@ -133,7 +133,7 @@ public class LoansTab extends LibraryTab {
 		}
 		
 		pnlLoansInventory = new JPanel();
-		pnlLoansInventory.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), Messages.getString("BookMasterTable.pnlLoansInventory.TitledBorder.text"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+		pnlLoansInventory.setBorder(new TitledBorder(null, Messages.getString("BookMasterTable.pnlLoansInventory.TitledBorder.text"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
 		this.add(pnlLoansInventory);
 		gbl_pnlLoansInventory = new GridBagLayout();
 		gbl_pnlLoansInventory.columnWidths = new int[] {0};

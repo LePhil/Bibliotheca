@@ -110,7 +110,7 @@ public class BooksTab extends LibraryTab {
 		pnlBookInventoryStats.add(lblNrOfCopies);
 		
 		pnlBookInventory = new JPanel();
-		pnlBookInventory.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlBookInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+		pnlBookInventory.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlBookInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		this.add(pnlBookInventory);
 		gbl_pnlBookInventory = new GridBagLayout();
 		gbl_pnlBookInventory.columnWidths = new int[] {0};

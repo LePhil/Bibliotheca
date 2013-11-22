@@ -1,5 +1,6 @@
 package views;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -26,6 +27,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -80,10 +82,10 @@ public class CustomerTab extends LibraryTab {
 		// CustomerStats
 		{
 			pnlCustomerStats = new JPanel();
-			pnlCustomerStats.setBorder(new TitledBorder(null, Messages.getString("CustomerTab.CustomerStats.Title")));
+			pnlCustomerStats.setBorder(new TitledBorder(null, Messages.getString("CustomerTab.CustomerStats.Title"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+			this.add(pnlCustomerStats);
 			pnlCustomerStats.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-			this.add( pnlCustomerStats );
-		
+			
 			lblNrOfCustomers = new JLabel();
 			pnlCustomerStats.add( lblNrOfCustomers );
 		}
