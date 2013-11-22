@@ -1,30 +1,28 @@
 package views;
 
-import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.AbstractAction;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.WindowConstants;
-
-import viewModels.BookTableModel;
-import viewModels.CustomerTableModel;
-import viewModels.LoanTableModel;
-
-import domain.Library;
-
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JPanel;
+
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.SwingConstants;
-import java.awt.FlowLayout;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import viewModels.BookTableModel;
+import viewModels.CustomerTableModel;
+import viewModels.LoanTableModel;
+import domain.Library;
 
 public class MainView extends javax.swing.JFrame implements Observer {
 

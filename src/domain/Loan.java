@@ -96,7 +96,7 @@ public class Loan {
 		dueDate.add(GregorianCalendar.DAY_OF_YEAR, DAYS_TO_RETURN_BOOK);
 		
 		return (int) (new GregorianCalendar().getTimeInMillis() - 
-				dueDate.getTimeInMillis())/ 1000 /60 /60 /24;
+				dueDate.getTimeInMillis()/ 1000 /60 /60 /24);
 	}
 	
 	public boolean isOverdue() {

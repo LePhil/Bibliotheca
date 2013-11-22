@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -36,11 +35,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.BookTableModel;
-import views.LoansTab.AddLoanAction;
-import views.LoansTab.ShowSelectedLoanAction;
 import domain.Book;
 import domain.Library;
-import domain.Loan;
 
 public class BooksTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;

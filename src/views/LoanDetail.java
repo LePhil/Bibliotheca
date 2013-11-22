@@ -30,7 +30,6 @@ import javax.swing.table.TableRowSorter;
 
 import viewModels.CustomerLoanTableModel;
 import domain.Customer;
-import domain.CustomerList;
 import domain.Library;
 import domain.Loan;
 import domain.LoanList;
