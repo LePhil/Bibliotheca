@@ -122,6 +122,7 @@ public class CustomerTab extends LibraryTab {
 			pnlCustomersInvTop.add(horizontalStrut_1);
 			
 			btnShowSelected = new JButton( showCustomer );
+			btnShowSelected.setIcon( new ImageIcon("icons/user_search_32.png") );
 			
 			Component horizontalStrut_2 = Box.createHorizontalStrut(20);
 			pnlCustomersInvTop.add(horizontalStrut_2);
@@ -210,6 +211,8 @@ public class CustomerTab extends LibraryTab {
 	}
 
 	private void initSearchField() {
+		pnlCustomersInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ) );
+		
 		txtSearch = new JTextField();
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override

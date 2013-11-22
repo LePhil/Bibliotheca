@@ -165,6 +165,7 @@ public class LoansTab extends LibraryTab {
 				showSelectedLoansButtonActionPerformed(e);
 			}
 		});
+		btnShowSelectedLoans.setIcon( new ImageIcon("icons/basket_search_32.png") );
 		
 		///////////////////////////////////////////////////////////
 		// ComboBox
@@ -297,6 +298,8 @@ public class LoansTab extends LibraryTab {
 	 * 
 	 */
 	private void initLoansSearchField() {
+		pnlLoansInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ) );
+		
 		txtSearchLoans = new JTextField();
 		txtSearchLoans.addKeyListener(new KeyAdapter() {
 			@Override

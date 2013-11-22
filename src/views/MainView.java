@@ -107,6 +107,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			getContentPane().add(pnlMainButtons, BorderLayout.SOUTH);
 			
 			btnCloseApp = new JButton( close );
+			btnCloseApp.setIcon( new ImageIcon("icons/close_32.png") );
 			pnlMainButtons.add(btnCloseApp);
 			
 			tbsMain = new JTabbedPane(JTabbedPane.TOP);

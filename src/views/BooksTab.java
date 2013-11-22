@@ -140,6 +140,7 @@ public class BooksTab extends LibraryTab {
 		pnlBooksInvTop.add(horizontalStrut_1);
 		
 		btnShowSelected = new JButton( showSelected );
+		btnShowSelected.setIcon( new ImageIcon("icons/book_search_32.png") );
 		
 		chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
 		chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
@@ -249,6 +250,8 @@ public class BooksTab extends LibraryTab {
 	 * 
 	 */
 	private void initSearchField() {
+		pnlBooksInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ) );
+		
 		txtSearch = new JTextField();
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
