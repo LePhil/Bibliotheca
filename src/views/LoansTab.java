@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -240,7 +241,25 @@ public class LoansTab extends LibraryTab {
 		TableColumn copyIDColumn = tblLoans.getColumnModel().getColumn(1);
 		copyIDColumn.setMinWidth(50);
 		copyIDColumn.setMaxWidth(50);
-		copyIDColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));
+		copyIDColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()) {
+			@Override
+			public Component
+					getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+				// TODO PCHR: icons!
+				
+				//boolean overdue = (Boolean) value;
+
+				//ImageIcon icon = new ImageIcon(BookDetailFrame.class.getResource("/silk/" + (overdue ? "error" : "tick") + ".png"));
+				//String text = BUNDLE.getString("InventoryFrame.loanList.state." + (overdue ? "overdue" : "ok"));
+
+				//label.setText(text);
+				//label.setIcon(icon);
+
+				return label;
+			}
+		});
 		
 		TableColumn copyTitleColumn = tblLoans.getColumnModel().getColumn(2);
 		copyTitleColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));

@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -29,6 +30,7 @@ import javax.swing.table.TableRowSorter;
 
 import viewModels.CustomerLoanTableModel;
 import domain.Customer;
+import domain.CustomerList;
 import domain.Library;
 import domain.Loan;
 import domain.LoanList;
@@ -76,6 +78,8 @@ public class LoanDetail extends JFrame {
 	private static boolean newlyCreated;
 	private static LoanDetail editFrame;
 	private JPanel panel;
+	
+	private static int customerNo;
 
 	/**
 	 * Create the application.
@@ -97,6 +101,10 @@ public class LoanDetail extends JFrame {
 			// create new loan
 			loan = new Loan( null, null ); // TODO: add new loan. feels weird.
 			newlyCreated = true;
+			customerNo = -1;
+			
+		} else {
+			customerNo = loan.getCustomer().getCustomerNo();
 		}
 		
 		LoanList loans = new LoanList();
@@ -169,8 +177,22 @@ public class LoanDetail extends JFrame {
 			gbc_txtCustomerId.gridy = 0;
 			pnlCustomer.add(txtCustomerId, gbc_txtCustomerId);
 			txtCustomerId.setColumns(10);
-			// TODO pforster: welche nummer ist die Kennnummer?
-			txtCustomerId.setText("156");
+			
+			txtCustomerId.setText( "" + loan.getCustomer().getCustomerNo() );
+			txtCustomerId.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyTyped(KeyEvent e) {
+					if ( txtCustomerId.getText().equals("") ) {
+						// TODO: color the input field red! Or so... PCHR
+						//customerNo = -1;
+						updateCustomerDropdown( null );
+					} else {
+						// TODO: remove the red color, if set.
+						customerNo = Integer.parseInt( txtCustomerId.getText() );
+						updateCustomerDropdown( library.getCustomerList().getByID( customerNo ) );
+					}
+				}
+			});
 	
 			lblCustomer = new JLabel(Messages.getString("LoanDetail.lblCustomer.text")); //$NON-NLS-1$
 			GridBagConstraints gbc_lblCustomer = new GridBagConstraints();
@@ -335,6 +357,13 @@ public class LoanDetail extends JFrame {
 		// customerLoanTable.getColumnModel().getColumn(1);
 		// TableColumn copyAuthorColumn =
 		// customerLoanTable.getColumnModel().getColumn(2);
+	}
+	private void updateCustomerDropdown( Customer customer ) {
+		if ( customer != null ) {
+			cmbCustomer.setSelectedItem( customer );
+		} else {
+			cmbCustomer.setSelectedIndex(0);
+		}
 	}
 	
 	/////////////////////////////////////////////////

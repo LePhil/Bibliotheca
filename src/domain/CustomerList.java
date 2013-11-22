@@ -78,6 +78,25 @@ public class CustomerList extends Observable implements Observer {
 		return customers.get( addCustomerIndex );
 	}
 	
+	/**
+	 * Returns the customer based on the ID. If the customer is
+	 * nonexistent, return null.
+	 * @param ID
+	 * @return Customer|null
+	 * @author PCHR
+	 */
+	public Customer getByID( int ID ) {
+		if ( ID > latestCustomer ) {
+			return null;
+		}
+		for (Customer customer : customers) {
+			if ( customer.getCustomerNo() == ID ) {
+				return customer;
+			}
+		}
+		return null;
+	}
+	
 	public int getEditedCustomerPos() {
 		return this.editedCustomerPos;
 	}
