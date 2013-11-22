@@ -7,32 +7,36 @@ import javax.swing.table.AbstractTableModel;
 
 import domain.Book;
 import domain.Copy;
-import domain.LoanList;
+import domain.CopyList;
 
-public class CustomerLoanTableModel extends AbstractTableModel implements
+public class CopyTableModel extends AbstractTableModel implements
 		Observer {
 
 	private static final long serialVersionUID = 1L;
 
-	private String[] columns = { "Exemplar-ID", "Titel", "Author" };
+	private String[] columns = {
+		"InvetoryNr",
+		"Title",
+		"Author"
+	};
 
-	private LoanList loanList;
+	private CopyList copyList;
 
-	public CustomerLoanTableModel(LoanList loanList) {
-		this.loanList = loanList;
-		loanList.addObserver(this);
+	public CopyTableModel(CopyList copyList) {
+		this.copyList = copyList;
+		copyList.addObserver(this);
 	}
 
 	@Override
 	public int getRowCount() {
-		return loanList.getLength();
+		return copyList.getLength();
 	}
 
 	@Override
 	public String getColumnName(int column) {
 		return columns[column];
 	}
-
+	
 	@Override
 	public int getColumnCount() {
 		return columns.length;
@@ -40,7 +44,7 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Copy copy = loanList.getLoanAt(rowIndex).getCopy();
+		Copy copy = copyList.getCopyAt(rowIndex);
 		Book book = copy.getTitle();
 		switch (columnIndex) {
 		case 0:
@@ -56,7 +60,8 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	@Override
 	public void update(Observable o, Object arg) {
-		fireTableDataChanged();
+		// TODO Auto-generated method stub
+
 	}
 
 }

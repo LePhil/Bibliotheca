@@ -16,6 +16,7 @@ public class LoanList extends Observable implements Observer {
 	}
 
 	public void addLoan(Loan loan) {
+		doNotify();
 		loanList.add( loan );
 
 	}
@@ -71,6 +72,7 @@ public class LoanList extends Observable implements Observer {
 	}
 
 	public void setLoanList(List<Loan> loanList) {
+		doNotify();
 		this.loanList = loanList;
 	}
 
