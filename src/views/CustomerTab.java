@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -127,6 +128,7 @@ public class CustomerTab extends LibraryTab {
 			pnlCustomersInvTop.add(btnShowSelected);
 			
 			btnAddNewCustomer = new JButton( addCustomer );
+			btnAddNewCustomer.setIcon( new ImageIcon("icons/user_add_32.png") );
 			pnlCustomersInvTop.add(btnAddNewCustomer);
 			
 			pnlCustomersInvBottom = new JPanel();

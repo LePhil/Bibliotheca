@@ -16,6 +16,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -149,6 +150,7 @@ public class BooksTab extends LibraryTab {
 		pnlBooksInvTop.add(btnShowSelected);
 		
 		btnAddNewBook = new JButton( addBook );
+		btnAddNewBook.setIcon( new ImageIcon("icons/book_add_32.png") );
 		pnlBooksInvTop.add(btnAddNewBook);
 		
 		pnlBooksInvBottom = new JPanel();

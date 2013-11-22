@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -184,6 +185,7 @@ public class LoansTab extends LibraryTab {
 		pnlLoansInvTop.add(btnShowSelectedLoans);
 		
 		btnAddNewLoan= new JButton( addLoan ); //$NON-NLS-1$
+		btnAddNewLoan.setIcon( new ImageIcon("icons/basket_add_32.png") );
 		pnlLoansInvTop.add(btnAddNewLoan);
 		pnlLoansInvBottom = new JPanel();
 		
