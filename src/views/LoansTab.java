@@ -18,7 +18,6 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -38,9 +37,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.LoanTableModel;
-import views.CustomerTab.AddCustomerAction;
-import views.CustomerTab.ShowSelectedCustomerAction;
-import domain.Customer;
 import domain.Library;
 import domain.Loan;
 
@@ -242,6 +238,8 @@ public class LoansTab extends LibraryTab {
 		copyIDColumn.setMinWidth(50);
 		copyIDColumn.setMaxWidth(50);
 		copyIDColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()) {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public Component
 					getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -389,10 +387,6 @@ public class LoansTab extends LibraryTab {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			currentTableMode = loanTableMode.values()[cmbLoanTableModes.getSelectedIndex()];
-			updateFilters();
-		}
-		public void actionPerformed(int i) {
-			currentTableMode = loanTableMode.values()[i];
 			updateFilters();
 		}
 	}

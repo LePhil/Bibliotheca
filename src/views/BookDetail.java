@@ -7,10 +7,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -28,6 +28,8 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import viewModels.CopyListModel;
 import domain.Book;
@@ -35,11 +37,6 @@ import domain.BookList;
 import domain.Copy;
 import domain.Library;
 import domain.Shelf;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class BookDetail extends javax.swing.JFrame implements Observer {
 
