@@ -14,11 +14,7 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	private static final long serialVersionUID = 1L;
 
-	private String[] columns = {
-		"Exemplar-ID",
-		"Titel",
-		"Author"
-	};
+	private String[] columns = { "Exemplar-ID", "Titel", "Author" };
 
 	private LoanList loanList;
 
@@ -30,6 +26,11 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 	@Override
 	public int getRowCount() {
 		return loanList.getLength();
+	}
+
+	@Override
+	public String getColumnName(int column) {
+		return columns[column];
 	}
 
 	@Override
@@ -55,8 +56,7 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
+		fireTableDataChanged();
 	}
 
 }

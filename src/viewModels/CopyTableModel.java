@@ -33,6 +33,11 @@ public class CopyTableModel extends AbstractTableModel implements
 	}
 
 	@Override
+	public String getColumnName(int column) {
+		return columns[column];
+	}
+	
+	@Override
 	public int getColumnCount() {
 		return columns.length;
 	}

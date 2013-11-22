@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Dictionary;
@@ -31,6 +32,7 @@ import javax.swing.table.TableRowSorter;
 
 import viewModels.CopyTableModel;
 import viewModels.CustomerLoanTableModel;
+import domain.Copy;
 import domain.CopyList;
 import domain.Customer;
 import domain.Library;
@@ -93,7 +95,7 @@ public class LoanDetail extends JFrame {
 		this.loan = loan;
 		this.loans = loanList;
 		this.copies = new CopyList();
-		this.copies.setCopyList(library.getCopies());
+		this.copies.setCopyList(library.getAvailableCopies());
 		this.library = library;
 
 		this.customerLoanTableModel = new CustomerLoanTableModel(loanList);
@@ -183,17 +185,24 @@ public class LoanDetail extends JFrame {
 			txtCustomerId.setText("" + loan.getCustomer().getCustomerNo());
 			txtCustomerId.addKeyListener(new KeyAdapter() {
 				@Override
-				public void keyTyped(KeyEvent e) {
-					if (txtCustomerId.getText().equals("")) {
-						// TODO: color the input field red! Or so... PCHR
-						// customerNo = -1;
-						updateCustomerDropdown(null);
-					} else {
-						// TODO: remove the red color, if set.
-						customerNo = Integer.parseInt(txtCustomerId.getText());
-						updateCustomerDropdown(library.getCustomerList()
-								.getByID(customerNo));
-					}
+				public void keyReleased(KeyEvent e) {
+					txtCustomerId.setBackground(Color.WHITE);
+					String text = txtCustomerId.getText();
+					try {
+						customerNo = Integer.parseInt(text);
+						if(customerNo < 0 || customerNo >= library.getCustomerList().getCustomers().size()){
+							handleInvalidCustomerID();
+						}else {
+							updateCustomerDropdown(library.getCustomerList().getByID(customerNo));
+						}
+			        } catch (NumberFormatException ex) {
+				           handleInvalidCustomerID();
+			        }
+				}
+
+				private void handleInvalidCustomerID() {
+					System.out.println("Invalid Customer ID");
+					txtCustomerId.setBackground(Color.PINK);
 				}
 			});
 
@@ -216,6 +225,13 @@ public class LoanDetail extends JFrame {
 				cmbCustomer.addItem(customer);
 			}
 			cmbCustomer.setSelectedItem(loan.getCustomer());
+			cmbCustomer.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Customer customer = (Customer) cmbCustomer.getSelectedItem();
+					List<Loan> customerLoans = library.getCustomerLoans(customer);
+					loans.setLoanList(customerLoans);
+				}
+			});
 			pnlCustomer.add(cmbCustomer, gbc_cmbCustomer);
 
 			// ///////////////////////////////////////////////
@@ -317,6 +333,15 @@ public class LoanDetail extends JFrame {
 			gbc_btnExemplarAusleihen.anchor = GridBagConstraints.WEST;
 			gbc_btnExemplarAusleihen.gridx = 0;
 			gbc_btnExemplarAusleihen.gridy = 2;
+			btnExemplarAusleihen.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Copy copy = copies.getCopyAt(copyTable.getSelectedRow());
+					Customer customer = (Customer) cmbCustomer.getSelectedItem();
+					Loan newLoan = new Loan(customer, copy);
+					loans.addLoan(newLoan);
+				}
+			});
+			
 			pnlCopies.add(btnExemplarAusleihen, gbc_btnExemplarAusleihen);
 		} catch (Exception e) {
 			e.printStackTrace();
