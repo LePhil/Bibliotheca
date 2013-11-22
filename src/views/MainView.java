@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -87,6 +88,8 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	 */
 	private void initialize() {
 		try {
+			
+			setMinimumSize( new Dimension(800, 600) );
 			
 			///////////////////////////////////////////////////////////////////
 			// ACTIONS

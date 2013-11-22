@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -128,31 +129,47 @@ public class BooksTab extends LibraryTab {
 		gbc_pnlBooksInvTop.gridx = 0;
 		gbc_pnlBooksInvTop.gridy = 0;
 		pnlBookInventory.add(pnlBooksInvTop, gbc_pnlBooksInvTop);
-		pnlBooksInvTop.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		// Init Filters
-		bookFilters = new ArrayList<RowFilter<Object,Object>>();
-		
-		// Search field i.e. Searchbox
-		initSearchField();
-		
-		horizontalStrut_1 = Box.createHorizontalStrut(20);
-		pnlBooksInvTop.add(horizontalStrut_1);
-		
-		btnShowSelected = new JButton( showSelected );
-		btnShowSelected.setIcon( new ImageIcon("icons/book_search_32.png") );
-		
-		chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
-		chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
-		pnlBooksInvTop.add(chckbxOnlyAvailable);
-		
-		horizontalStrut_2 = Box.createHorizontalStrut(20);
-		pnlBooksInvTop.add(horizontalStrut_2);
-		pnlBooksInvTop.add(btnShowSelected);
-		
-		btnAddNewBook = new JButton( addBook );
-		btnAddNewBook.setIcon( new ImageIcon("icons/book_add_32.png") );
-		pnlBooksInvTop.add(btnAddNewBook);
+		{
+			GridBagLayout gbl_BooksInvTop = new GridBagLayout();
+			gbl_BooksInvTop.columnWidths = new int[]{0, 100, 0, 20, 0, 0, 0};
+			gbl_BooksInvTop.rowHeights = new int[]{0, 0};
+			gbl_BooksInvTop.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_BooksInvTop.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+			pnlBooksInvTop.setLayout( gbl_BooksInvTop );
+			
+			// Init Filters
+			bookFilters = new ArrayList<RowFilter<Object,Object>>();
+			
+			// Search field i.e. Searchbox
+			initSearchField();
+			
+			chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
+			chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
+			
+			GridBagConstraints gbc_chckBox = new GridBagConstraints();
+			gbc_chckBox.insets = new Insets(0, 0, 0, 5);
+			gbc_chckBox.fill = GridBagConstraints.HORIZONTAL;
+			gbc_chckBox.gridx = 2;
+			gbc_chckBox.gridy = 0;
+			pnlBooksInvTop.add( chckbxOnlyAvailable, gbc_chckBox );
+			
+			
+			btnShowSelected = new JButton( showSelected );
+			btnShowSelected.setIcon( new ImageIcon("icons/book_search_32.png") );
+			GridBagConstraints gbc_btnShow = new GridBagConstraints();
+			gbc_btnShow.insets = new Insets(0, 0, 0, 5);
+			gbc_btnShow.gridx = 4;
+			gbc_btnShow.gridy = 0;
+			pnlBooksInvTop.add(btnShowSelected, gbc_btnShow);
+			
+			btnAddNewBook = new JButton( addBook );
+			btnAddNewBook.setIcon( new ImageIcon("icons/book_add_32.png") );
+			GridBagConstraints gbc_btnAdd = new GridBagConstraints();
+			gbc_btnAdd.gridx = 5;
+			gbc_btnAdd.gridy = 0;
+			pnlBooksInvTop.add( btnAddNewBook, gbc_btnAdd );
+		}
 		
 		pnlBooksInvBottom = new JPanel();
 		gbc_pnlBooksInvBottom = new GridBagConstraints();
@@ -160,6 +177,7 @@ public class BooksTab extends LibraryTab {
 		gbc_pnlBooksInvBottom.gridx = 0;
 		gbc_pnlBooksInvBottom.gridy = 1;
 		pnlBookInventory.add(pnlBooksInvBottom, gbc_pnlBooksInvBottom);
+		
 		gbl_pnlBooksInvBottom = new GridBagLayout();
 		gbl_pnlBooksInvBottom.columnWidths = new int[]{0, 0};
 		gbl_pnlBooksInvBottom.rowHeights = new int[]{0, 0, 0};
@@ -250,9 +268,14 @@ public class BooksTab extends LibraryTab {
 	 * 
 	 */
 	private void initSearchField() {
-		pnlBooksInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ) );
+		GridBagConstraints gbc_Icon = new GridBagConstraints();
+		gbc_Icon.insets = new Insets(0, 0, 0, 5);
+		gbc_Icon.anchor = GridBagConstraints.EAST;
+		gbc_Icon.gridx = 0;
+		gbc_Icon.gridy = 0;
+		pnlBooksInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
 		
-		txtSearch = new JTextField();
+		txtSearch = new JTextField(10);
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -284,8 +307,13 @@ public class BooksTab extends LibraryTab {
     			});
     	    }
     	});
-		txtSearch.setColumns(10);
-		pnlBooksInvTop.add(txtSearch);
+		
+		GridBagConstraints gbc_searchField = new GridBagConstraints();
+		gbc_searchField.insets = new Insets(0, 0, 0, 5);
+		gbc_searchField.anchor = GridBagConstraints.EAST;
+		gbc_searchField.gridx = 1;
+		gbc_searchField.gridy = 0;
+		pnlBooksInvTop.add( txtSearch, gbc_searchField );
 	}
 	
 	private void editBook( Book book ) {

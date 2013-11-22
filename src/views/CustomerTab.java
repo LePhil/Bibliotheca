@@ -110,7 +110,14 @@ public class CustomerTab extends LibraryTab {
 			gbc_pnlCustomersInvTop.gridx = 0;
 			gbc_pnlCustomersInvTop.gridy = 0;
 			pnlCustomerInventory.add(pnlCustomersInvTop, gbc_pnlCustomersInvTop);
-			pnlCustomersInvTop.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+
+			GridBagLayout gbl_InvTop = new GridBagLayout();
+			gbl_InvTop.columnWidths = new int[]{0, 100, 20, 0, 0, 0};
+			gbl_InvTop.rowHeights = new int[]{0, 0};
+			gbl_InvTop.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_InvTop.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+			
+			pnlCustomersInvTop.setLayout( gbl_InvTop );
 			
 			// Init Filters
 			customerFilters = new ArrayList<RowFilter<Object,Object>>();
@@ -118,19 +125,23 @@ public class CustomerTab extends LibraryTab {
 			// Search field i.e. Searchbox
 			initSearchField();
 			
-			Component horizontalStrut_1 = Box.createHorizontalStrut(20);
-			pnlCustomersInvTop.add(horizontalStrut_1);
-			
 			btnShowSelected = new JButton( showCustomer );
 			btnShowSelected.setIcon( new ImageIcon("icons/user_search_32.png") );
 			
-			Component horizontalStrut_2 = Box.createHorizontalStrut(20);
-			pnlCustomersInvTop.add(horizontalStrut_2);
-			pnlCustomersInvTop.add(btnShowSelected);
+			GridBagConstraints gbc_btnShow = new GridBagConstraints();
+			gbc_btnShow.gridx = 4;
+			gbc_btnShow.gridy = 0;
+			pnlCustomersInvTop.add(btnShowSelected, gbc_btnShow);
+
 			
 			btnAddNewCustomer = new JButton( addCustomer );
 			btnAddNewCustomer.setIcon( new ImageIcon("icons/user_add_32.png") );
-			pnlCustomersInvTop.add(btnAddNewCustomer);
+
+			GridBagConstraints gbc_btnAdd = new GridBagConstraints();
+			gbc_btnAdd.gridx = 5;
+			gbc_btnAdd.gridy = 0;
+			pnlCustomersInvTop.add( btnAddNewCustomer, gbc_btnAdd );
+			
 			
 			pnlCustomersInvBottom = new JPanel();
 			GridBagConstraints gbc_pnlCustomersInvBottom = new GridBagConstraints();
@@ -211,9 +222,12 @@ public class CustomerTab extends LibraryTab {
 	}
 
 	private void initSearchField() {
-		pnlCustomersInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ) );
+		GridBagConstraints gbc_Icon = new GridBagConstraints();
+		gbc_Icon.gridx = 0;
+		gbc_Icon.gridy = 0;
+		pnlCustomersInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
 		
-		txtSearch = new JTextField();
+		txtSearch = new JTextField( 10 );
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -245,8 +259,10 @@ public class CustomerTab extends LibraryTab {
     			});
     	    }
     	});
-		txtSearch.setColumns(10);
-		pnlCustomersInvTop.add(txtSearch);
+		GridBagConstraints gbc_searchField = new GridBagConstraints();
+		gbc_searchField.gridx = 1;
+		gbc_searchField.gridy = 0;
+		pnlCustomersInvTop.add( txtSearch, gbc_searchField );
 	}
 	
 	private void updateFilters() {

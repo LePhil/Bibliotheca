@@ -151,43 +151,59 @@ public class LoansTab extends LibraryTab {
 		gbc_pnlLoansInvTop.gridx = 0;
 		gbc_pnlLoansInvTop.gridy = 0;
 		pnlLoansInventory.add(pnlLoansInvTop, gbc_pnlLoansInvTop);
-		pnlLoansInvTop.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		// Search field i.e. Searchbox
-		initLoansSearchField();
-		
-		horizontalStrut_5 = Box.createHorizontalStrut(20);
-		pnlLoansInvTop.add(horizontalStrut_5);
-		
-		btnShowSelectedLoans = new JButton( showSelected );
-		btnShowSelectedLoans.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showSelectedLoansButtonActionPerformed(e);
-			}
-		});
-		btnShowSelectedLoans.setIcon( new ImageIcon("icons/basket_search_32.png") );
-		
-		///////////////////////////////////////////////////////////
-		// ComboBox
-		///////////////////////////////////////////////////////////
-		String[] strLoanTableModes = {
+		{
+			GridBagLayout gbl_LoansInvTop = new GridBagLayout();
+			gbl_LoansInvTop.columnWidths = new int[]{0, 100, 0, 20, 0, 0, 0};
+			gbl_LoansInvTop.rowHeights = new int[]{0, 0};
+			gbl_LoansInvTop.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_LoansInvTop.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+			pnlLoansInvTop.setLayout( gbl_LoansInvTop );
+			
+			// Search field i.e. Searchbox
+			initLoansSearchField();
+			
+			///////////////////////////////////////////////////////////
+			// ComboBox
+			///////////////////////////////////////////////////////////
+			String[] strLoanTableModes = {
 			Messages.getString( "BookMastertable.BookTableModes.All" ),
 			Messages.getString( "BookMastertable.BookTableModes.LentOnly" ),
 			Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" )
-		};
+			};
+			
+			cmbLoanTableModes = new JComboBox<String>( strLoanTableModes );
+			cmbLoanTableModes.setAction( getChangeLoanTableModeAction() );
+			
+			GridBagConstraints gbc_cmbBox = new GridBagConstraints();
+			gbc_cmbBox.insets = new Insets(0, 0, 0, 5);
+			gbc_cmbBox.fill = GridBagConstraints.HORIZONTAL;
+			gbc_cmbBox.gridx = 2;
+			gbc_cmbBox.gridy = 0;
+			pnlLoansInvTop.add( cmbLoanTableModes, gbc_cmbBox );
+			
+			btnShowSelectedLoans = new JButton( showSelected );
+			btnShowSelectedLoans.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					showSelectedLoansButtonActionPerformed(e);
+				}
+			});
+			btnShowSelectedLoans.setIcon( new ImageIcon("icons/basket_search_32.png") );
+			
+			GridBagConstraints gbc_btnShow = new GridBagConstraints();
+			gbc_btnShow.insets = new Insets(0, 0, 0, 5);
+			gbc_btnShow.gridx = 4;
+			gbc_btnShow.gridy = 0;
+			pnlLoansInvTop.add(btnShowSelectedLoans, gbc_btnShow);
+			
+			btnAddNewLoan= new JButton( addLoan ); //$NON-NLS-1$
+			btnAddNewLoan.setIcon( new ImageIcon("icons/basket_add_32.png") );
+			GridBagConstraints gbc_btnAdd = new GridBagConstraints();
+			gbc_btnAdd.gridx = 5;
+			gbc_btnAdd.gridy = 0;
+			pnlLoansInvTop.add( btnAddNewLoan, gbc_btnAdd );
+		}
 		
-		cmbLoanTableModes = new JComboBox<String>( strLoanTableModes );
-		cmbLoanTableModes.setAction( getChangeLoanTableModeAction() );
-		
-		pnlLoansInvTop.add( cmbLoanTableModes );
-		
-		horizontalStrut_6 = Box.createHorizontalStrut(20);
-		pnlLoansInvTop.add(horizontalStrut_6);
-		pnlLoansInvTop.add(btnShowSelectedLoans);
-		
-		btnAddNewLoan= new JButton( addLoan ); //$NON-NLS-1$
-		btnAddNewLoan.setIcon( new ImageIcon("icons/basket_add_32.png") );
-		pnlLoansInvTop.add(btnAddNewLoan);
 		pnlLoansInvBottom = new JPanel();
 		
 		gbc_pnlLoansInvBottom = new GridBagConstraints();
@@ -252,7 +268,7 @@ public class LoansTab extends LibraryTab {
 				
 				//boolean overdue = (Boolean) value;
 
-				//ImageIcon icon = new ImageIcon(BookDetailFrame.class.getResource("/silk/" + (overdue ? "error" : "tick") + ".png"));
+				//ImageIcon icon = new ImageIcon( new ImageIcon("icons/search_32.png") );
 				//String text = BUNDLE.getString("InventoryFrame.loanList.state." + (overdue ? "overdue" : "ok"));
 
 				//label.setText(text);
@@ -298,7 +314,12 @@ public class LoansTab extends LibraryTab {
 	 * 
 	 */
 	private void initLoansSearchField() {
-		pnlLoansInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ) );
+		GridBagConstraints gbc_Icon = new GridBagConstraints();
+		gbc_Icon.insets = new Insets(0, 0, 0, 5);
+		gbc_Icon.anchor = GridBagConstraints.EAST;
+		gbc_Icon.gridx = 0;
+		gbc_Icon.gridy = 0;
+		pnlLoansInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
 		
 		txtSearchLoans = new JTextField();
 		txtSearchLoans.addKeyListener(new KeyAdapter() {
@@ -333,7 +354,13 @@ public class LoansTab extends LibraryTab {
     	    }
     	});
 		txtSearchLoans.setColumns(10);
-		pnlLoansInvTop.add(txtSearchLoans);
+		
+		GridBagConstraints gbc_searchField = new GridBagConstraints();
+		gbc_searchField.insets = new Insets(0, 0, 0, 5);
+		gbc_searchField.anchor = GridBagConstraints.EAST;
+		gbc_searchField.gridx = 1;
+		gbc_searchField.gridy = 0;
+		pnlLoansInvTop.add( txtSearchLoans, gbc_searchField );
 	}
 
 	/**
