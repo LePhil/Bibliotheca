@@ -122,18 +122,21 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			///////////////////////////////////////////////////////////////////
 			booksTab = new BooksTab( bookTableModel, library );
 			tbsMain.addTab( Messages.getString("BookMaster.Tab.Books" ), new ImageIcon("icons/book_32.png"), booksTab, null );
+			tbsMain.setMnemonicAt(0, KeyEvent.VK_1);
 			
 			///////////////////////////////////////////////////////////////////
 			// LOANS TAB
 			///////////////////////////////////////////////////////////////////
 			loansTab = new LoansTab( loanTableModel, library );
 			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), new ImageIcon("icons/basket_32.png"), loansTab, null );
+			tbsMain.setMnemonicAt(1, KeyEvent.VK_2);
 			
 			///////////////////////////////////////////////////////////////////
 			// CUSTOMERS TAB
 			///////////////////////////////////////////////////////////////////
 			customerTab = new CustomerTab(customerTableModel, library);
 			tbsMain.addTab( Messages.getString( "MainView.Tab.Customers"), new ImageIcon("icons/user_32.png"), customerTab, null );
+			tbsMain.setMnemonicAt(2, KeyEvent.VK_3);
 			
 			///////////////////////////////////////////////////////////////////
 			// MENU
