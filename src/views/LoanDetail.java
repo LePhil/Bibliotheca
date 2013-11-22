@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -45,20 +46,18 @@ public class LoanDetail extends JFrame {
 	private Library library;
 	
 	// Buttons
-	private JButton btnCopy;
 	private JButton btnCancel;
 	private JButton btnSave;
+	private JButton btnSelektierteAusleiheAbschliessen;
+	private JButton btnExemplarAusleihen;
 	
 	// Labels
 	private JLabel lblCustomerId;
 	private JLabel lblCustomer;
-	private JLabel lblReturnDate;
 	private JLabel lblAnzahlAusleihen;
 	
 	// Textfields
 	private JTextField txtCustomerId;
-	private JTextField txtCopyId;
-	private JTextField txtReturnDate;
 	
 	private JTable customerLoanTable;
 	
@@ -67,11 +66,13 @@ public class LoanDetail extends JFrame {
 	private JComboBox<Customer> cmbCustomer;
 	
 	// Panels
-	private JPanel pnlLoanCopy;
 	private JPanel pnlLoans;
 	private JPanel pnlCustomerLoanInfo;
 	private JPanel pnlCustomerLoans;
-	private JScrollPane scrollPane;
+	private JPanel pnlCopies;
+	private JPanel pnlAvailableCopies;
+	private JScrollPane scrollPaneLoans;
+	private JScrollPane scrollPaneCopies;
 	private JPanel pnlCustomer;
 	
 	private static boolean newlyCreated;
@@ -129,7 +130,7 @@ public class LoanDetail extends JFrame {
 	private void initialize() {
 		try {
 			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-			setBounds(100, 100, 450, 300);
+			setBounds(100, 100, 900, 600);
 			setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 			getContentPane().setLayout(
 					new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -148,6 +149,7 @@ public class LoanDetail extends JFrame {
 			// CUSTOMER PANEL
 			/////////////////////////////////////////////////
 			pnlCustomer = new JPanel();
+			pnlCustomer.setMaximumSize(new Dimension(32767, 50));
 			pnlCustomer.setBorder(new TitledBorder(new LineBorder(
 					new Color(0, 0, 0)), Messages.getString( "LoanDetail.CustomerSelection.text" ), TitledBorder.LEADING,
 					TitledBorder.TOP, null, null));
@@ -213,82 +215,18 @@ public class LoanDetail extends JFrame {
 			cmbCustomer.setSelectedItem(loan.getCustomer());
 			pnlCustomer.add(cmbCustomer, gbc_cmbCustomer);
 			
-	
-			pnlLoanCopy = new JPanel();
-			pnlLoanCopy.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), Messages.getString( "LoanDetail.loanNewTitle.text" ), TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			getContentPane().add(pnlLoanCopy);
-			GridBagLayout gbl_pnlLoanCopy = new GridBagLayout();
-			gbl_pnlLoanCopy.columnWidths = new int[] { 0, 0, 0, 0, 0, 0 };
-			gbl_pnlLoanCopy.rowHeights = new int[] { 0, 0, 0 };
-			gbl_pnlLoanCopy.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0,
-					Double.MIN_VALUE };
-			gbl_pnlLoanCopy.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-			pnlLoanCopy.setLayout(gbl_pnlLoanCopy);
-	
-			JLabel lblCopyId = new JLabel(Messages.getString("LoanDetail.lblCopyId.text")); //$NON-NLS-1$
-			GridBagConstraints gbc_lblCopyId = new GridBagConstraints();
-			gbc_lblCopyId.insets = new Insets(0, 0, 5, 5);
-			gbc_lblCopyId.anchor = GridBagConstraints.EAST;
-			gbc_lblCopyId.gridx = 1;
-			gbc_lblCopyId.gridy = 0;
-			pnlLoanCopy.add(lblCopyId, gbc_lblCopyId);
-	
-			txtCopyId = new JTextField();
-			GridBagConstraints gbc_txtCopyId = new GridBagConstraints();
-			gbc_txtCopyId.insets = new Insets(0, 0, 5, 5);
-			gbc_txtCopyId.fill = GridBagConstraints.HORIZONTAL;
-			gbc_txtCopyId.gridx = 2;
-			gbc_txtCopyId.gridy = 0;
-			pnlLoanCopy.add(txtCopyId, gbc_txtCopyId);
-			txtCopyId.setColumns(10);
-			
-			if ( loan.getCopy() != null ) {
-				txtCopyId.setText( loan.getCopy().getInventoryNumber() + "" );
-			} else {
-				txtCopyId.setText( "" );
-			}
-	
-			btnCopy = new JButton(Messages.getString("LoanDetail.btnCopy.text")); //$NON-NLS-1$
-			GridBagConstraints gbc_btnCopy = new GridBagConstraints();
-			gbc_btnCopy.insets = new Insets(0, 0, 5, 5);
-			gbc_btnCopy.gridx = 3;
-			gbc_btnCopy.gridy = 0;
-			pnlLoanCopy.add(btnCopy, gbc_btnCopy);
-	
-			lblReturnDate = new JLabel(Messages.getString("LoanDetail.lblReturnDate.text")); //$NON-NLS-1$
-			GridBagConstraints gbc_lblReturnDate = new GridBagConstraints();
-			gbc_lblReturnDate.anchor = GridBagConstraints.EAST;
-			gbc_lblReturnDate.insets = new Insets(0, 0, 0, 5);
-			gbc_lblReturnDate.gridx = 1;
-			gbc_lblReturnDate.gridy = 1;
-			pnlLoanCopy.add(lblReturnDate, gbc_lblReturnDate);
-	
-			txtReturnDate = new JTextField();
-			txtReturnDate.setEnabled(false);
-			GridBagConstraints gbc_txtReturnDate = new GridBagConstraints();
-			gbc_txtReturnDate.insets = new Insets(0, 0, 0, 5);
-			gbc_txtReturnDate.fill = GridBagConstraints.HORIZONTAL;
-			gbc_txtReturnDate.gridx = 2;
-			gbc_txtReturnDate.gridy = 1;
-			pnlLoanCopy.add(txtReturnDate, gbc_txtReturnDate);
-			txtReturnDate.setColumns(10);
-			
-			// PCHR: only show returnDate if copy was acutally returned!
-			if ( !loan.isLent() ) {
-				txtReturnDate.setText(loan.getReturnDate().toString());
-			} else {
-				txtReturnDate.setText("-");
-				txtReturnDate.setEnabled(false);
-			}
-	
+			/////////////////////////////////////////////////
+			// LOANS PANEL
+			/////////////////////////////////////////////////
 			pnlLoans = new JPanel();
 			pnlLoans.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Loans of $PARAM", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			pnlLoans.setMaximumSize(new Dimension(32767, 50));
 			getContentPane().add(pnlLoans);
 			GridBagLayout gbl_pnlLoans = new GridBagLayout();
 			gbl_pnlLoans.columnWidths = new int[] { 0, 0 };
-			gbl_pnlLoans.rowHeights = new int[] { 0, 0, 0 };
+			gbl_pnlLoans.rowHeights = new int[] { 0, 0, 0, 0 };
 			gbl_pnlLoans.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-			gbl_pnlLoans.rowWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
+			gbl_pnlLoans.rowWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
 			pnlLoans.setLayout(gbl_pnlLoans);
 	
 			pnlCustomerLoanInfo = new JPanel();
@@ -307,24 +245,67 @@ public class LoanDetail extends JFrame {
 	
 			pnlCustomerLoans = new JPanel();
 			GridBagConstraints gbc_pnlCustomerLoans = new GridBagConstraints();
+			gbc_pnlCustomerLoans.insets = new Insets(0, 0, 5, 0);
 			gbc_pnlCustomerLoans.fill = GridBagConstraints.BOTH;
 			gbc_pnlCustomerLoans.gridx = 0;
 			gbc_pnlCustomerLoans.gridy = 1;
 			pnlLoans.add(pnlCustomerLoans, gbc_pnlCustomerLoans);
 			pnlCustomerLoans.setLayout(new BoxLayout(pnlCustomerLoans,
-					BoxLayout.X_AXIS));
+					BoxLayout.Y_AXIS));
 	
-			scrollPane = new JScrollPane();
-			scrollPane.setPreferredSize(new java.awt.Dimension(200, 100));
+			scrollPaneLoans = new JScrollPane();
 			{
 				customerLoanTable = new JTable();
 				initTable();
 			}
-			scrollPane.setViewportView(customerLoanTable);
-			pnlCustomerLoans.add(scrollPane);
+			scrollPaneLoans.setViewportView(customerLoanTable);
+			pnlCustomerLoans.add(scrollPaneLoans);
 			
-			panel = new JPanel();
-			getContentPane().add(panel);
+			btnSelektierteAusleiheAbschliessen = new JButton("Selektierte Ausleihe abschliessen");
+			GridBagConstraints gbc_btnSelektierteAusleiheAbschliessen = new GridBagConstraints();
+			gbc_btnSelektierteAusleiheAbschliessen.anchor = GridBagConstraints.EAST;
+			gbc_btnSelektierteAusleiheAbschliessen.gridx = 0;
+			gbc_btnSelektierteAusleiheAbschliessen.gridy = 2;
+			pnlCustomerLoans.add(btnSelektierteAusleiheAbschliessen, gbc_btnSelektierteAusleiheAbschliessen);
+			
+			
+			/////////////////////////////////////////////////
+			// COPIES PANEL
+			/////////////////////////////////////////////////
+			pnlCopies = new JPanel();
+			pnlCopies.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Exemplare", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			getContentPane().add(pnlCopies);
+			GridBagLayout gbl_pnlCopies = new GridBagLayout();
+			gbl_pnlCopies.columnWidths = new int[] { 0, 0 };
+			gbl_pnlCopies.rowHeights = new int[] { 0, 0, 0, 0 };
+			gbl_pnlCopies.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+			gbl_pnlCopies.rowWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
+			pnlCopies.setLayout(gbl_pnlCopies);
+			
+			pnlAvailableCopies = new JPanel();
+			GridBagConstraints gbc_pnlCopies = new GridBagConstraints();
+			gbc_pnlCopies.insets = new Insets(0, 0, 5, 0);
+			gbc_pnlCopies.fill = GridBagConstraints.BOTH;
+			gbc_pnlCopies.gridx = 0;
+			gbc_pnlCopies.gridy = 0;
+			pnlAvailableCopies.setLayout(new BoxLayout(pnlAvailableCopies,
+					BoxLayout.Y_AXIS));
+			pnlCopies.add(pnlAvailableCopies, gbc_pnlCopies);
+	
+			scrollPaneCopies = new JScrollPane();
+			{
+				customerLoanTable = new JTable();
+				initTable();
+			}
+			scrollPaneCopies.setViewportView(customerLoanTable);
+			pnlAvailableCopies.add(scrollPaneCopies);
+			
+			btnExemplarAusleihen = new JButton("Exemplar ausleihen");
+			GridBagConstraints gbc_btnExemplarAusleihen = new GridBagConstraints();
+			gbc_btnExemplarAusleihen.anchor = GridBagConstraints.EAST;
+			gbc_btnExemplarAusleihen.gridx = 0;
+			gbc_btnExemplarAusleihen.gridy = 1;
+			pnlCopies.add(btnExemplarAusleihen, gbc_btnExemplarAusleihen);
 		} catch ( Exception e) {
 			e.printStackTrace();
 		}
