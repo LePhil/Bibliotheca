@@ -86,7 +86,7 @@ public class CustomerList extends Observable implements Observer {
 	 * @author PCHR
 	 */
 	public Customer getByID( int ID ) {
-		if ( ID > latestCustomer ) {
+		if ( ID > latestCustomer || ID < 0 ) {
 			return null;
 		}
 		for (Customer customer : customers) {

@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -122,19 +123,19 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			// BOOKS TAB
 			///////////////////////////////////////////////////////////////////
 			booksTab = new BooksTab( bookTableModel, library );
-			tbsMain.addTab( Messages.getString("BookMaster.Tab.Books" ), null, booksTab, null );
+			tbsMain.addTab( Messages.getString("BookMaster.Tab.Books" ), new ImageIcon("icons/book_32.png"), booksTab, null );
 			
 			///////////////////////////////////////////////////////////////////
 			// LOANS TAB
 			///////////////////////////////////////////////////////////////////
 			loansTab = new LoansTab( loanTableModel, library );
-			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), null, loansTab, null );
+			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), new ImageIcon("icons/basket_32.png"), loansTab, null );
 			
 			///////////////////////////////////////////////////////////////////
 			// CUSTOMERS TAB
 			///////////////////////////////////////////////////////////////////
 			customerTab = new CustomerTab(customerTableModel, library);
-			tbsMain.addTab( Messages.getString( "MainView.Tab.Customers"), null, customerTab, null );
+			tbsMain.addTab( Messages.getString( "MainView.Tab.Customers"), new ImageIcon("icons/user_32.png"), customerTab, null );
 			
 			///////////////////////////////////////////////////////////////////
 			// MENU
