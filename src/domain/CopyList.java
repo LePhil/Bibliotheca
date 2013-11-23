@@ -28,10 +28,12 @@ public class CopyList extends Observable implements Observer {
 	}
 
 	public void removeCopyAt(int index) {
+		doNotify();
 		copyList.remove(index);
 	}
 
 	public boolean removeCopy(Copy copy) {
+		doNotify();
 		return copyList.remove(copy);
 	}
 
@@ -71,6 +73,7 @@ public class CopyList extends Observable implements Observer {
 	}
 
 	public void setCopyList(List<Copy> copyList) {
+		doNotify();
 		this.copyList = copyList;
 	}
 

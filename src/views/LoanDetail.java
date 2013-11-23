@@ -338,7 +338,9 @@ public class LoanDetail extends JFrame {
 					Copy copy = copies.getCopyAt(copyTable.getSelectedRow());
 					Customer customer = (Customer) cmbCustomer.getSelectedItem();
 					Loan newLoan = new Loan(customer, copy);
-					loans.addLoan(newLoan);
+					library.getLoans().add(newLoan);
+					copies.setCopyList(library.getAvailableCopies());
+					loans.addLoan(newLoan); 
 				}
 			});
 			
@@ -354,6 +356,10 @@ public class LoanDetail extends JFrame {
 		loanSorter = new TableRowSorter<CustomerLoanTableModel>(
 				customerLoanTableModel);
 		customerLoanTable.setRowSorter(loanSorter);
+		// TODO pforster: why aren't the loans which are overdue not red?
+		customerLoanTable.getColumnModel().getColumn(0).setCellRenderer(new LoanTableCellRenderer(library));
+		customerLoanTable.getColumnModel().getColumn(1).setCellRenderer(new LoanTableCellRenderer(library));
+		customerLoanTable.getColumnModel().getColumn(2).setCellRenderer(new LoanTableCellRenderer(library));
 	}
 
 	private void initCopyTable() {

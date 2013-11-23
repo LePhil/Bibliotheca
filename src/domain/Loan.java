@@ -109,6 +109,6 @@ public class Loan {
 		dueDate.add(GregorianCalendar.MINUTE, 59);
 		dueDate.add(GregorianCalendar.SECOND, 59);
 		
-		return ( new GregorianCalendar().after(dueDate) );
+		return new GregorianCalendar().after(dueDate);
 	}
 }
