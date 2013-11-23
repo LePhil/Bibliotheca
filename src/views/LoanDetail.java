@@ -10,12 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -25,6 +27,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -62,6 +66,7 @@ public class LoanDetail extends JFrame {
 
 	// Textfields
 	private JTextField txtCustomerId;
+	private JTextField txtSearchCopies;
 
 	// Tables
 	private JTable customerLoanTable;
@@ -69,6 +74,8 @@ public class LoanDetail extends JFrame {
 
 	private TableRowSorter<CustomerLoanTableModel> loanSorter;
 	private TableRowSorter<CopyTableModel> copySorter;
+	
+	private List<RowFilter<Object,Object>> copyFilters;
 
 	private JComboBox<Customer> cmbCustomer;
 
@@ -77,6 +84,7 @@ public class LoanDetail extends JFrame {
 	private JPanel pnlCustomerLoanInfo;
 	private JPanel pnlCustomerLoans;
 	private JPanel pnlCopies;
+	private JPanel pnlFilterCopies;
 	private JPanel pnlAvailableCopies;
 	private JScrollPane scrollPaneLoans;
 	private JScrollPane scrollPaneCopies;
@@ -100,6 +108,7 @@ public class LoanDetail extends JFrame {
 
 		this.customerLoanTableModel = new CustomerLoanTableModel(loanList);
 		this.copyTableModel = new CopyTableModel(this.copies);
+		this.copyFilters = new ArrayList<RowFilter<Object,Object>>();
 		initialize();
 	}
 
@@ -309,6 +318,24 @@ public class LoanDetail extends JFrame {
 			gbl_pnlCopies.rowWeights = new double[] { 0.0, 1.0, 0.0,
 					Double.MIN_VALUE };
 			pnlCopies.setLayout(gbl_pnlCopies);
+			
+			pnlFilterCopies = new JPanel();
+			FlowLayout flowLayoutFilter = (FlowLayout) pnlFilterCopies
+					.getLayout();
+			flowLayoutFilter.setAlignment(FlowLayout.LEFT);
+			GridBagConstraints gbc_pnlFilterCopies = new GridBagConstraints();
+			gbc_pnlFilterCopies.insets = new Insets(0, 0, 5, 0);
+			gbc_pnlFilterCopies.fill = GridBagConstraints.BOTH;
+			gbc_pnlFilterCopies.gridx = 0;
+			gbc_pnlFilterCopies.gridy = 0;
+			pnlCopies.add(pnlFilterCopies, gbc_pnlFilterCopies);
+
+			// TODO pforster: make dynamic
+			pnlFilterCopies.add( new JLabel( new ImageIcon("icons/search_32.png") ));
+			
+			txtSearchCopies = new JTextField();
+			initCopySearchField();
+			pnlFilterCopies.add(txtSearchCopies);
 
 			pnlAvailableCopies = new JPanel();
 			GridBagConstraints gbc_pnlCopies = new GridBagConstraints();
@@ -335,7 +362,8 @@ public class LoanDetail extends JFrame {
 			gbc_btnExemplarAusleihen.gridy = 2;
 			btnExemplarAusleihen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Copy copy = copies.getCopyAt(copyTable.getSelectedRow());
+					int selectedRow = copyTable.convertRowIndexToModel(copyTable.getSelectedRow());
+					Copy copy = copies.getCopyAt(selectedRow);
 					Customer customer = (Customer) cmbCustomer.getSelectedItem();
 					Loan newLoan = new Loan(customer, copy);
 					library.getLoans().add(newLoan);
@@ -350,6 +378,55 @@ public class LoanDetail extends JFrame {
 		}
 	}
 
+	private void initCopySearchField() {
+		txtSearchCopies.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+					String searchText= txtSearchCopies.getText();
+					updateFilters(searchText);
+			}
+		});
+		txtSearchCopies.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
+		txtSearchCopies.addFocusListener(new java.awt.event.FocusAdapter() {
+			// Mark the whole text when the text field gains focus
+		    public void focusGained(java.awt.event.FocusEvent evt) {
+		    	SwingUtilities.invokeLater( new Runnable() {
+
+					@Override
+					public void run() {
+						txtSearchCopies.selectAll();
+					}
+				});
+		    }
+		    
+		    // "unmark" everything (=mark nothing) when losing focus
+		    public void focusLost(java.awt.event.FocusEvent evt) {
+		    	SwingUtilities.invokeLater( new Runnable() {
+
+					@Override
+					public void run() {
+						txtSearchCopies.select(0, 0);
+					}
+				});
+		    }
+		});
+		txtSearchCopies.setColumns(10);
+	}
+
+	private void updateFilters(String searchText) {
+		// 1st, clear all filters, if there are any
+		if ( !copyFilters.isEmpty() ) {
+			copyFilters.clear();
+		}
+		
+		// 3rd: apply the filter from the search box. (?i) makes regex ignore cases
+		if ( searchText != null ) {
+			copyFilters.add( RowFilter.regexFilter( "(?i)" + searchText ) );
+		}
+		
+		copySorter.setRowFilter( RowFilter.andFilter(copyFilters) );
+	}
+	
 	private void initLoanTable() {
 		customerLoanTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		customerLoanTable.setModel(customerLoanTableModel);
