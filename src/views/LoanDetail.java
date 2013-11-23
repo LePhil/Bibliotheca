@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -58,6 +59,7 @@ public class LoanDetail extends JFrame {
 	// Buttons
 	private JButton btnSelektierteAusleiheAbschliessen;
 	private JButton btnExemplarAusleihen;
+	private JButton btnClose;
 
 	// Labels
 	private JLabel lblCustomerId;
@@ -89,6 +91,7 @@ public class LoanDetail extends JFrame {
 	private JScrollPane scrollPaneLoans;
 	private JScrollPane scrollPaneCopies;
 	private JPanel pnlCustomer;
+	private JPanel pnlButtons;
 
 	private static boolean newlyCreated;
 	private static LoanDetail editFrame;
@@ -334,7 +337,6 @@ public class LoanDetail extends JFrame {
 			gbc_pnlFilterCopies.gridy = 0;
 			pnlCopies.add(pnlFilterCopies, gbc_pnlFilterCopies);
 
-			// TODO pforster: make dynamic
 			pnlFilterCopies.add( new JLabel( new ImageIcon("icons/search_32.png") ));
 			
 			txtSearchCopies = new JTextField();
@@ -376,8 +378,28 @@ public class LoanDetail extends JFrame {
 					lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", loans.getLoanList().size() + ""));
 				}
 			});
-			
 			pnlCopies.add(btnExemplarAusleihen, gbc_btnExemplarAusleihen);
+			
+			
+			// ///////////////////////////////////////////////
+			// BUTTONS PANEL
+			// ///////////////////////////////////////////////
+			pnlButtons = new JPanel();
+			pnlButtons.setMaximumSize(new Dimension(32767, 50));
+			getContentPane().add(pnlButtons);
+			pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout.X_AXIS));
+	
+			pnlButtons.add(Box.createHorizontalGlue());
+			
+			btnClose = new JButton();
+			btnClose.setText(Messages.getString( "MainView.btnExit.text"));
+			btnClose.setIcon( new ImageIcon("icons/close_32.png") );
+			btnClose.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					editFrame.setVisible(false);
+				}
+			});
+			pnlButtons.add(btnClose);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -460,7 +482,7 @@ public class LoanDetail extends JFrame {
 	}
 
 	// ///////////////////////////////////////////////
-	// Action Subclasses
+	// Action Subclasses TODO pforster: use them or delete them
 	// ///////////////////////////////////////////////
 	/**
 	 * Closes the current dialog. TODO: Close dialog, disregard changes. Don't
