@@ -190,8 +190,10 @@ public class LoanDetail extends JFrame {
 			gbc_txtCustomerId.gridy = 0;
 			pnlCustomer.add(txtCustomerId, gbc_txtCustomerId);
 			txtCustomerId.setColumns(10);
-
-			txtCustomerId.setText("" + loan.getCustomer().getCustomerNo());
+			
+			if(loan.getCustomer() != null){
+				txtCustomerId.setText("" + loan.getCustomer().getCustomerNo());
+			}
 			txtCustomerId.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent e) {
@@ -239,6 +241,9 @@ public class LoanDetail extends JFrame {
 					Customer customer = (Customer) cmbCustomer.getSelectedItem();
 					List<Loan> customerLoans = library.getCustomerLoans(customer);
 					loans.setLoanList(customerLoans);
+					txtCustomerId.setText("" + customer.getCustomerNo());
+					txtCustomerId.setBackground(Color.WHITE);
+					lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", customerLoans.size() + ""));
 				}
 			});
 			pnlCustomer.add(cmbCustomer, gbc_cmbCustomer);
@@ -271,9 +276,8 @@ public class LoanDetail extends JFrame {
 			gbc_pnlCustomerLoanInfo.gridy = 0;
 			pnlLoans.add(pnlCustomerLoanInfo, gbc_pnlCustomerLoanInfo);
 
-			// TODO pforster: make dynamic
 			lblAnzahlAusleihen = new JLabel(Messages.getString(
-					"LoanDetail.nrOfLoansOfCustomer.text", "2"));
+					"LoanDetail.nrOfLoansOfCustomer.text", loans.getLoanList().size() + ""));
 			pnlCustomerLoanInfo.add(lblAnzahlAusleihen);
 
 			pnlCustomerLoans = new JPanel();
@@ -369,6 +373,7 @@ public class LoanDetail extends JFrame {
 					library.getLoans().add(newLoan);
 					copies.setCopyList(library.getAvailableCopies());
 					loans.addLoan(newLoan); 
+					lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", loans.getLoanList().size() + ""));
 				}
 			});
 			
