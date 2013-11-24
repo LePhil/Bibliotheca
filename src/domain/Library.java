@@ -16,6 +16,7 @@ public class Library extends Observable implements Observer {
 	
 	private int addLoanIndex;
 	private int removeLoanIndex;
+	private int editedLoanIndex;
 
 	public Library() {
 		copies = new ArrayList<Copy>();
@@ -141,9 +142,9 @@ public class Library extends Observable implements Observer {
 	
 	//LOANS
 	public int getEditedLoanPos() {
-		// TODO Auto-generated method stub
-		return 0;
+		return editedLoanIndex;
 	}
+	
 	public int getInsertedLoanIndex() {
 		return addLoanIndex;
 	}
