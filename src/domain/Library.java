@@ -10,19 +10,12 @@ public class Library extends Observable implements Observer {
 	private List<Copy> copies;
 	private List<Customer> customers;
 	private List<Loan> loans;
-	private List<Book> books;
 	
 	private CustomerList customerList;
 	private BookList bookList;
 	
-	private int editedLoanPos;
 	private int addLoanIndex;
 	private int removeLoanIndex;
-	
-	private int editedCustomerPos;
-	private int addCustomerIndex;
-	private int removeCustomerIndex;
-	private int latestCustomer;
 
 	public Library() {
 		copies = new ArrayList<Copy>();
@@ -31,7 +24,6 @@ public class Library extends Observable implements Observer {
 		setCustomerList( new CustomerList() );
 		
 		loans = new ArrayList<Loan>();
-		books = new ArrayList<Book>();
 	}
 
 	public Loan createAndAddLoan(Customer customer, Copy copy) {

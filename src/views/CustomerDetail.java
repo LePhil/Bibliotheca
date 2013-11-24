@@ -138,14 +138,13 @@ public class CustomerDetail extends JFrame {
 			// ///////////////////////////////////////////////
 			// CUSTOMER NO
 			{
-				lblCustomerNo = new JLabel(
-						Messages.getString("CustomerDetail.CustomerNo"));
+				lblCustomerNo = new JLabel( Messages.getString("CustomerDetail.CustomerNo") );
 				GridBagConstraints gbc_lblCustomerNo = new GridBagConstraints();
 				gbc_lblCustomerNo.anchor = GridBagConstraints.EAST;
 				gbc_lblCustomerNo.insets = new Insets(0, 0, 5, 5);
 				gbc_lblCustomerNo.gridx = 1;
 				gbc_lblCustomerNo.gridy = 0;
-				pnlInformation.add(lblCustomerNo, gbc_lblCustomerNo);
+				pnlInformation.add( lblCustomerNo, gbc_lblCustomerNo );
 
 				txtCustomerNo = new JTextField();
 				txtCustomerNo.addKeyListener(new KeyAdapter() {
@@ -192,8 +191,7 @@ public class CustomerDetail extends JFrame {
 
 			// SURNAME
 			{
-				lblSurname = new JLabel(
-						Messages.getString("CustomerDetail.Surname"));
+				lblSurname = new JLabel( Messages.getString("CustomerDetail.Surname") );
 				GridBagConstraints gbc_lblSurname = new GridBagConstraints();
 				gbc_lblSurname.anchor = GridBagConstraints.EAST;
 				gbc_lblSurname.insets = new Insets(0, 0, 5, 5);
@@ -219,8 +217,7 @@ public class CustomerDetail extends JFrame {
 
 			// Street
 			{
-				lblStreet = new JLabel(
-						Messages.getString("CustomerDetail.Street"));
+				lblStreet = new JLabel( Messages.getString("CustomerDetail.Street") );
 				GridBagConstraints gbc_lblStreet = new GridBagConstraints();
 				gbc_lblStreet.anchor = GridBagConstraints.EAST;
 				gbc_lblStreet.insets = new Insets(0, 0, 5, 5);
@@ -263,8 +260,7 @@ public class CustomerDetail extends JFrame {
 				GridBagLayout gbl_panel = new GridBagLayout();
 				gbl_panel.columnWidths = new int[] { 100, 0, 0, 0 };
 				gbl_panel.rowHeights = new int[] { 0, 0 };
-				gbl_panel.columnWeights = new double[] { 0.0, 0.0, 1.0,
-						Double.MIN_VALUE };
+				gbl_panel.columnWeights = new double[] { 0.0, 0.0, 1.0, Double.MIN_VALUE };
 				gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 				panel.setLayout(gbl_panel);
 
@@ -286,8 +282,7 @@ public class CustomerDetail extends JFrame {
 					txtZip.setColumns(3);
 
 					// CITY
-					lblCity = new JLabel(
-							Messages.getString("CustomerDetail.City")); //$NON-NLS-1$
+					lblCity = new JLabel( Messages.getString("CustomerDetail.City") );
 					GridBagConstraints gbc_lblCity = new GridBagConstraints();
 					gbc_lblCity.insets = new Insets(0, 0, 0, 5);
 					gbc_lblCity.gridx = 1;
@@ -305,14 +300,14 @@ public class CustomerDetail extends JFrame {
 					gbc_txtCity.fill = GridBagConstraints.HORIZONTAL;
 					gbc_txtCity.gridx = 2;
 					gbc_txtCity.gridy = 0;
-					panel.add(txtCity, gbc_txtCity);
+					panel.add( txtCity, gbc_txtCity );
 					txtCity.setColumns(10);
 				}
 			}
 
 			panel_2 = new JPanel();
-			FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
-			flowLayout.setAlignment(FlowLayout.RIGHT);
+			FlowLayout flowLayout = ( FlowLayout ) panel_2.getLayout();
+			flowLayout.setAlignment( FlowLayout.RIGHT );
 			GridBagConstraints gbc_panel_2 = new GridBagConstraints();
 			gbc_panel_2.insets = new Insets(0, 0, 0, 5);
 			gbc_panel_2.fill = GridBagConstraints.BOTH;
@@ -320,8 +315,7 @@ public class CustomerDetail extends JFrame {
 			gbc_panel_2.gridy = 5;
 			pnlInformation.add(panel_2, gbc_panel_2);
 
-			btnReset = new JButton(
-					Messages.getString("CustomerDetail.btnReset.text")); //$NON-NLS-1$
+			btnReset = new JButton( Messages.getString("CustomerDetail.btnReset.text") );
 			panel_2.add(btnReset);
 
 			// Buttons
@@ -330,16 +324,13 @@ public class CustomerDetail extends JFrame {
 				getContentPane().add(panel_1);
 				panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 
-				//btnDelete = new JButton(Messages.getString("CustomerDetail.btnDelete.text")); //$NON-NLS-1$
 				btnDelete = new JButton(delete);
 				panel_1.add(btnDelete);
 
-				//btnSave = new JButton(Messages.getString("CustomerDetail.btnSave.text")); //$NON-NLS-1$
 				btnSave = new JButton(save);
 				panel_1.add(btnSave);
 				btnSave.setEnabled(false);
 
-				//btnCancel = new JButton(Messages.getString("CustomerDetail.btnCancel.text")); //$NON-NLS-1$
 				btnCancel = new JButton(cancel);
 				panel_1.add(btnCancel);
 			}

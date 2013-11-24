@@ -18,9 +18,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import viewModels.BookTableModel;
 import viewModels.CustomerTableModel;
 import viewModels.LoanTableModel;
@@ -115,11 +112,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			
 			tbsMain = new JTabbedPane(JTabbedPane.TOP);
 			getContentPane().add(tbsMain, BorderLayout.CENTER);
-			tbsMain.addChangeListener(new ChangeListener() {
-		        public void stateChanged(ChangeEvent e) {
-		            changedTab();
-		        }
-		    });
 			
 			///////////////////////////////////////////////////////////////////
 			// BOOKS TAB
@@ -227,23 +219,12 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		loansTab.updateListButtons();
 		customerTab.updateListButtons();
 	}
-
-	public void changedTab() {
-		switch ( tbsMain.getSelectedIndex() ) {
-		case 0:	// Books
-			break;
-		case 1: // Loans
-			break;
-		case 2:	// Customers
-			break;
-		}
-	}
+	
 	/////////////////////////////////////////////////
 	// Action Subclasses
 	/////////////////////////////////////////////////
 	/**
 	 * Closes the current dialog.
-	 * TODO: Close dialog, disregard changes. Don't save!
 	 * @author PCHR
 	 */
 	class CloseAction extends AbstractAction {
@@ -251,11 +232,10 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		public CloseAction( String text, String desc ) {
 			super( text );
 			putValue( SHORT_DESCRIPTION, desc );
-			putValue( MNEMONIC_KEY, KeyEvent.VK_ESCAPE );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_S );
 		}
 		public void actionPerformed(ActionEvent e) {
 			System.exit(0);
-			// TODO (or maybe in each dialog): call cancel action so unsaved changes get lost. Or if we'll have enough time: check if there are unsaved changes and warn before closing.
 		}
 	}
 }

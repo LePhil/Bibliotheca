@@ -67,7 +67,7 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	}
 	
 	@Override
-	public Class getColumnClass (int columnIndex) {
+	public Class<?> getColumnClass (int columnIndex) {
 		switch (columnIndex) {
 		case 0:
 			return Integer.class;

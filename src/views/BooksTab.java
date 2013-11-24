@@ -1,7 +1,6 @@
 package views;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -54,8 +53,6 @@ public class BooksTab extends LibraryTab {
 	private JButton btnAddNewBook;
 	
 	private Component horizontalStrut;
-	private Component horizontalStrut_1;
-	private Component horizontalStrut_2;
 	
 	private GridBagLayout gbl_pnlBookInventory;
 	private GridBagLayout gbl_pnlBooksInvBottom;

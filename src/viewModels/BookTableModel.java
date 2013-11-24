@@ -110,7 +110,7 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 	}
 	
 	@Override
-	public Class getColumnClass (int columnIndex) {
+	public Class<?> getColumnClass (int columnIndex) {
 		switch (columnIndex) {
 		case 0:
 		case 1:

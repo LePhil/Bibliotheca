@@ -1,6 +1,5 @@
 package views;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -30,7 +29,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -56,8 +54,6 @@ public class LoansTab extends LibraryTab {
 	
 	private Component horizontalStrut_3;
 	private Component horizontalStrut_4;
-	private Component horizontalStrut_5;
-	private Component horizontalStrut_6;
 	
 	private GridBagLayout gbl_pnlLoansInventory;
 	private GridBagLayout gbl_pnlLoansInvBottom;
