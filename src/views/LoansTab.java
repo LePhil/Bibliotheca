@@ -322,7 +322,7 @@ public class LoansTab extends LibraryTab {
 		txtSearchLoans = new JTextField();
 		txtSearchLoans.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				searchTextLoans = txtSearchLoans.getText();
 				updateFilters();
 			}

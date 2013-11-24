@@ -33,6 +33,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.CopyTableModel;
@@ -247,6 +249,7 @@ public class LoanDetail extends JFrame {
 					txtCustomerId.setText("" + customer.getCustomerNo());
 					txtCustomerId.setBackground(Color.WHITE);
 					lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", customerLoans.size() + ""));
+					btnSelektierteAusleiheAbschliessen.setEnabled(false);
 				}
 			});
 			pnlCustomer.add(cmbCustomer, gbc_cmbCustomer);
@@ -307,6 +310,25 @@ public class LoanDetail extends JFrame {
 			gbc_btnSelektierteAusleiheAbschliessen.anchor = GridBagConstraints.WEST;
 			gbc_btnSelektierteAusleiheAbschliessen.gridx = 0;
 			gbc_btnSelektierteAusleiheAbschliessen.gridy = 2;
+			btnSelektierteAusleiheAbschliessen.setEnabled(false);
+			btnSelektierteAusleiheAbschliessen.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					int index = customerLoanTable.getSelectedRow();
+					if(index < loans.getLoanList().size()){
+						Loan loan = loans.getLoanAt(index);
+						for(Loan l : library.getLoans()){
+							if(loan.equals(l)){
+								l.returnCopy();
+							}
+						}
+						loan.returnCopy();
+						loans.notifyObservers();
+						copies.setCopyList(library.getAvailableCopies());
+						btnSelektierteAusleiheAbschliessen.setEnabled(false);
+					}
+				}
+			});
+			
 			pnlCustomerLoans.add(btnSelektierteAusleiheAbschliessen,
 					gbc_btnSelektierteAusleiheAbschliessen);
 
@@ -464,6 +486,24 @@ public class LoanDetail extends JFrame {
 		customerLoanTable.getColumnModel().getColumn(0).setCellRenderer(new LoanTableCellRenderer(library));
 		customerLoanTable.getColumnModel().getColumn(1).setCellRenderer(new LoanTableCellRenderer(library));
 		customerLoanTable.getColumnModel().getColumn(2).setCellRenderer(new LoanTableCellRenderer(library));
+		
+		// Add Listeners
+		customerLoanTable.getSelectionModel().addListSelectionListener(
+			new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent evt) {
+					SwingUtilities.invokeLater(new Runnable() {  
+						public void run() {
+							int index = customerLoanTable.getSelectedRow();
+							if(index >= 0 && index < loans.getLoanList().size()){
+								Loan loan = loans.getLoanAt(index);
+								boolean isLent = loan != null && loan.isLent();
+								btnSelektierteAusleiheAbschliessen.setEnabled(isLent);
+							}
+						}
+					});
+				}
+			}
+		);
 	}
 
 	private void initCopyTable() {

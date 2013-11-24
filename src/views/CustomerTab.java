@@ -226,7 +226,7 @@ public class CustomerTab extends LibraryTab {
 		txtSearch = new JTextField( 10 );
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				searchText = txtSearch.getText();
 				updateFilters();
 			}
