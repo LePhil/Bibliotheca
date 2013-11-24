@@ -315,7 +315,7 @@ public class CustomerDetail extends JFrame {
 			gbc_panel_2.gridy = 5;
 			pnlInformation.add(panel_2, gbc_panel_2);
 
-			btnReset = new JButton( Messages.getString("CustomerDetail.btnReset.text") );
+			btnReset = new JButton( reset );
 			panel_2.add(btnReset);
 
 			// Buttons
@@ -392,7 +392,11 @@ public class CustomerDetail extends JFrame {
 			validated = false;
 		}
 
+		// enable the save button if the form has been validated.
 		btnSave.setEnabled(validated);
+		
+		// in any way, enable the reset button
+		btnReset.setEnabled( true );
 	}
 
 	// ///////////////////////////////////////////////
