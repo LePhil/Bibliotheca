@@ -6,6 +6,8 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import sun.swing.DefaultLookup;
+
 import domain.Loan;
 import domain.Library;
 
@@ -25,7 +27,14 @@ public class LoanTableCellRenderer extends DefaultTableCellRenderer {
 		Color fgColor = Color.BLACK,
 			  bgColor = Color.WHITE;
 		
+		Color alternateColor = DefaultLookup.getColor(this, ui, "Table.alternateRowColor");
+		
 		if (value!= null) {
+			
+			if ( row % 2 != 0 ) {
+				bgColor = alternateColor;
+			}
+			
 			if( isSelected ) {
 				fgColor = Color.WHITE;
 				bgColor = Color.GRAY;
