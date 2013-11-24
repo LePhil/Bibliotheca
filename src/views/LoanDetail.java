@@ -329,7 +329,7 @@ public class LoanDetail extends JFrame {
 				}
 			});
 			
-			pnlCustomerLoans.add(btnSelektierteAusleiheAbschliessen,
+			pnlLoans.add(btnSelektierteAusleiheAbschliessen,
 					gbc_btnSelektierteAusleiheAbschliessen);
 
 			// ///////////////////////////////////////////////
