@@ -27,6 +27,9 @@ public class LoanTableCellRenderer extends DefaultTableCellRenderer {
 		Color fgColor = Color.BLACK,
 			  bgColor = Color.WHITE;
 		
+        //Color fg = DefaultLookup.getColor(this, ui, "Table.dropCellForeground");
+        //Color bg = DefaultLookup.getColor(this, ui, "Table.dropCellBackground");
+		
 		Color alternateColor = DefaultLookup.getColor(this, ui, "Table.alternateRowColor");
 		
 		if (value!= null) {
