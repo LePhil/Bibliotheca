@@ -245,34 +245,36 @@ public class LoansTab extends LibraryTab {
 		updateFilters();
 		
 		TableColumn statusColumn = tblLoans.getColumnModel().getColumn(0);
-		statusColumn.setMinWidth(50);
-		statusColumn.setMaxWidth(50);
-		statusColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));
+		statusColumn.setMinWidth(100);
+		statusColumn.setMaxWidth(100);
+		statusColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				
+				// get value from TableModel
+				boolean isOverdue = (Boolean) value;
+				
+				if ( isOverdue ) {
+					label.setIcon( new ImageIcon("icons/warning_16.png") );
+					label.setText( Messages.getString("LoanTable.CellContent.Overdue") );
+				} else {
+					label.setText( Messages.getString("LoanTable.CellContent.OK") );
+					label.setIcon( new ImageIcon("icons/ok_button_16.png") );
+				}
+				
+				
+				return label;
+			}
+		});
+		//setCellRenderer(new LoanTableCellRenderer(getLibrary()));
+		
 		
 		TableColumn copyIDColumn = tblLoans.getColumnModel().getColumn(1);
 		copyIDColumn.setMinWidth(50);
 		copyIDColumn.setMaxWidth(50);
-		copyIDColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()) {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Component
-					getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-				// TODO PCHR: icons!
-				
-				//boolean overdue = (Boolean) value;
-
-				//ImageIcon icon = new ImageIcon( new ImageIcon("icons/search_32.png") );
-				//String text = BUNDLE.getString("InventoryFrame.loanList.state." + (overdue ? "overdue" : "ok"));
-
-				//label.setText(text);
-				//label.setIcon(icon);
-
-				return label;
-			}
-		});
 		
 		TableColumn copyTitleColumn = tblLoans.getColumnModel().getColumn(2);
 		copyTitleColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));

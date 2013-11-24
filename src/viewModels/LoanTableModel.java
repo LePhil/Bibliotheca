@@ -63,12 +63,7 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 		Loan loan = library.getLoans().get(rowIndex);
 		
 		switch (columnIndex) {
-		case 0:
-			if ( loan.isOverdue() ) {
-				return "!!!";
-			} else {
-				return "OK";
-			}
+		case 0: return loan.isOverdue();
 		case 1:
 			return loan.getCopy().getInventoryNumber();
 		case 2:
@@ -90,6 +85,7 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 	public Class<?> getColumnClass (int columnIndex) {
 		switch (columnIndex) {
 		case 0:
+			return Boolean.class;
 		case 1:
 		case 2:
 		case 3:
