@@ -104,9 +104,6 @@ public class LibraryApp {
 		System.out.println("Percent copies on loan: " + lentBooksPercentage + "%");
 		System.out.println("Copies currently overdue: " + library.getOverdueLoans().size());
 		
-		for(Loan l : library.getOverdueLoans())
-			System.out.println(l.getDaysOverdue());
-		
 		progress.updateProgress( 90 );
 	}
 

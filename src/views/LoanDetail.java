@@ -385,6 +385,7 @@ public class LoanDetail extends JFrame {
 			gbc_btnExemplarAusleihen.anchor = GridBagConstraints.WEST;
 			gbc_btnExemplarAusleihen.gridx = 0;
 			gbc_btnExemplarAusleihen.gridy = 2;
+			btnExemplarAusleihen.setEnabled( false );
 			btnExemplarAusleihen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int selectedRow = copyTable.convertRowIndexToModel(copyTable.getSelectedRow());
@@ -511,8 +512,27 @@ public class LoanDetail extends JFrame {
 		
 		// Ignore the status in this view, because only available copies should show up here anyway!
 		copyTable.getColumnModel().removeColumn( copyTable.getColumnModel().getColumn(3) );
+		
+		// Add Listeners
+		copyTable.getSelectionModel().addListSelectionListener(
+			new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent evt) {
+					SwingUtilities.invokeLater(new Runnable() {  
+						public void run() {
+							// Update the "Show Selected" button
+							updateListButtons();
+						}
+					});
+				}
+			}
+		);
 	}
 
+	public void updateListButtons() {
+		// Enables or disables the buttons
+		btnExemplarAusleihen.setEnabled( copyTable.getSelectedRowCount()>0);
+	}
+	
 	private void updateCustomerDropdown(Customer customer) {
 		if (customer != null) {
 			cmbCustomer.setSelectedItem(customer);

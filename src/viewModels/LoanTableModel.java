@@ -98,7 +98,7 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("UPDATE IN LOANSTABLEMODEL CALLED");
+		System.out.println("UPDATE IN LOANSTABLEMODEL CALLED"); // TODO: remove
 		int pos = library.getEditedLoanPos();
 		
 		if ( pos >= 0 ) {
