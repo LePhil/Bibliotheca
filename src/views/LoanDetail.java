@@ -124,7 +124,7 @@ public class LoanDetail extends JFrame {
 
 		if ( loan == null ) {
 			// create new loan
-			loan = new Loan( null, null ); // TODO: add new loan. feels weird.
+			loan = new Loan( null, null );
 			newlyCreated = true;
 			customerNo = -1;
 
@@ -602,9 +602,6 @@ public class LoanDetail extends JFrame {
 	// Action Subclasses TODO pforster: use them or delete them
 	// ///////////////////////////////////////////////
 	/**
-	 * Closes the current dialog. TODO: Close dialog, disregard changes. Don't
-	 * save!
-	 * 
 	 * @author PCHR
 	 */
 	class CloseAction extends AbstractAction {

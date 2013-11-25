@@ -17,7 +17,7 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	Library library;
-    SimpleDateFormat dateFormat = new SimpleDateFormat( "dd/MM/yy" ); //TODO READ local instead of guessing it :P
+    SimpleDateFormat dateFormat = new SimpleDateFormat( "dd/MM/yy" );
 
 	private String[] columns = {
 		Messages.getString("BookMasterLoanTable.ColumnHeader.Status"),

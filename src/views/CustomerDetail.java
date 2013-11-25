@@ -403,9 +403,6 @@ public class CustomerDetail extends JFrame {
 	// Action Subclasses
 	// ///////////////////////////////////////////////
 	/**
-	 * Closes the current dialog. TODO: Close dialog, disregard changes. Don't
-	 * save!
-	 * 
 	 * @author PCHR
 	 */
 	class CloseAction extends AbstractAction {
