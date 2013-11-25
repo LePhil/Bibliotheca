@@ -5,6 +5,8 @@ import java.util.Observer;
 
 import javax.swing.table.AbstractTableModel;
 
+import views.Messages;
+
 import domain.Book;
 import domain.Copy;
 import domain.LoanList;
@@ -14,7 +16,11 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	private static final long serialVersionUID = 1L;
 
-	private String[] columns = { "Exemplar-ID", "Titel", "Author" };
+	private String[] columns = {
+		Messages.getString( "BookMasterLoanTable.ColumnHeader.CopyID" ),
+		Messages.getString( "BookDetail.lblTitle.text" ),
+		Messages.getString( "BookDetail.lblAuthor.text" )
+	};
 
 	private LoanList loanList;
 

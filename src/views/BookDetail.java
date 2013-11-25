@@ -3,12 +3,15 @@ package views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Observable;
@@ -17,6 +20,7 @@ import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -24,17 +28,25 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
 
 import viewModels.CopyListModel;
+import viewModels.CopyTableModel;
 import domain.Book;
 import domain.BookList;
 import domain.Copy;
+import domain.CopyList;
 import domain.Library;
 import domain.Shelf;
 
@@ -57,14 +69,25 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private JButton btnRemove;
 	private JButton btnAdd;
 	private JPanel pnlCopies;
-	private JList<Copy> lstCopy;
+	//private JList<Copy> lstCopy;
 
 	private Book book;
 	private Library library;
 	private BookList books;
+	
+	private JTable tblCopies;
+	private JScrollPane scrollPane;
+	private GridBagConstraints gbc_scrollPane;
+	
+	// Models
+	private CopyTableModel copyTableModel;
+	private TableRowSorter<CopyTableModel> sorter;
+	
+	private CopyList copies;
 
 	private static Dictionary<Book, BookDetail> editFramesDict = new Hashtable<Book, BookDetail>();
 	private JPanel pnlButtons;
+	private JPanel pnlBookButtons;
 	
 	// Buttons
 	private JButton btnSave;
@@ -87,6 +110,13 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		this.library = library;
 		this.books = library.getBookList();
 		this.book = book;
+		
+		// TODO: check if book is NULL!
+		this.copies = new CopyList();
+		this.copies.setCopyList( library.getCopiesOfBook( book ) );
+		
+		this.copyTableModel = new CopyTableModel( this.copies );
+		
 		initialize();
 	}
 
@@ -256,49 +286,43 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			gbc_cmbShelf.gridy = 3;
 			pnlInformation.add(cmbShelf, gbc_cmbShelf);
 			
-			pnlButtons = new JPanel();
+			pnlBookButtons = new JPanel();
 			GridBagConstraints gbc_panel = new GridBagConstraints();
 			gbc_panel.insets = new Insets(0, 0, 0, 5);
 			gbc_panel.fill = GridBagConstraints.BOTH;
 			gbc_panel.gridx = 2;
 			gbc_panel.gridy = 4;
-			pnlInformation.add(pnlButtons, gbc_panel);
-			pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout.X_AXIS));
+			pnlInformation.add( pnlBookButtons, gbc_panel );
+			pnlBookButtons.setLayout( new BoxLayout( pnlBookButtons, BoxLayout.X_AXIS ) );
 			
 			horizontalGlue = Box.createHorizontalGlue();
-			pnlButtons.add(horizontalGlue);
+			pnlBookButtons.add(horizontalGlue);
 			
 			///////////////////////////////////////////////////
-			// BUTTONS
+			// BOOK-BUTTONS
 			///////////////////////////////////////////////////
 			// DELETE
 			btnDelete = new JButton( delete );
 			btnDelete.setEnabled( !newlyCreated );
-			pnlButtons.add( btnDelete );
+			pnlBookButtons.add( btnDelete );
 			
 			// RESET
-			btnReset = new JButton( reset ); //$NON-NLS-1$
+			btnReset = new JButton( reset );
 			btnReset.setEnabled( false );
-			pnlButtons.add(btnReset);
+			pnlBookButtons.add(btnReset);
 			
 			// SAVE
 			btnSave = new JButton( save );
 			btnSave.setEnabled(false);
-			pnlButtons.add(btnSave);
-			
-			// CANCEL
-			btnCancel = new JButton( cancel );
-			btnCancel.setEnabled( true );
-			pnlButtons.add( btnCancel );
-			
+			pnlBookButtons.add(btnSave);
+						
 			/////////////////////////////////////////////////
 			// COPY AREA
 			/////////////////////////////////////////////////
 			pnlCopiesEdit = new JPanel();
-			pnlCopiesEdit
-					.setBorder(new TitledBorder(
+			pnlCopiesEdit.setBorder(new TitledBorder(
 							new LineBorder(new Color(0, 0, 0)),
-							Messages.getString("BookDetail.pnlSpecimensEdit.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, //$NON-NLS-1$
+							Messages.getString("BookDetail.pnlSpecimensEdit.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP,
 							null, null));
 			getContentPane().add(pnlCopiesEdit);
 			pnlCopiesEdit.setLayout(new BoxLayout(pnlCopiesEdit,
@@ -309,7 +333,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			pnlAction.setLayout(new BoxLayout(pnlAction, BoxLayout.X_AXIS));
 
 			lblAmount = new JLabel(
-					Messages.getString("BookDetail.lblAmount.text")); //$NON-NLS-1$
+					Messages.getString("BookDetail.lblAmount.text"));
 			pnlAction.add(lblAmount);
 
 			Component hglCopiesEdit = Box.createHorizontalGlue();
@@ -330,10 +354,57 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			btnAdd = new JButton( addCopy );
 			pnlAction.add(btnAdd);
 
+			/*
 			pnlCopies = new JPanel();
 			pnlCopiesEdit.add(pnlCopies);
-			pnlCopies.setLayout(new BorderLayout(0, 0));
+			//pnlCopies.setLayout(new BorderLayout(0, 0));
 			
+			
+			// NEW: TABLE INSTEAD OF LIST. Yay! TODO: remove
+			GridBagLayout gbl_pnlCopiesInvBottom = new GridBagLayout();
+			gbl_pnlCopiesInvBottom.columnWidths = new int[]{0, 0};
+			gbl_pnlCopiesInvBottom.rowHeights = new int[]{0, 0, 0};
+			gbl_pnlCopiesInvBottom.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+			gbl_pnlCopiesInvBottom.rowWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+			pnlCopies.setLayout(gbl_pnlCopiesInvBottom);
+			
+			scrollPane = new JScrollPane();
+			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			gbc_scrollPane = new GridBagConstraints();
+			gbc_scrollPane.gridheight = 2;
+			gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+			gbc_scrollPane.fill = GridBagConstraints.BOTH;
+			gbc_scrollPane.gridx = 0;
+			gbc_scrollPane.gridy = 0;
+			pnlCopies.add(scrollPane, gbc_scrollPane);
+			
+			tblCopies = new JTable();
+			initTable();
+			pnlCopies.add( tblCopies );
+			*/
+			
+			// ///////////////////////////////////////////////
+			// COPIES PANEL
+			// ///////////////////////////////////////////////
+			pnlCopies = new JPanel();
+			GridBagConstraints gbc_pnlCopies = new GridBagConstraints();
+			gbc_pnlCopies.insets = new Insets(0, 0, 5, 0);
+			gbc_pnlCopies.fill = GridBagConstraints.BOTH;
+			gbc_pnlCopies.gridx = 0;
+			gbc_pnlCopies.gridy = 1;
+			pnlCopies.setLayout(new BoxLayout( pnlCopies,
+					BoxLayout.Y_AXIS));
+			pnlCopiesEdit.add( pnlCopies, gbc_pnlCopies);
+
+			scrollPane = new JScrollPane();
+			{
+				tblCopies = new JTable();
+				initTable();
+			}
+			scrollPane.setViewportView(tblCopies);
+			pnlCopies.add(scrollPane);
+			
+			/*
 			lstCopy = new JList<Copy>();
 			lstCopy.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent e) {
@@ -343,6 +414,24 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
 			
 			pnlCopies.add( getContentPane().add(new JScrollPane(lstCopy)) );
+			*/
+			
+			// ///////////////////////////////////////////////
+			// BUTTONS PANEL
+			// ///////////////////////////////////////////////
+			pnlButtons = new JPanel();
+			pnlButtons.setMaximumSize(new Dimension(32767, 50));
+			getContentPane().add(pnlButtons);
+			pnlButtons.setLayout(new BoxLayout(pnlButtons, BoxLayout.X_AXIS));
+	
+			pnlButtons.add(Box.createHorizontalGlue());
+			
+			// CANCEL
+			btnCancel = new JButton( cancel );
+			btnCancel.setEnabled( true );
+			btnCancel.setIcon( new ImageIcon("icons/close_32.png") );
+			pnlButtons.add( btnCancel );
+
 			
 			displayBook();
 			
@@ -350,6 +439,76 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void initTable() {
+		tblCopies.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblCopies.setModel( copyTableModel );
+		sorter = new TableRowSorter<CopyTableModel>( copyTableModel );
+		tblCopies.setRowSorter( sorter );
+		
+		// Ignore the title and author in this view, because all copies from this book have the same properties in those fields.
+		tblCopies.getColumnModel().removeColumn( tblCopies.getColumnModel().getColumn(1) );
+		tblCopies.getColumnModel().removeColumn( tblCopies.getColumnModel().getColumn(2) );
+		
+		/*
+		tblCopies.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		scrollPane.setViewportView(tblCopies);
+		tblCopies.setModel(copyTableModel);
+		
+		// Make the columns sortable
+		sorter = new TableRowSorter<CopyTableModel>(copyTableModel);
+		tblCopies.setRowSorter(sorter);
+		
+		// Handle the filtering over there:
+		//updateFilters();
+		
+		// TableColumns
+		TableColumn availabilityColumn = tblCopies.getColumnModel().getColumn(0);
+		availabilityColumn.setMinWidth(100);
+		availabilityColumn.setMaxWidth(100);
+		//availabilityColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+		
+		TableColumn titleColumn = tblCopies.getColumnModel().getColumn(1);
+		//titleColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+
+		TableColumn authorColumn = tblCopies.getColumnModel().getColumn(2);
+		//authorColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+		
+		TableColumn publisherColumn = tblCopies.getColumnModel().getColumn(3);
+		publisherColumn.setMinWidth(100);
+		publisherColumn.setMaxWidth(100);
+		//publisherColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+		
+		TableColumn shelfColumn = tblCopies.getColumnModel().getColumn(4);
+		shelfColumn.setMinWidth(50);
+		shelfColumn.setMaxWidth(50);
+		//shelfColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+		
+		// Add Listeners
+		tblCopies.getSelectionModel().addListSelectionListener(
+			new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent evt) {
+					SwingUtilities.invokeLater(new Runnable() {  
+						public void run() {
+							// Update the "Show Selected" button
+							//updateListButtons();
+						}
+					});
+				}
+			}
+		);
+		
+		// On DoubleClick on an entry, show it in the detail view
+		tblCopies.addMouseListener(new MouseAdapter() {
+	        public void mouseClicked(MouseEvent e) {
+	            if (e.getClickCount() == 2) {
+	            	int selectedRow = tblCopies.convertRowIndexToModel( tblCopies.getSelectedRow() );
+	                //editBook( getLibrary().getBookList().getBooks().get( selectedRow ) );
+	            }
+	        }
+		});
+		*/
 	}
 	
 	private void validateInformation(){
@@ -466,7 +625,14 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	    }
 		public void actionPerformed(ActionEvent e) {
 			library.createAndAddCopy(book);
-			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+			
+			CopyList copies = new CopyList();
+			copies.setCopyList( library.getCopiesOfBook( book ) );
+			
+			CopyTableModel copyTableModel = new CopyTableModel( copies );
+			
+			tblCopies.setModel( copyTableModel );
+			//lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
 			// TODO: throws a stackTrace (ArrayIndexOutOfBoundsException)
 		}
 	}
@@ -483,8 +649,19 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	        //putValue( MNEMONIC_KEY, KeyEvent.VK_R );
 	    }
 		public void actionPerformed(ActionEvent e) {
-			library.removeCopy(lstCopy.getSelectedValue());
-			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+			//library.removeCopy(lstCopy.getSelectedValue());
+			int selectedRow = tblCopies.convertRowIndexToModel( tblCopies.getSelectedRow() );
+			library.removeCopy( copies.getCopyAt( selectedRow ) );	// TODO
+			
+			CopyList copies = new CopyList();
+			copies.setCopyList( library.getCopiesOfBook( book ) );
+			
+			CopyTableModel copyTableModel = new CopyTableModel( copies );
+			
+			tblCopies.setModel( copyTableModel );
+			
+			// TODO: PCHR: CLEAN UP THIS CLUSTERFUCK, DOESN'T WORK ANYWAY!
+			//lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
 		}
 	}
 	/**

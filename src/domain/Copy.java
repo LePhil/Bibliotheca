@@ -3,7 +3,11 @@ package domain;
 public class Copy {
 
 	public enum Condition {
-		NEW, GOOD, DAMAGED, WASTE, LOST
+		NEW,
+		GOOD,
+		DAMAGED,
+		WASTE,
+		LOST
 	}
 
 	public static long nextInventoryNumber = 1;

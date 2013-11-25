@@ -117,12 +117,12 @@ public class LoanDetail extends JFrame {
 		initialize();
 	}
 
-	public static void editLoan(Loan loan, Library library) {
+	public static void editLoan( Loan loan, Library library ) {
 		newlyCreated = false;
 
-		if (loan == null) {
+		if ( loan == null ) {
 			// create new loan
-			loan = new Loan(null, null); // TODO: add new loan. feels weird.
+			loan = new Loan( null, null ); // TODO: add new loan. feels weird.
 			newlyCreated = true;
 			customerNo = -1;
 
@@ -133,19 +133,18 @@ public class LoanDetail extends JFrame {
 		LoanList loans = new LoanList();
 		// get other loans from this customer and show them in the loanTable
 		if (loan.getCustomer() != null) {
-			List<Loan> customerLoans = library.getCustomerLoans(loan
-					.getCustomer());
-			if (customerLoans != null) {
-				loans.setLoanList(customerLoans);
+			List<Loan> customerLoans = library.getCustomerLoans( loan.getCustomer() );
+			if ( customerLoans != null ) {
+				loans.setLoanList( customerLoans );
 			}
 		}
 
-		editFrame = loanFramesDict.get(loan);
-		if (editFrame == null) {
-			editFrame = new LoanDetail(loan, loans, library);
-			loanFramesDict.put(loan, editFrame);
+		editFrame = loanFramesDict.get( loan );
+		if ( editFrame == null ) {
+			editFrame = new LoanDetail( loan, loans, library );
+			loanFramesDict.put( loan, editFrame );
 		}
-		editFrame.setVisible(true);
+		editFrame.setVisible( true );
 	}
 
 	/**
@@ -304,8 +303,7 @@ public class LoanDetail extends JFrame {
 			scrollPaneLoans.setViewportView(customerLoanTable);
 			pnlCustomerLoans.add(scrollPaneLoans);
 
-			btnSelektierteAusleiheAbschliessen = new JButton(
-					"Selektierte Ausleihe abschliessen");
+			btnSelektierteAusleiheAbschliessen = new JButton( Messages.getString( "LoanDetail.returnCopyBtn.text" ) );
 			GridBagConstraints gbc_btnSelektierteAusleiheAbschliessen = new GridBagConstraints();
 			gbc_btnSelektierteAusleiheAbschliessen.anchor = GridBagConstraints.WEST;
 			gbc_btnSelektierteAusleiheAbschliessen.gridx = 0;
@@ -329,8 +327,7 @@ public class LoanDetail extends JFrame {
 				}
 			});
 			
-			pnlLoans.add(btnSelektierteAusleiheAbschliessen,
-					gbc_btnSelektierteAusleiheAbschliessen);
+			pnlLoans.add( btnSelektierteAusleiheAbschliessen, gbc_btnSelektierteAusleiheAbschliessen );
 
 			// ///////////////////////////////////////////////
 			// COPIES PANEL
@@ -468,7 +465,7 @@ public class LoanDetail extends JFrame {
 			copyFilters.clear();
 		}
 		
-		// 3rd: apply the filter from the search box. (?i) makes regex ignore cases
+		// 2nd: apply the filter from the search box. (?i) makes regex ignore cases
 		if ( searchText != null ) {
 			copyFilters.add( RowFilter.regexFilter( "(?i)" + searchText ) );
 		}
@@ -511,6 +508,9 @@ public class LoanDetail extends JFrame {
 		copyTable.setModel(copyTableModel);
 		copySorter = new TableRowSorter<CopyTableModel>(copyTableModel);
 		copyTable.setRowSorter(copySorter);
+		
+		// Ignore the status in this view, because only available copies should show up here anyway!
+		copyTable.getColumnModel().removeColumn( copyTable.getColumnModel().getColumn(3) );
 	}
 
 	private void updateCustomerDropdown(Customer customer) {

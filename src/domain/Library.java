@@ -7,19 +7,20 @@ import java.util.Observer;
 
 public class Library extends Observable implements Observer {
 
-	private List<Copy> copies;
+	//private List<Copy> copies;
 	private List<Customer> customers;
 	private List<Loan> loans;
 	
 	private CustomerList customerList;
 	private BookList bookList;
+	private CopyList copies;
 	
 	private int addLoanIndex;
 	private int removeLoanIndex;
 	private int editedLoanIndex;
 
 	public Library() {
-		copies = new ArrayList<Copy>();
+		copies = new CopyList();
 
 		setBookList( new BookList() );
 		setCustomerList( new CustomerList() );
@@ -40,14 +41,13 @@ public class Library extends Observable implements Observer {
 
 	public Copy createAndAddCopy(Book title) {
 		Copy c = new Copy(title);
-		copies.add(c);
+		copies.addCopy( c );
 		doNotify();
 		return c;
 	}
 	
 	public void removeCopy(Copy copy){
-		int index = copies.indexOf(copy);
-		copies.remove(index);
+		copies.removeCopy( copy );
 	}
 
 	public boolean isCopyLent(Copy copy) {
@@ -61,8 +61,8 @@ public class Library extends Observable implements Observer {
 
 	public List<Copy> getCopiesOfBook(Book book) {
 		List<Copy> res = new ArrayList<Copy>();
-		for (Copy c : copies) {
-			if (c.getTitle().equals(book)) {
+		for ( Copy c : copies.getCopyList() ) {
+			if ( c.getTitle().equals(book) ) {
 				res.add(c);
 			}
 		}
@@ -109,15 +109,19 @@ public class Library extends Observable implements Observer {
 
 	private List<Copy> getCopies(boolean isLent) {
 		List<Copy> retCopies = new ArrayList<Copy>();
-		for (Copy c : copies) {
-			if (isLent == isCopyLent(c)) {
-				retCopies.add(c);
+		for ( Copy c : copies.getCopyList() ) {
+			if ( isLent == isCopyLent( c ) ) {
+				retCopies.add( c );
 			}
 		}
 		return retCopies;
 	}
 
 	public List<Copy> getCopies() {
+		return copies.getCopyList();
+	}
+	
+	public CopyList getCopyList() {
 		return copies;
 	}
 

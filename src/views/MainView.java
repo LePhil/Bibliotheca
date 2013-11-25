@@ -98,7 +98,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			// INITIAL SETUP
 			///////////////////////////////////////////////////////////////////
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			this.setTitle(Messages.getString("BookMaster.frmTodoTitle.title")); //$NON-NLS-1$
+			this.setTitle(Messages.getString("BookMaster.frmTodoTitle.title"));
 			this.setBounds(100, 100, 700, 550);
 			
 			pnlMainButtons = new JPanel();
@@ -194,7 +194,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("UPDATE ON MAINVIEW CALLED!");
 		updateButtons();
 		booksTab.updateShowUnavailableCheckbox();
 		updateStatistics();
