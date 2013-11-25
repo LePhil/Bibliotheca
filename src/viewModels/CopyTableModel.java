@@ -10,6 +10,7 @@ import views.Messages;
 import domain.Book;
 import domain.Copy;
 import domain.CopyList;
+import domain.Library;
 
 public class CopyTableModel extends AbstractTableModel implements
 		Observer {
@@ -25,9 +26,11 @@ public class CopyTableModel extends AbstractTableModel implements
 	};
 
 	private CopyList copyList;
+	private Library library;
 
-	public CopyTableModel(CopyList copyList) {
+	public CopyTableModel(CopyList copyList, Library library) {
 		this.copyList = copyList;
+		this.library = library;
 		copyList.addObserver(this);
 	}
 
@@ -59,7 +62,7 @@ public class CopyTableModel extends AbstractTableModel implements
 		case 2:
 			return book.getAuthor();
 		case 3:
-			return "TODO - status"; // TODO status. (ausgeliehen or whatever)
+			return library.isCopyLent( copy );
 		case 4:
 			return conditionToString( copy.getCondition() ); // TODO: make editable!!!
 		default:

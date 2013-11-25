@@ -26,10 +26,7 @@ public class LoanTableCellRenderer extends DefaultTableCellRenderer {
 		Loan loan = library.getLoans().get(table.convertRowIndexToModel(row));
 		Color fgColor = Color.BLACK,
 			  bgColor = Color.WHITE;
-		
-        //Color fg = DefaultLookup.getColor(this, ui, "Table.dropCellForeground");
-        //Color bg = DefaultLookup.getColor(this, ui, "Table.dropCellBackground");
-		
+			
 		Color alternateColor = DefaultLookup.getColor(this, ui, "Table.alternateRowColor");
 		
 		if (value!= null) {
@@ -43,7 +40,6 @@ public class LoanTableCellRenderer extends DefaultTableCellRenderer {
 				bgColor = Color.GRAY;
 			}
 			
-			System.out.println("loan is " + (loan.isOverdue() ? "" : "NOT ") + "overdue");
 			if ( loan.isOverdue() ) {
 				fgColor = Color.RED;
 				bgColor = bgColor.brighter();

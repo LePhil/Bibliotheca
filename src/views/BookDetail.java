@@ -36,6 +36,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.CopyTableModel;
@@ -112,7 +113,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		this.copies = new CopyList();
 		this.copies.setCopyList( library.getCopiesOfBook( book ) );
 		
-		this.copyTableModel = new CopyTableModel( this.copies );
+		this.copyTableModel = new CopyTableModel( this.copies, library );
 		
 		initialize();
 	}
@@ -368,7 +369,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			{
 				tblCopies = new JTable();
 				initTable();
-				// TODO: listener that enables button on selection. Also hide other button (removeCopy) when there are no more books.
 			}
 			scrollPane.setViewportView(tblCopies);
 			pnlCopies.add(scrollPane);
@@ -408,7 +408,28 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		
 		// Ignore the title and author in this view, because all copies from this book have the same properties in those fields.
 		tblCopies.getColumnModel().removeColumn( tblCopies.getColumnModel().getColumn(1) );
-		tblCopies.getColumnModel().removeColumn( tblCopies.getColumnModel().getColumn(2) );
+		tblCopies.getColumnModel().removeColumn( tblCopies.getColumnModel().getColumn(1) );
+		
+		tblCopies.getColumnModel().getColumn( 1 ).setCellRenderer(new LoanTableCellRenderer(library) {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value,
+					boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				// Get value from TableModel
+				boolean isLent = (boolean) value;
+				
+				if ( isLent ) {
+					label.setText( Messages.getString("LoanTable.CellContent.Lent") );
+					label.setIcon( new ImageIcon("icons/warning_16.png") );
+				} else {
+					label.setText( Messages.getString("LoanTable.CellContent.Available") );
+					label.setIcon( null );
+				}
+				return label;
+			}
+		});
 		
 		// Add Listeners
 		tblCopies.getSelectionModel().addListSelectionListener(
@@ -447,11 +468,26 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	
 	public void updateListButtons() {
 		// Enables or disables the buttons
-		btnRemove.setEnabled( tblCopies.getSelectedRowCount()>0);
+		
+		// Here we check if this copy is lent. If so, we disable the removeCopyButton, if not, we enable it.
+		if ( tblCopies.getSelectedRowCount() > 0 ) {
+			Copy copy = copies.getCopyAt( tblCopies.convertRowIndexToModel( tblCopies.getSelectedRow() ) );
+			List<Loan> lentCopiesOfBook = library.getLentCopiesOfBook(book);
+			boolean copyIsLent = false;
+			for(Loan loan : lentCopiesOfBook){
+				if(copy.equals(loan.getCopy())){
+					copyIsLent = true;
+					break;
+				}
+			}
+			btnRemove.setEnabled( !copyIsLent );
+		} else {
+			btnRemove.setEnabled( false );
+		}
 		
 		btnDelete.setEnabled( library.getLentCopiesOfBook( book ).size() == 0 );
 	}
-
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		displayBook();
@@ -594,8 +630,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		public void actionPerformed(ActionEvent e) {
 			boolean canDelete = false;
 			canDelete = library.getLentCopiesOfBook(book).size() == 0;
-			// TODO: maybe even disable the button if there are lent out copies...?
-			
+
 			if ( canDelete ) {
 				int delete = JOptionPane.showConfirmDialog(
 					editFrame,
@@ -616,8 +651,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 						}
 					}
 				}
-			} else {
-				
 			}
 		}
 	}

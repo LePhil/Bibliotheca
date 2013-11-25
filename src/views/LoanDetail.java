@@ -114,7 +114,7 @@ public class LoanDetail extends JFrame {
 		this.library = library;
 
 		this.customerLoanTableModel = new CustomerLoanTableModel(loanList);
-		this.copyTableModel = new CopyTableModel(this.copies);
+		this.copyTableModel = new CopyTableModel( this.copies, library );
 		this.copyFilters = new ArrayList<RowFilter<Object,Object>>();
 		initialize();
 	}
