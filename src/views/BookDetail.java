@@ -392,6 +392,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			
 			displayBook();
 			
+			updateListButtons();
+			
 			pack();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -446,6 +448,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	public void updateListButtons() {
 		// Enables or disables the buttons
 		btnRemove.setEnabled( tblCopies.getSelectedRowCount()>0);
+		
+		btnDelete.setEnabled( library.getLentCopiesOfBook( book ).size() == 0 );
 	}
 
 	@Override
@@ -601,25 +605,19 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				);
 				
 				if ( delete == 0 ) {
-					// Delete all copies of this book. TODO: necessary? Should we keep the copies but set a flag to "deleted" or something?
-					//for (Copy copy : library.getCopiesOfBook( book ) ) {
-					//	library.removeCopy( copy );
-					//}
 					if ( books.removeBook( book ) ) {
 						// SUCCESS
 						editFrame.setVisible(false);
 					} else {
 						try {
-							// TODO: show a better dialog.
 							throw new Exception( "Yeah, deleting that book didn't really work. Sorry about that, please restart the application." );
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
 					}
 				}
-				// TODO: make sure that past loans of that book keep existing. (or not?)
 			} else {
-				// TODO: throw a tantrum.
+				
 			}
 		}
 	}
