@@ -11,6 +11,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -36,6 +37,7 @@ import domain.Book;
 import domain.BookList;
 import domain.Copy;
 import domain.Library;
+import domain.Loan;
 import domain.Shelf;
 
 public class BookDetail extends javax.swing.JFrame implements Observer {
@@ -483,8 +485,25 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	        //putValue( MNEMONIC_KEY, KeyEvent.VK_R );
 	    }
 		public void actionPerformed(ActionEvent e) {
-			library.removeCopy(lstCopy.getSelectedValue());
-			lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+			Copy copy = lstCopy.getSelectedValue();
+			List<Loan> lentCopiesOfBook = library.getLentCopiesOfBook(book);
+			boolean copyIsLent = false;
+			for(Loan loan : lentCopiesOfBook){
+				if(copy.equals(loan.getCopy())){
+					copyIsLent = true;
+				}
+			}
+			if(copyIsLent){
+				JOptionPane.showMessageDialog(
+					editFrame,
+					"Dieses Exemplar ist zur Zeit ausgeliehen und kann nicht gelöscht werden.",
+					Messages.getString("Exemplar ausgeliehen"),
+					JOptionPane.YES_NO_OPTION
+				);
+			}else {
+				library.removeCopy(lstCopy.getSelectedValue());
+				lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+			}
 		}
 	}
 	/**
