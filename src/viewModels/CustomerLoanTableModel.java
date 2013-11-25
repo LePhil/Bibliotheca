@@ -9,6 +9,7 @@ import views.Messages;
 
 import domain.Book;
 import domain.Copy;
+import domain.Loan;
 import domain.LoanList;
 
 public class CustomerLoanTableModel extends AbstractTableModel implements
@@ -18,6 +19,7 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	private String[] columns = {
 		Messages.getString( "BookMasterLoanTable.ColumnHeader.CopyID" ),
+		Messages.getString( "BookMasterLoanTable.ColumnHeader.Status" ),
 		Messages.getString( "BookDetail.lblTitle.text" ),
 		Messages.getString( "BookDetail.lblAuthor.text" )
 	};
@@ -46,14 +48,17 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Copy copy = loanList.getLoanAt(rowIndex).getCopy();
+		Loan loan = loanList.getLoanAt(rowIndex);
+		Copy copy = loan.getCopy();
 		Book book = copy.getTitle();
 		switch (columnIndex) {
 		case 0:
 			return copy.getInventoryNumber();
 		case 1:
-			return book.getName();
+			return loan.isOverdue() ? 0 : loan.isLent() ? 1 : 2;
 		case 2:
+			return book.getName();
+		case 3:
 			return book.getAuthor();
 		default:
 			return null;

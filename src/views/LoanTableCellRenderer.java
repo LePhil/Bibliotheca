@@ -43,6 +43,7 @@ public class LoanTableCellRenderer extends DefaultTableCellRenderer {
 				bgColor = Color.GRAY;
 			}
 			
+			System.out.println("loan is " + (loan.isOverdue() ? "" : "NOT ") + "overdue");
 			if ( loan.isOverdue() ) {
 				fgColor = Color.RED;
 				bgColor = bgColor.brighter();

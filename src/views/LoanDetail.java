@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -484,7 +485,34 @@ public class LoanDetail extends JFrame {
 		customerLoanTable.getColumnModel().getColumn(0).setCellRenderer(new LoanTableCellRenderer(library));
 		customerLoanTable.getColumnModel().getColumn(1).setCellRenderer(new LoanTableCellRenderer(library));
 		customerLoanTable.getColumnModel().getColumn(2).setCellRenderer(new LoanTableCellRenderer(library));
+		customerLoanTable.getColumnModel().getColumn(3).setCellRenderer(new LoanTableCellRenderer(library));
 		
+		customerLoanTable.getColumnModel().getColumn( 1 ).setCellRenderer(new LoanTableCellRenderer( library ) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				
+				// get value from TableModel
+				boolean isOverdue = value.equals(0);
+				boolean isLent = value.equals(1);
+				boolean isOld = value.equals(2);
+				
+				if ( isOverdue ) {
+					label.setIcon( new ImageIcon("icons/warning_16.png") );
+					label.setText( Messages.getString("LoanTable.CellContent.Overdue") );
+				} else if ( isLent ) {
+					label.setText( Messages.getString("LoanTable.CellContent.Lent") );
+					label.setIcon( new ImageIcon("icons/ok_button_16.png") );
+				} else {
+					label.setText( Messages.getString("LoanTable.CellContent.Old") );
+				}
+				
+				
+				return label;
+			}
+		});
 		// Add Listeners
 		customerLoanTable.getSelectionModel().addListSelectionListener(
 			new ListSelectionListener() {
