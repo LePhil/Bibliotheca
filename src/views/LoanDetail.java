@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -59,8 +60,8 @@ public class LoanDetail extends JFrame {
 	private Library library;
 
 	// Buttons
-	private JButton btnSelektierteAusleiheAbschliessen;
-	private JButton btnExemplarAusleihen;
+	private JButton btnReturnSelectedLoan;
+	private JButton btnAddLoan;
 	private JButton btnClose;
 
 	// Labels
@@ -249,7 +250,8 @@ public class LoanDetail extends JFrame {
 					txtCustomerId.setText("" + customer.getCustomerNo());
 					txtCustomerId.setBackground(Color.WHITE);
 					lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", customerLoans.size() + ""));
-					btnSelektierteAusleiheAbschliessen.setEnabled(false);
+					btnReturnSelectedLoan.setEnabled(false);
+					updateBtnAddLoan();
 				}
 			});
 			pnlCustomer.add(cmbCustomer, gbc_cmbCustomer);
@@ -304,18 +306,26 @@ public class LoanDetail extends JFrame {
 			scrollPaneLoans.setViewportView(customerLoanTable);
 			pnlCustomerLoans.add(scrollPaneLoans);
 
-			btnSelektierteAusleiheAbschliessen = new JButton(
+			btnReturnSelectedLoan = new JButton(
 					"Selektierte Ausleihe abschliessen");
 			GridBagConstraints gbc_btnSelektierteAusleiheAbschliessen = new GridBagConstraints();
 			gbc_btnSelektierteAusleiheAbschliessen.anchor = GridBagConstraints.WEST;
 			gbc_btnSelektierteAusleiheAbschliessen.gridx = 0;
 			gbc_btnSelektierteAusleiheAbschliessen.gridy = 2;
-			btnSelektierteAusleiheAbschliessen.setEnabled(false);
-			btnSelektierteAusleiheAbschliessen.addActionListener(new ActionListener() {
+			btnReturnSelectedLoan.setEnabled(false);
+			btnReturnSelectedLoan.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int index = customerLoanTable.getSelectedRow();
 					if(index < loans.getLoanList().size()){
 						Loan loan = loans.getLoanAt(index);
+						if(loan.isOverdue()){
+							JOptionPane.showMessageDialog(
+								editFrame,
+								"Diese Ausleihe ist überfällig. Es muss eine Gebühr von 3.- CHF bezahlt werden.",
+								Messages.getString("Ausleihe Überfällig"),
+								JOptionPane.YES_NO_OPTION
+							);
+						}
 						for(Loan l : library.getLoans()){
 							if(loan.equals(l)){
 								l.returnCopy();
@@ -324,12 +334,13 @@ public class LoanDetail extends JFrame {
 						loan.returnCopy();
 						loans.notifyObservers();
 						copies.setCopyList(library.getAvailableCopies());
-						btnSelektierteAusleiheAbschliessen.setEnabled(false);
+						btnReturnSelectedLoan.setEnabled(false);
+						updateBtnAddLoan();
 					}
 				}
 			});
 			
-			pnlLoans.add(btnSelektierteAusleiheAbschliessen,
+			pnlLoans.add(btnReturnSelectedLoan,
 					gbc_btnSelektierteAusleiheAbschliessen);
 
 			// ///////////////////////////////////////////////
@@ -383,12 +394,13 @@ public class LoanDetail extends JFrame {
 			scrollPaneCopies.setViewportView(copyTable);
 			pnlAvailableCopies.add(scrollPaneCopies);
 
-			btnExemplarAusleihen = new JButton("Exemplar ausleihen");
+			btnAddLoan = new JButton("Exemplar ausleihen");
 			GridBagConstraints gbc_btnExemplarAusleihen = new GridBagConstraints();
 			gbc_btnExemplarAusleihen.anchor = GridBagConstraints.WEST;
 			gbc_btnExemplarAusleihen.gridx = 0;
 			gbc_btnExemplarAusleihen.gridy = 2;
-			btnExemplarAusleihen.addActionListener(new ActionListener() {
+			updateBtnAddLoan();
+			btnAddLoan.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					int selectedRow = copyTable.convertRowIndexToModel(copyTable.getSelectedRow());
 					Copy copy = copies.getCopyAt(selectedRow);
@@ -398,9 +410,10 @@ public class LoanDetail extends JFrame {
 					copies.setCopyList(library.getAvailableCopies());
 					loans.addLoan(newLoan); 
 					lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", loans.getLoanList().size() + ""));
+					updateBtnAddLoan();
 				}
 			});
-			pnlCopies.add(btnExemplarAusleihen, gbc_btnExemplarAusleihen);
+			pnlCopies.add(btnAddLoan, gbc_btnExemplarAusleihen);
 			
 			
 			// ///////////////////////////////////////////////
@@ -497,7 +510,7 @@ public class LoanDetail extends JFrame {
 							if(index >= 0 && index < loans.getLoanList().size()){
 								Loan loan = loans.getLoanAt(index);
 								boolean isLent = loan != null && loan.isLent();
-								btnSelektierteAusleiheAbschliessen.setEnabled(isLent);
+								btnReturnSelectedLoan.setEnabled(isLent);
 							}
 						}
 					});
@@ -519,6 +532,21 @@ public class LoanDetail extends JFrame {
 		} else {
 			cmbCustomer.setSelectedIndex(0);
 		}
+	}
+	
+	private void updateBtnAddLoan(){
+		boolean displayBtn = true;
+		int countLents = 0;
+		for(Loan loan : this.loans.getLoanList()){
+			if(loan.isOverdue()){
+				displayBtn = false;
+			}
+			if(loan.isLent()){
+				countLents++;
+			}
+		}
+		displayBtn = displayBtn && countLents < 3;
+		btnAddLoan.setEnabled(displayBtn);
 	}
 
 	// ///////////////////////////////////////////////
