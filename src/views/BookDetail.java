@@ -1,5 +1,6 @@
 package views;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -11,6 +12,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -21,6 +23,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -36,10 +39,13 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.CopyTableModel;
+import viewModels.CopyListModel;
 import domain.Book;
 import domain.BookList;
+import domain.Copy;
 import domain.CopyList;
 import domain.Library;
+import domain.Loan;
 import domain.Shelf;
 
 public class BookDetail extends javax.swing.JFrame implements Observer {
@@ -61,6 +67,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private JButton btnRemove;
 	private JButton btnAdd;
 	private JPanel pnlCopies;
+	private JList<Copy> lstCopy;
 
 	private Book book;
 	private Library library;
@@ -443,7 +450,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("ASDASD");
 		displayBook();
 	}
 	
@@ -569,6 +575,29 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			
 			// TODO: PCHR: CLEAN UP THIS CLUSTERFUCK, DOESN'T WORK ANYWAY!
 			//lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+			
+			/*
+			CODE PFORSTER: TODO: check if we can take some logic from the following code:
+			Copy copy = lstCopy.getSelectedValue();
+			List<Loan> lentCopiesOfBook = library.getLentCopiesOfBook(book);
+			boolean copyIsLent = false;
+			for(Loan loan : lentCopiesOfBook){
+				if(copy.equals(loan.getCopy())){
+					copyIsLent = true;
+				}
+			}
+			if(copyIsLent){
+				JOptionPane.showMessageDialog(
+					editFrame,
+					"Dieses Exemplar ist zur Zeit ausgeliehen und kann nicht gel�scht werden.",
+					Messages.getString("Exemplar ausgeliehen"),
+					JOptionPane.YES_NO_OPTION
+				);
+			}else {
+				library.removeCopy(lstCopy.getSelectedValue());
+				lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+			}
+			*/
 		}
 	}
 	/**

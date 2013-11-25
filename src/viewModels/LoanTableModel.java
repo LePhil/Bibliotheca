@@ -17,7 +17,7 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 
 	private static final long serialVersionUID = 1L;
 	Library library;
-    SimpleDateFormat dateFormat = new SimpleDateFormat( "dd/mm/yy" ); //TODO READ local instead of guessing it :P
+    SimpleDateFormat dateFormat = new SimpleDateFormat( "dd/MM/yy" ); //TODO READ local instead of guessing it :P
 
 	private String[] columns = {
 		Messages.getString("BookMasterLoanTable.ColumnHeader.Status"),
@@ -69,10 +69,10 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 		case 2:
 			return loan.getCopy().getTitle();
 		case 3:
-			if ( loan.getReturnDate() == null ) {
-				return Messages.getString("BookMasterLoanTable.LoanDate.Since", dateFormat.format( loan.getPickupDate().getTime() ).toString() );
+			if ( loan.isLent() ) {
+				return Messages.getString("BookMasterLoanTable.LoanDate.Until", dateFormat.format(loan.getDueDate().getTime()));
 			} else {
-				return Messages.getString("BookMasterLoanTable.LoanDate.Until", dateFormat.format( loan.getPickupDate().getTime() ).toString() );
+				return dateFormat.format(loan.getReturnDate().getTime());
 			}
 		case 4:
 			return loan.getCustomer().getName() + ", " + loan.getCustomer().getSurname();
