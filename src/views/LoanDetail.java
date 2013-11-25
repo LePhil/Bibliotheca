@@ -511,18 +511,18 @@ public class LoanDetail extends JFrame {
 				// get value from TableModel
 				boolean isOverdue = value.equals(0);
 				boolean isLent = value.equals(1);
-				boolean isOld = value.equals(2);
 				
 				if ( isOverdue ) {
 					label.setIcon( new ImageIcon("icons/warning_16.png") );
 					label.setText( Messages.getString("LoanTable.CellContent.Overdue") );
+					label.setForeground( Color.RED );
 				} else if ( isLent ) {
 					label.setText( Messages.getString("LoanTable.CellContent.Lent") );
 					label.setIcon( new ImageIcon("icons/ok_button_16.png") );
 				} else {
 					label.setText( Messages.getString("LoanTable.CellContent.Old") );
+					label.setIcon( null );
 				}
-				
 				
 				return label;
 			}
