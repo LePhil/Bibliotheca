@@ -538,15 +538,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	    }
 		public void actionPerformed(ActionEvent e) {
 			library.createAndAddCopy(book);
-			
-			CopyList copies = new CopyList();
 			copies.setCopyList( library.getCopiesOfBook( book ) );
-			
-			CopyTableModel copyTableModel = new CopyTableModel( copies );
-			
-			tblCopies.setModel( copyTableModel );
-			//lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
-			// TODO: throws a stackTrace (ArrayIndexOutOfBoundsException)
 		}
 	}
 	/**
@@ -562,23 +554,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	        //putValue( MNEMONIC_KEY, KeyEvent.VK_R );
 	    }
 		public void actionPerformed(ActionEvent e) {
-			//library.removeCopy(lstCopy.getSelectedValue());
-			int selectedRow = tblCopies.convertRowIndexToModel( tblCopies.getSelectedRow() );
-			library.removeCopy( copies.getCopyAt( selectedRow ) );	// TODO
-			
-			CopyList copies = new CopyList();
-			copies.setCopyList( library.getCopiesOfBook( book ) );
-			
-			CopyTableModel copyTableModel = new CopyTableModel( copies );
-			
-			tblCopies.setModel( copyTableModel );
-			
-			// TODO: PCHR: CLEAN UP THIS CLUSTERFUCK, DOESN'T WORK ANYWAY!
-			//lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
-			
-			/*
-			CODE PFORSTER: TODO: check if we can take some logic from the following code:
-			Copy copy = lstCopy.getSelectedValue();
+			Copy copy = copies.getCopyAt( tblCopies.convertRowIndexToModel( tblCopies.getSelectedRow() ) );
 			List<Loan> lentCopiesOfBook = library.getLentCopiesOfBook(book);
 			boolean copyIsLent = false;
 			for(Loan loan : lentCopiesOfBook){
@@ -589,15 +565,14 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			if(copyIsLent){
 				JOptionPane.showMessageDialog(
 					editFrame,
-					"Dieses Exemplar ist zur Zeit ausgeliehen und kann nicht gel�scht werden.",
+					"Dieses Exemplar ist zur Zeit ausgeliehen und kann nicht gelöscht werden.",
 					Messages.getString("Exemplar ausgeliehen"),
 					JOptionPane.YES_NO_OPTION
 				);
 			}else {
-				library.removeCopy(lstCopy.getSelectedValue());
-				lstCopy.setModel(new CopyListModel(library.getCopiesOfBook(book)));
+				library.removeCopy(copy);				
+				copies.setCopyList( library.getCopiesOfBook( book ) );
 			}
-			*/
 		}
 	}
 	/**
