@@ -68,8 +68,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private JButton btnRemove;
 	private JButton btnAdd;
 	private JPanel pnlCopies;
-	private JList<Copy> lstCopy;
-
 	private Book book;
 	private Library library;
 	private BookList books;
@@ -109,7 +107,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		this.books = library.getBookList();
 		this.book = book;
 		
-		// TODO: check if book is NULL!
 		this.copies = new CopyList();
 		this.copies.setCopyList( library.getCopiesOfBook( book ) );
 		
@@ -122,7 +119,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		newlyCreated = false;
 		
 		if ( book == null ) {
-			System.out.println("CREATE NEW BOOK");
 			book = new Book("");
 			newlyCreated = true;
 		}
@@ -498,7 +494,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	/////////////////////////////////////////////////
 	/**
 	 * Closes the current dialog.
-	 * TODO: Close dialog, disregard changes. Don't save!
 	 * @author PCHR
 	 */
 	class CloseAction extends AbstractAction {
@@ -509,7 +504,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	        putValue( MNEMONIC_KEY, KeyEvent.VK_C );
 	    }
 	    public void actionPerformed(ActionEvent e) {
-	    	System.out.println("CLOSE DIALOG NOW.");
 	    	editFrame.setVisible(false);
 	    }
 	}
