@@ -100,8 +100,6 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 					// Customer was added
 					fireTableRowsInserted( pos, pos );
 					fireTableDataChanged();
-				} else {
-					// Nothing of our concern. Maybe a TODO?
 				}
 			}
 		}

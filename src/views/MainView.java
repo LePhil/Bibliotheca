@@ -31,7 +31,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	private JMenu viewMenu;
 	private JMenuBar jMenuBar;
 	
-	private JCheckBoxMenuItem showUnavailableMenuItem;	//TODO: remove
+	private JCheckBoxMenuItem showUnavailableMenuItem;
 	
 	private JMenu loansSubMenu;
 	private JMenuItem loansShowAll;
