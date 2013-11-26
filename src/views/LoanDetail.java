@@ -399,8 +399,9 @@ public class LoanDetail extends JFrame {
 					Loan newLoan = new Loan(customer, copy);
 					library.getLoans().add(newLoan);
 					copies.setCopyList(library.getAvailableCopies());
-					loans.addLoan(newLoan); 
-					lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", loans.getLoanList().size() + ""));
+					loans.addLoan(newLoan);
+					
+					updateLabels();
 					updateBtnAddLoan();
 				}
 			});
@@ -475,6 +476,8 @@ public class LoanDetail extends JFrame {
 			
 			txtCustomerId.setText("" + customer.getCustomerNo());		
 			customerBorder.setTitle( Messages.getString( "LoanDetail.LoansOfCustomer.text", customer.getName() + " " + customer.getSurname() ) );
+			
+			lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", loans.getLoanList().size() + ""));
 		}
 	}
 
