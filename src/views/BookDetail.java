@@ -435,13 +435,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		
 		JComboBox<Condition> comboBox = new JComboBox<>( Condition.values() );
 		
-		tblCopies.getColumnModel().getColumn( 2 ).setCellEditor(
-			new DefaultCellEditor(
-				comboBox
-			)
-		);
-		//tblCopies.getColumnModel().getColumn(2).getCellEditor().stopCellEditing()
-		// TODO: make cell editable (already prepared in CopyTableModel!), but TODO: save changes!
+		tblCopies.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( comboBox ) );
 		
 		// Add Listeners
 		tblCopies.getSelectionModel().addListSelectionListener(
