@@ -166,7 +166,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			// ACTIONS
 			/////////////////////////////////////////////////
 			// Close (via Esc-Key (?), Button)
-			AbstractAction cancel = new CloseAction( Messages.getString( "BookDetail.btnCancel.text"), "Revert Changes, close dialog" );
+			AbstractAction cancel = new CloseAction( Messages.getString( "MainView.btnExit.text"), "Revert Changes, close dialog" );
 			// Save (via S, Button)
 			AbstractAction save = new SaveAction( Messages.getString( "BookDetail.btnSave.text"), "Save changes" );
 			// Reset (via R, Button)
@@ -429,7 +429,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			}
 		});
 		
-		// tblCopies.getColumnModel().getColumn( 2 ).setCellEditor(new DefaultCellEditor(new JComboBox<>(Condition.values())));
+		tblCopies.getColumnModel().getColumn( 2 ).setCellEditor(new DefaultCellEditor(new JComboBox<>(Condition.values())));
+		// TODO: make cell editable (already prepared in CopyTableModel!), but TODO: save changes!
 		
 		// Add Listeners
 		tblCopies.getSelectionModel().addListSelectionListener(

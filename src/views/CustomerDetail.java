@@ -14,6 +14,7 @@ import java.util.Hashtable;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -104,7 +105,7 @@ public class CustomerDetail extends JFrame {
 			// ///////////////////////////////////////////////
 			// Close (via Esc-Key (?), Button)
 			AbstractAction cancel = new CloseAction(
-					Messages.getString("CustomerDetail.btnCancel.text"),
+					Messages.getString("MainView.btnExit.text"),
 					"Revert Changes, close dialog");
 			// Save (via S, Button)
 			AbstractAction save = new SaveAction(
@@ -124,7 +125,7 @@ public class CustomerDetail extends JFrame {
 			// ///////////////////////////////////////////////
 			JPanel pnlInformation = new JPanel();
 			pnlInformation.setBorder(new TitledBorder(new LineBorder(new Color(
-					0, 0, 0)), "Customer Details", TitledBorder.LEADING,
+					0, 0, 0)), Messages.getString("CustomerDetail.CustomerInfo.border.title"), TitledBorder.LEADING,
 					TitledBorder.TOP, null, null));
 			getContentPane().add(pnlInformation);
 
@@ -317,8 +318,15 @@ public class CustomerDetail extends JFrame {
 			gbc_panel_2.gridy = 5;
 			pnlInformation.add(panel_2, gbc_panel_2);
 
+			btnDelete = new JButton(delete);
+			panel_2.add(btnDelete);
+			
 			btnReset = new JButton( reset );
 			panel_2.add(btnReset);
+
+			btnSave = new JButton(save);
+			panel_2.add(btnSave);
+			btnSave.setEnabled(false);
 
 			// Buttons
 			{
@@ -326,14 +334,8 @@ public class CustomerDetail extends JFrame {
 				getContentPane().add(panel_1);
 				panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 
-				btnDelete = new JButton(delete);
-				panel_1.add(btnDelete);
-
-				btnSave = new JButton(save);
-				panel_1.add(btnSave);
-				btnSave.setEnabled(false);
-
 				btnCancel = new JButton(cancel);
+				btnCancel.setIcon( new ImageIcon("icons/close_32.png") );
 				panel_1.add(btnCancel);
 			}
 
