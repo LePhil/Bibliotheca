@@ -69,6 +69,7 @@ public class LoanDetail extends JFrame {
 	private JLabel lblCustomerId;
 	private JLabel lblCustomer;
 	private JLabel lblAnzahlAusleihen;
+	private TitledBorder customerBorder;
 
 	// Textfields
 	private JTextField txtCustomerId;
@@ -173,10 +174,9 @@ public class LoanDetail extends JFrame {
 					Double.MIN_VALUE };
 			pnlCustomer.setLayout(gbl_pnlCustomer);
 
-			lblCustomerId = new JLabel(
-					Messages.getString("LoanDetail.lblCustomerId.text")); //$NON-NLS-1$
+			lblCustomerId = new JLabel( Messages.getString( "LoanDetail.lblCustomerId.text" ) );
 			GridBagConstraints gbc_lblCustomerId = new GridBagConstraints();
-			gbc_lblCustomerId.insets = new Insets(0, 0, 5, 5);
+			gbc_lblCustomerId.insets = new Insets( 0, 0, 5, 5 );
 			gbc_lblCustomerId.anchor = GridBagConstraints.EAST;
 			gbc_lblCustomerId.gridx = 1;
 			gbc_lblCustomerId.gridy = 0;
@@ -190,10 +190,6 @@ public class LoanDetail extends JFrame {
 			gbc_txtCustomerId.gridy = 0;
 			pnlCustomer.add(txtCustomerId, gbc_txtCustomerId);
 			txtCustomerId.setColumns(10);
-			
-			if(loan.getCustomer() != null){
-				txtCustomerId.setText("" + loan.getCustomer().getCustomerNo());
-			}
 			txtCustomerId.addKeyListener(new KeyAdapter() {
 				@Override
 				public void keyReleased(KeyEvent e) {
@@ -205,6 +201,7 @@ public class LoanDetail extends JFrame {
 							handleInvalidCustomerID();
 						}else {
 							updateCustomerDropdown(library.getCustomerList().getByID(customerNo));
+							updateLabels();
 						}
 			        } catch (NumberFormatException ex) {
 				           handleInvalidCustomerID();
@@ -232,6 +229,8 @@ public class LoanDetail extends JFrame {
 			gbc_cmbCustomer.fill = GridBagConstraints.HORIZONTAL;
 			gbc_cmbCustomer.gridx = 2;
 			gbc_cmbCustomer.gridy = 1;
+			
+			// Fill Combobox with customers
 			for (Customer customer : library.getCustomerList().getCustomers()) {
 				cmbCustomer.addItem(customer);
 			}
@@ -246,6 +245,7 @@ public class LoanDetail extends JFrame {
 					lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", customerLoans.size() + ""));
 					btnReturnSelectedLoan.setEnabled(false);
 					updateBtnAddLoan();
+					updateLabels();
 				}
 			});
 			pnlCustomer.add(cmbCustomer, gbc_cmbCustomer);
@@ -254,22 +254,20 @@ public class LoanDetail extends JFrame {
 			// LOANS PANEL
 			// ///////////////////////////////////////////////
 			pnlLoans = new JPanel();
-			pnlLoans.setBorder(new TitledBorder(new LineBorder(new Color(0, 0,
-					0)), "Loans of $PARAM", TitledBorder.LEADING,
-					TitledBorder.TOP, null, null));
+			LineBorder customerLineBorder = new LineBorder( new Color (0,0,0));
+			customerBorder = new TitledBorder(customerLineBorder, Messages.getString("LoanDetail.LoansOfCustomer.text") );
+			pnlLoans.setBorder( customerBorder );
 			pnlLoans.setMaximumSize(new Dimension(32767, 50));
 			getContentPane().add(pnlLoans);
 			GridBagLayout gbl_pnlLoans = new GridBagLayout();
 			gbl_pnlLoans.columnWidths = new int[] { 0, 0 };
 			gbl_pnlLoans.rowHeights = new int[] { 0, 0, 0, 0 };
 			gbl_pnlLoans.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-			gbl_pnlLoans.rowWeights = new double[] { 0.0, 1.0, 0.0,
-					Double.MIN_VALUE };
+			gbl_pnlLoans.rowWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
 			pnlLoans.setLayout(gbl_pnlLoans);
 
 			pnlCustomerLoanInfo = new JPanel();
-			FlowLayout flowLayout = (FlowLayout) pnlCustomerLoanInfo
-					.getLayout();
+			FlowLayout flowLayout = (FlowLayout) pnlCustomerLoanInfo.getLayout();
 			flowLayout.setAlignment(FlowLayout.LEFT);
 			GridBagConstraints gbc_pnlCustomerLoanInfo = new GridBagConstraints();
 			gbc_pnlCustomerLoanInfo.insets = new Insets(0, 0, 5, 0);
@@ -428,6 +426,9 @@ public class LoanDetail extends JFrame {
 				}
 			});
 			pnlButtons.add(btnClose);
+			
+			updateLabels();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -466,6 +467,15 @@ public class LoanDetail extends JFrame {
 		    }
 		});
 		txtSearchCopies.setColumns(10);
+	}
+	
+	private void updateLabels() {
+		if ( cmbCustomer.getSelectedItem() != null ) {
+			Customer customer = (Customer) cmbCustomer.getSelectedItem();
+			
+			txtCustomerId.setText("" + customer.getCustomerNo());		
+			customerBorder.setTitle( Messages.getString( "LoanDetail.LoansOfCustomer.text", customer.getName() + " " + customer.getSurname() ) );
+		}
 	}
 
 	private void updateFilters(String searchText) {
