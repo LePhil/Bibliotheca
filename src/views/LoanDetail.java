@@ -477,7 +477,7 @@ public class LoanDetail extends JFrame {
 				public void valueChanged(ListSelectionEvent evt) {
 					SwingUtilities.invokeLater(new Runnable() {  
 						public void run() {
-							int index = customerLoanTable.getSelectedRow();
+							int index = customerLoanTable.convertRowIndexToModel(customerLoanTable.getSelectedRow());
 							if(index >= 0 && index < loans.getLoanList().size()){
 								Loan loan = loans.getLoanAt(index);
 								boolean isLent = loan != null && loan.isLent();
@@ -507,6 +507,7 @@ public class LoanDetail extends JFrame {
 						public void run() {
 							// Update the "Show Selected" button
 							updateListButtons();
+							updateBtnAddLoan();
 						}
 					});
 				}
