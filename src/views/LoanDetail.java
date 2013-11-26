@@ -474,10 +474,12 @@ public class LoanDetail extends JFrame {
 				customerLoanTableModel);
 		customerLoanTable.setRowSorter(loanSorter);
 		
-		customerLoanTable.getColumnModel().getColumn(0).setCellRenderer(new LoanTableCellRenderer(library));
-		customerLoanTable.getColumnModel().getColumn(1).setCellRenderer(new LoanTableCellRenderer(library));
-		customerLoanTable.getColumnModel().getColumn(2).setCellRenderer(new LoanTableCellRenderer(library));
-		customerLoanTable.getColumnModel().getColumn(3).setCellRenderer(new LoanTableCellRenderer(library));
+		LoanTableCellRenderer cellRenderer = new LoanTableCellRenderer(library);
+		
+		customerLoanTable.getColumnModel().getColumn(0).setCellRenderer( cellRenderer );
+		customerLoanTable.getColumnModel().getColumn(1).setCellRenderer( cellRenderer );
+		customerLoanTable.getColumnModel().getColumn(2).setCellRenderer( cellRenderer );
+		customerLoanTable.getColumnModel().getColumn(3).setCellRenderer( cellRenderer );
 		
 		customerLoanTable.getColumnModel().getColumn( 1 ).setCellRenderer(new LoanTableCellRenderer( library ) {
 			private static final long serialVersionUID = 1L;
@@ -560,23 +562,23 @@ public class LoanDetail extends JFrame {
 		if (customer != null) {
 			cmbCustomer.setSelectedItem(customer);
 		} else {
-			cmbCustomer.setSelectedIndex(0);
+			cmbCustomer.setSelectedItem( null );
 		}
 	}
 	
 	private void updateBtnAddLoan(){
 		boolean displayBtn = true;
-		int countLents = 0;
+		int countLoans = 0;
 		for(Loan loan : this.loans.getLoanList()){
 			if(loan.isOverdue()){
 				displayBtn = false;
 			}
 			if(loan.isLent()){
-				countLents++;
+				countLoans++;
 			}
 		}
-		displayBtn = displayBtn && countLents < 3;
-		btnAddLoan.setEnabled(displayBtn);
+		displayBtn = displayBtn && countLoans < 3 && cmbCustomer.getSelectedItem() != null;
+		btnAddLoan.setEnabled( displayBtn );
 	}
 
 	// ///////////////////////////////////////////////
