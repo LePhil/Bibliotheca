@@ -567,6 +567,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				
 				updateLabels();
 			}
+			copies.setCopyList(library.getCopiesOfBook(book));
 	    }
 	}
 	
