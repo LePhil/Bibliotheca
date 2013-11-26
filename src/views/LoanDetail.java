@@ -156,22 +156,26 @@ public class LoanDetail extends JFrame {
 			getContentPane().setLayout( new BoxLayout( getContentPane(), BoxLayout.Y_AXIS ) );
 
 			// ///////////////////////////////////////////////
+			// ACTIONS
+			// ///////////////////////////////////////////////
+			
+			AddLoanAction addLoanAction = new AddLoanAction( Messages.getString("LoanDetail.addLoanBtn.text"), "" );
+			CloseAction closeAction = new CloseAction( Messages.getString( "MainView.btnExit.text"), "" );
+			ReturnLoanAction returnLoanAction = new ReturnLoanAction( Messages.getString( "LoanDetail.returnCopyBtn.text" ), "" );
+			ChangeCustomerAction changeCustomerSelection = new ChangeCustomerAction(  );
+			
+			// ///////////////////////////////////////////////
 			// CUSTOMER PANEL
 			// ///////////////////////////////////////////////
 			pnlCustomer = new JPanel();
 			pnlCustomer.setMaximumSize(new Dimension(32767, 50));
-			pnlCustomer.setBorder(new TitledBorder(new LineBorder(new Color(0,
-					0, 0)), Messages
-					.getString("LoanDetail.CustomerSelection.text"),
-					TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			pnlCustomer.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), Messages.getString("LoanDetail.CustomerSelection.text"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			getContentPane().add(pnlCustomer);
 			GridBagLayout gbl_pnlCustomer = new GridBagLayout();
 			gbl_pnlCustomer.columnWidths = new int[] { 0, 0, 0, 0, 0 };
 			gbl_pnlCustomer.rowHeights = new int[] { 0, 0, 0 };
-			gbl_pnlCustomer.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0,
-					Double.MIN_VALUE };
-			gbl_pnlCustomer.rowWeights = new double[] { 0.0, 0.0,
-					Double.MIN_VALUE };
+			gbl_pnlCustomer.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+			gbl_pnlCustomer.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
 			pnlCustomer.setLayout(gbl_pnlCustomer);
 
 			lblCustomerId = new JLabel( Messages.getString( "LoanDetail.lblCustomerId.text" ) );
@@ -209,13 +213,11 @@ public class LoanDetail extends JFrame {
 				}
 
 				private void handleInvalidCustomerID() {
-					System.out.println("Invalid Customer ID");
 					txtCustomerId.setBackground(Color.PINK);
 				}
 			});
 
-			lblCustomer = new JLabel(
-					Messages.getString("LoanDetail.lblCustomer.text"));
+			lblCustomer = new JLabel( Messages.getString("LoanDetail.lblCustomer.text") );
 			GridBagConstraints gbc_lblCustomer = new GridBagConstraints();
 			gbc_lblCustomer.anchor = GridBagConstraints.EAST;
 			gbc_lblCustomer.insets = new Insets(0, 0, 0, 5);
@@ -234,20 +236,8 @@ public class LoanDetail extends JFrame {
 			for (Customer customer : library.getCustomerList().getCustomers()) {
 				cmbCustomer.addItem(customer);
 			}
-			cmbCustomer.setSelectedItem(loan.getCustomer());
-			cmbCustomer.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					Customer customer = (Customer) cmbCustomer.getSelectedItem();
-					List<Loan> customerLoans = library.getCustomerLoans(customer);
-					loans.setLoanList(customerLoans);
-					txtCustomerId.setText("" + customer.getCustomerNo());
-					txtCustomerId.setBackground(Color.WHITE);
-					lblAnzahlAusleihen.setText(Messages.getString("LoanDetail.nrOfLoansOfCustomer.text", customerLoans.size() + ""));
-					btnReturnSelectedLoan.setEnabled(false);
-					updateBtnAddLoan();
-					updateLabels();
-				}
-			});
+			cmbCustomer.setSelectedItem( loan.getCustomer() );
+			cmbCustomer.setAction( changeCustomerSelection );
 			pnlCustomer.add(cmbCustomer, gbc_cmbCustomer);
 
 			// ///////////////////////////////////////////////
@@ -297,60 +287,29 @@ public class LoanDetail extends JFrame {
 			scrollPaneLoans.setViewportView(customerLoanTable);
 			pnlCustomerLoans.add(scrollPaneLoans);
 
-			btnReturnSelectedLoan = new JButton( Messages.getString( "LoanDetail.returnCopyBtn.text" ) );
+			btnReturnSelectedLoan = new JButton( returnLoanAction );
 			GridBagConstraints gbc_btnSelektierteAusleiheAbschliessen = new GridBagConstraints();
 			gbc_btnSelektierteAusleiheAbschliessen.anchor = GridBagConstraints.WEST;
 			gbc_btnSelektierteAusleiheAbschliessen.gridx = 0;
 			gbc_btnSelektierteAusleiheAbschliessen.gridy = 2;
 			btnReturnSelectedLoan.setEnabled(false);
-			btnReturnSelectedLoan.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int index = customerLoanTable.getSelectedRow();
-					if(index < loans.getLoanList().size()){
-						Loan loan = loans.getLoanAt(index);
-						if(loan.isOverdue()){
-							JOptionPane.showMessageDialog(
-								editFrame,
-								"Diese Ausleihe ist überfallig. Es muss eine Gebühr von 3.- CHF bezahlt werden.",
-								Messages.getString("Ausleihe überfällig"),
-								JOptionPane.YES_NO_OPTION
-							);
-						}
-						for(Loan l : library.getLoans()){
-							if(loan.equals(l)){
-								l.returnCopy();
-							}
-						}
-						loan.returnCopy();
-						loans.notifyObservers();
-						copies.setCopyList(library.getAvailableCopies());
-						btnReturnSelectedLoan.setEnabled(false);
-						updateBtnAddLoan();
-					}
-				}
-			});
-			
 			pnlLoans.add(btnReturnSelectedLoan,	gbc_btnSelektierteAusleiheAbschliessen);
 
 			// ///////////////////////////////////////////////
 			// COPIES PANEL
 			// ///////////////////////////////////////////////
 			pnlCopies = new JPanel();
-			pnlCopies.setBorder(new TitledBorder(new LineBorder(new Color(0, 0,
-					0)), "Exemplare", TitledBorder.LEADING, TitledBorder.TOP,
-					null, null));
+			pnlCopies.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Exemplare", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			getContentPane().add(pnlCopies);
 			GridBagLayout gbl_pnlCopies = new GridBagLayout();
 			gbl_pnlCopies.columnWidths = new int[] { 0, 0 };
 			gbl_pnlCopies.rowHeights = new int[] { 0, 0, 0, 0 };
 			gbl_pnlCopies.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-			gbl_pnlCopies.rowWeights = new double[] { 0.0, 1.0, 0.0,
-					Double.MIN_VALUE };
+			gbl_pnlCopies.rowWeights = new double[] { 0.0, 1.0, 0.0, Double.MIN_VALUE };
 			pnlCopies.setLayout(gbl_pnlCopies);
 			
 			pnlFilterCopies = new JPanel();
-			FlowLayout flowLayoutFilter = (FlowLayout) pnlFilterCopies
-					.getLayout();
+			FlowLayout flowLayoutFilter = (FlowLayout) pnlFilterCopies.getLayout();
 			flowLayoutFilter.setAlignment(FlowLayout.LEFT);
 			GridBagConstraints gbc_pnlFilterCopies = new GridBagConstraints();
 			gbc_pnlFilterCopies.insets = new Insets(0, 0, 5, 0);
@@ -371,8 +330,7 @@ public class LoanDetail extends JFrame {
 			gbc_pnlCopies.fill = GridBagConstraints.BOTH;
 			gbc_pnlCopies.gridx = 0;
 			gbc_pnlCopies.gridy = 1;
-			pnlAvailableCopies.setLayout(new BoxLayout(pnlAvailableCopies,
-					BoxLayout.Y_AXIS));
+			pnlAvailableCopies.setLayout( new BoxLayout( pnlAvailableCopies, BoxLayout.Y_AXIS ) );
 			pnlCopies.add(pnlAvailableCopies, gbc_pnlCopies);
 
 			scrollPaneCopies = new JScrollPane();
@@ -383,28 +341,13 @@ public class LoanDetail extends JFrame {
 			scrollPaneCopies.setViewportView(copyTable);
 			pnlAvailableCopies.add(scrollPaneCopies);
 
-			btnAddLoan = new JButton();
+			btnAddLoan = new JButton( addLoanAction );
 			GridBagConstraints gbc_btnExemplarAusleihen = new GridBagConstraints();
 			gbc_btnExemplarAusleihen.anchor = GridBagConstraints.WEST;
 			gbc_btnExemplarAusleihen.gridx = 0;
 			gbc_btnExemplarAusleihen.gridy = 2;
-			btnAddLoan.setText( Messages.getString("LoanDetail.addLoanBtn.text") );
 			btnAddLoan.setEnabled( false );
 			updateBtnAddLoan();
-			btnAddLoan.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					int selectedRow = copyTable.convertRowIndexToModel(copyTable.getSelectedRow());
-					Copy copy = copies.getCopyAt(selectedRow);
-					Customer customer = (Customer) cmbCustomer.getSelectedItem();
-					Loan newLoan = new Loan(customer, copy);
-					library.getLoans().add(newLoan);
-					copies.setCopyList(library.getAvailableCopies());
-					loans.addLoan(newLoan);
-					
-					updateLabels();
-					updateBtnAddLoan();
-				}
-			});
 			pnlCopies.add(btnAddLoan, gbc_btnExemplarAusleihen);
 			
 			
@@ -418,17 +361,12 @@ public class LoanDetail extends JFrame {
 	
 			pnlButtons.add(Box.createHorizontalGlue());
 			
-			btnClose = new JButton();
-			btnClose.setText(Messages.getString( "MainView.btnExit.text"));
+			btnClose = new JButton( closeAction );
 			btnClose.setIcon( new ImageIcon("icons/close_32.png") );
-			btnClose.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					editFrame.setVisible(false);
-				}
-			});
 			pnlButtons.add(btnClose);
 			
 			updateLabels();
+			updateListButtons();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -501,7 +439,7 @@ public class LoanDetail extends JFrame {
 		loanSorter = new TableRowSorter<CustomerLoanTableModel>(
 				customerLoanTableModel);
 		customerLoanTable.setRowSorter(loanSorter);
-		// TODO pforster: why aren't the loans which are overdue not red?
+		
 		customerLoanTable.getColumnModel().getColumn(0).setCellRenderer(new LoanTableCellRenderer(library));
 		customerLoanTable.getColumnModel().getColumn(1).setCellRenderer(new LoanTableCellRenderer(library));
 		customerLoanTable.getColumnModel().getColumn(2).setCellRenderer(new LoanTableCellRenderer(library));
@@ -621,6 +559,83 @@ public class LoanDetail extends JFrame {
 
 		public void actionPerformed(ActionEvent e) {
 			editFrame.setVisible(false);
+		}
+	}
+
+	class AddLoanAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public AddLoanAction( String text, String desc ) {
+			super(text);
+			putValue(SHORT_DESCRIPTION, desc);
+			putValue(MNEMONIC_KEY, KeyEvent.VK_H );
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			int selectedRow = copyTable.convertRowIndexToModel(copyTable.getSelectedRow());
+			Copy copy = copies.getCopyAt(selectedRow);
+			Customer customer = (Customer) cmbCustomer.getSelectedItem();
+			Loan newLoan = new Loan(customer, copy);
+			library.getLoans().add(newLoan);
+			copies.setCopyList(library.getAvailableCopies());
+			loans.addLoan(newLoan);
+			
+			updateLabels();
+			updateBtnAddLoan();
+		}
+	}
+	
+	class ReturnLoanAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public ReturnLoanAction( String text, String desc ) {
+			super(text);
+			putValue(SHORT_DESCRIPTION, desc);
+			putValue(MNEMONIC_KEY, KeyEvent.VK_R );
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			int index = customerLoanTable.getSelectedRow();
+			if(index < loans.getLoanList().size()){
+				Loan loan = loans.getLoanAt(index);
+				if(loan.isOverdue()){
+					JOptionPane.showMessageDialog(
+						editFrame,
+						"Diese Ausleihe ist überfallig. Es muss eine Gebühr von 3.- CHF bezahlt werden.",
+						Messages.getString("Ausleihe überfällig"),
+						JOptionPane.YES_NO_OPTION
+					);
+				}
+				for(Loan l : library.getLoans()){
+					if(loan.equals(l)){
+						l.returnCopy();
+					}
+				}
+				loan.returnCopy();
+				loans.notifyObservers();
+				copies.setCopyList(library.getAvailableCopies());
+				btnReturnSelectedLoan.setEnabled(false);
+				updateBtnAddLoan();
+			}
+		}
+	}
+	
+	class ChangeCustomerAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		public ChangeCustomerAction() {
+			super();
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			Customer customer = (Customer) cmbCustomer.getSelectedItem();
+			List<Loan> customerLoans = library.getCustomerLoans(customer);
+			loans.setLoanList(customerLoans);
+			txtCustomerId.setText("" + customer.getCustomerNo());
+			txtCustomerId.setBackground(Color.WHITE);
+			btnReturnSelectedLoan.setEnabled(false);
+			updateBtnAddLoan();
+			updateLabels();
 		}
 	}
 }
