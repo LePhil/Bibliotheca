@@ -19,14 +19,17 @@ import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -373,6 +376,12 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			
 			updateLabels();
 			updateListButtons();
+			
+			// Add Escape-Action ( close dialog )
+			KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
+			InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		    inputMap.put(stroke, "ESCAPE");
+		    rootPane.getActionMap().put("ESCAPE", cancel);
 			
 			pack();
 		} catch (Exception e) {

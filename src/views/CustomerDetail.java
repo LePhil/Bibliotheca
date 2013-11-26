@@ -14,12 +14,15 @@ import java.util.Hashtable;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -335,6 +338,12 @@ public class CustomerDetail extends JFrame {
 			}
 
 			fillForm();
+			
+			// Add Escape-Action ( close dialog )
+			KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
+			InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		    inputMap.put(stroke, "ESCAPE");
+		    rootPane.getActionMap().put( "ESCAPE", cancel );
 
 		} catch (Exception e) {
 			e.printStackTrace();
