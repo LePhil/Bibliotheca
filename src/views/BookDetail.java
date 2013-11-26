@@ -458,7 +458,6 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	private void validateInformation(){
 		boolean hasValidationError = "".equals(txtAuthor.getText()) || "".equals(txtPublisher.getText()) || "".equals(txtTitle.getText());
 		if(hasValidationError){
-			// TODO pforster: handle validation error
 			btnSave.setEnabled(false);
 		}else {
 			btnSave.setEnabled(true);
