@@ -1,5 +1,9 @@
 package domain;
 
+import java.util.ResourceBundle;
+
+import views.Messages;
+
 public class Copy {
 
 	public enum Condition {
@@ -7,7 +11,12 @@ public class Copy {
 		GOOD,
 		DAMAGED,
 		WASTE,
-		LOST
+		LOST;
+		
+		@Override
+		public String toString() {
+			return Messages.getString("Copy.Condition." + name());
+		};
 	}
 
 	public static long nextInventoryNumber = 1;

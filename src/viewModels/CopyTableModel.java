@@ -9,6 +9,7 @@ import views.Messages;
 
 import domain.Book;
 import domain.Copy;
+import domain.Copy.Condition;
 import domain.CopyList;
 import domain.Library;
 
@@ -51,10 +52,15 @@ public class CopyTableModel extends AbstractTableModel implements
 	
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		//return columnIndex == 4;
-		return false;
+		return columnIndex == 4;
 	}
-
+	
+	@Override
+	public void setValueAt( Object aValue, int rowIndex, int columnIndex ) {
+		super.setValueAt(aValue, rowIndex, columnIndex);
+		copyList.getCopyAt(rowIndex).setCondition( (Condition) aValue );
+	}
+	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Copy copy = copyList.getCopyAt(rowIndex);
@@ -79,15 +85,15 @@ public class CopyTableModel extends AbstractTableModel implements
 	private String conditionToString( Copy.Condition condition ) {
 		switch (condition) {
 		case NEW:
-			return Messages.getString( "Copy.Condition.New" );
+			return Messages.getString( "Copy.Condition.NEW" );
 		case DAMAGED:
-			return Messages.getString( "Copy.Condition.Damaged" );
+			return Messages.getString( "Copy.Condition.DAMAGED" );
 		case GOOD:
-			return Messages.getString( "Copy.Condition.Good" );
+			return Messages.getString( "Copy.Condition.GOOD" );
 		case LOST:
-			return Messages.getString( "Copy.Condition.Lost" );
+			return Messages.getString( "Copy.Condition.LOST" );
 		case WASTE:
-			return Messages.getString( "Copy.Condition.Waste" );
+			return Messages.getString( "Copy.Condition.WASTE" );
 		default:
 			return "";
 		}
