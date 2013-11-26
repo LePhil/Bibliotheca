@@ -415,8 +415,7 @@ public class CustomerDetail extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("CLOSE DIALOG NOW.");
-			editFrame.setVisible(false);
+			dispose();
 		}
 	}
 
@@ -514,7 +513,7 @@ public class CustomerDetail extends JFrame {
 
 			if (delete == 0) {
 				if (customers.removeCustomer(customer)) { // SUCCESS
-					editFrame.setVisible(false);
+					dispose();
 				} else { // FAILED.
 					try {
 						throw new Exception( "Deleting that customer didn't really work. Sorry about that, please restart the application.");

@@ -558,7 +558,7 @@ public class LoanDetail extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			editFrame.setVisible(false);
+			dispose();
 		}
 	}
 

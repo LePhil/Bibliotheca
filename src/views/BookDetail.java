@@ -490,7 +490,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	        putValue( MNEMONIC_KEY, KeyEvent.VK_C );
 	    }
 	    public void actionPerformed(ActionEvent e) {
-	    	editFrame.setVisible(false);
+	    	dispose();
 	    }
 	}
 	/**
@@ -628,7 +628,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				if ( delete == 0 ) {
 					if ( books.removeBook( book ) ) {
 						// SUCCESS
-						editFrame.setVisible(false);
+						dispose();
 					} else {
 						try {
 							throw new Exception( "Yeah, deleting that book didn't really work. Sorry about that, please restart the application." );
