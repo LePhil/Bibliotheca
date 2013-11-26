@@ -1,13 +1,13 @@
 package viewModels;
 
+import i18n.Messages;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.table.AbstractTableModel;
-
-import views.Messages;
 
 import domain.Book;
 import domain.BookList;
@@ -143,6 +143,7 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 				if (pos >= 0){
 					//insert happend
 					fireTableRowsInserted(pos, pos);
+					fireTableDataChanged();
 				}else{
 					fireTableDataChanged();
 				}

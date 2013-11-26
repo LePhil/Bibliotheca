@@ -1,4 +1,4 @@
-package views;
+package renderers;
 
 import java.awt.Color;
 import java.awt.Component;

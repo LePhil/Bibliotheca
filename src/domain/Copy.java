@@ -1,11 +1,8 @@
 package domain;
 
-import java.util.ResourceBundle;
-
-import views.Messages;
+import i18n.Messages;
 
 public class Copy {
-
 	public enum Condition {
 		NEW,
 		GOOD,
