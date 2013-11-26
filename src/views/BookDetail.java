@@ -200,6 +200,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				@Override
 				public void keyReleased(KeyEvent e) {
 					validateInformation();
+					handleFieldError(txtTitle);
 				}
 			});
 			GridBagConstraints gbc_txtTitle = new GridBagConstraints();
@@ -230,6 +231,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				@Override
 				public void keyReleased(KeyEvent e) {
 					validateInformation();
+					handleFieldError(txtAuthor);
 				}
 			});
 
@@ -253,6 +255,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				@Override
 				public void keyReleased(KeyEvent e) {
 					validateInformation();
+					handleFieldError(txtPublisher);
 				}
 			});
 
@@ -444,10 +447,17 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		);
 	}
 	
+	private void handleFieldError(JTextField field) {
+		if("".equals(field.getText())){
+			field.setBackground(Color.PINK);
+		}else {
+			field.setBackground(Color.WHITE);
+		}
+	}
+	
 	private void validateInformation(){
 		boolean hasValidationError = "".equals(txtAuthor.getText()) || "".equals(txtPublisher.getText()) || "".equals(txtTitle.getText());
 		if(hasValidationError){
-			// TODO pforster: handle validation error
 			btnSave.setEnabled(false);
 		}else {
 			btnSave.setEnabled(true);
