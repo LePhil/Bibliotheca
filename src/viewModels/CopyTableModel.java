@@ -48,6 +48,12 @@ public class CopyTableModel extends AbstractTableModel implements
 	public int getColumnCount() {
 		return columns.length;
 	}
+	
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		//return columnIndex == 4;
+		return false;
+	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {

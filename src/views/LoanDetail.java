@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -103,6 +105,7 @@ public class LoanDetail extends JFrame {
 	private static LoanDetail editFrame;
 
 	private static int customerNo;
+	private JPanel panel;
 
 	/**
 	 * Create the application.
@@ -344,16 +347,23 @@ public class LoanDetail extends JFrame {
 			}
 			scrollPaneCopies.setViewportView(copyTable);
 			pnlAvailableCopies.add(scrollPaneCopies);
-
-			btnAddLoan = new JButton( addLoanAction );
-			GridBagConstraints gbc_btnExemplarAusleihen = new GridBagConstraints();
-			gbc_btnExemplarAusleihen.anchor = GridBagConstraints.WEST;
-			gbc_btnExemplarAusleihen.gridx = 0;
-			gbc_btnExemplarAusleihen.gridy = 2;
-			btnAddLoan.setEnabled( false );
-			updateBtnAddLoan();
-			pnlCopies.add(btnAddLoan, gbc_btnExemplarAusleihen);
 			
+			panel = new JPanel();
+			GridBagConstraints gbc_panel = new GridBagConstraints();
+			gbc_panel.fill = GridBagConstraints.BOTH;
+			gbc_panel.gridx = 0;
+			gbc_panel.gridy = 2;
+			Date returnDate = new Date( new Date().getTime() + (30 * 1000 * 60 * 60 * 24));
+			pnlCopies.add(panel, gbc_panel);
+			panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+	
+			btnAddLoan = new JButton( addLoanAction );
+			panel.add(btnAddLoan);
+			btnAddLoan.setEnabled( false );
+			JLabel lblReturnDate = new JLabel( returnDate.toString() );
+			panel.add(lblReturnDate);
+
+			updateBtnAddLoan();
 			
 			// ///////////////////////////////////////////////
 			// BUTTONS PANEL

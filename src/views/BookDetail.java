@@ -9,7 +9,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Date;
 import java.util.Dictionary;
+import java.util.EventObject;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Observable;
@@ -18,6 +20,7 @@ import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -35,8 +38,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.CellEditorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.CopyTableModel;
@@ -47,6 +52,8 @@ import domain.CopyList;
 import domain.Library;
 import domain.Loan;
 import domain.Shelf;
+import domain.Copy.Condition;
+
 import java.awt.Rectangle;
 
 public class BookDetail extends javax.swing.JFrame implements Observer {
@@ -390,7 +397,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	}
 	
 	private void initTable() {
-		tblCopies.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tblCopies.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		tblCopies.setModel( copyTableModel );
 		sorter = new TableRowSorter<CopyTableModel>( copyTableModel );
 		tblCopies.setRowSorter( sorter );
@@ -421,6 +428,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				return label;
 			}
 		});
+		
+		// tblCopies.getColumnModel().getColumn( 2 ).setCellEditor(new DefaultCellEditor(new JComboBox<>(Condition.values())));
 		
 		// Add Listeners
 		tblCopies.getSelectionModel().addListSelectionListener(
