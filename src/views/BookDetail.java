@@ -492,7 +492,9 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 					break;
 				}
 			}
-			btnRemove.setEnabled( !copyIsLent );
+			// Enable the "Remove Copy" button if this copy isn't lent right now
+			// AND if the book has more than 1 copy left.
+			btnRemove.setEnabled( !copyIsLent && library.getCopiesOfBook( book ).size() > 1 );
 		} else {
 			btnRemove.setEnabled( false );
 		}
