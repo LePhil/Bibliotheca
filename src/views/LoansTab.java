@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
@@ -229,7 +230,11 @@ public class LoansTab extends LibraryTab {
 		scrollPaneLoans.setViewportView(tblLoans);
 		
 		initLoansTable();
-
+		
+		// Enable opening selected items on ENTER
+		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+		tblLoans.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "showItem");
+		tblLoans.getActionMap().put( "showItem", showSelected );
 	}
 	
 	private void initLoansTable() {

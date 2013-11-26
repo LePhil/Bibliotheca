@@ -200,6 +200,12 @@ public class BooksTab extends LibraryTab {
 		updateListButtons();
 		updateShowUnavailableCheckbox();
 		updateStatistics();
+		
+		// Enable opening selected items on ENTER
+		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+		tblBooks.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "showItem");
+		tblBooks.getActionMap().put( "showItem", showSelected );
+		
 	}
 	
 	private void initTable() {

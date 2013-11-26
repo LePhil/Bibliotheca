@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
@@ -170,6 +171,11 @@ public class CustomerTab extends LibraryTab {
 		initTable();
 		updateListButtons();
 		updateStatistics();
+		
+		// Enable opening selected items on ENTER
+		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+		tblCustomers.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "showItem");
+		tblCustomers.getActionMap().put( "showItem", showCustomer );
 	}
 	
 	private void initTable() {
