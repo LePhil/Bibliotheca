@@ -36,7 +36,7 @@ public class BookTableCellRenderer extends DefaultTableCellRenderer {
 			}
 			// Show red text if no copies are available
 			if(!available) {
-				fgColor = Color.RED.darker();
+				fgColor = Color.RED;
 			}
 			cellRenderer.setBackground(bgColor);
 			cellRenderer.setForeground(fgColor);

@@ -402,6 +402,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 					label.setText( Messages.getString("LoanTable.CellContent.Available") );
 					label.setIcon( null );
 				}
+				// Bug: every 10th copy or so gets a red text. Overrule!
+				label.setForeground( Color.BLACK );
 				return label;
 			}
 		});
