@@ -10,6 +10,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -353,14 +354,15 @@ public class LoanDetail extends JFrame {
 			gbc_panel.fill = GridBagConstraints.BOTH;
 			gbc_panel.gridx = 0;
 			gbc_panel.gridy = 2;
-			Date returnDate = new Date( new Date().getTime() + (30 * 1000 * 60 * 60 * 24));
+			Date returnDate = new Date( new Date().getTime() + ( 30 * 1000 * 60 * 60 * 24));
 			pnlCopies.add(panel, gbc_panel);
 			panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 	
 			btnAddLoan = new JButton( addLoanAction );
 			panel.add(btnAddLoan);
 			btnAddLoan.setEnabled( false );
-			JLabel lblReturnDate = new JLabel( returnDate.toString() );
+			
+			JLabel lblReturnDate = new JLabel( Messages.getString( "LoanDetail.returnDateLabel.text", new SimpleDateFormat("dd.MM.yyyy").format( returnDate ).toString() ) );
 			panel.add(lblReturnDate);
 
 			updateBtnAddLoan();
