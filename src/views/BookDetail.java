@@ -44,6 +44,7 @@ import domain.CopyList;
 import domain.Library;
 import domain.Loan;
 import domain.Shelf;
+import java.awt.Rectangle;
 
 public class BookDetail extends javax.swing.JFrame implements Observer {
 
@@ -99,6 +100,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	 */
 	public BookDetail(Library library, Book book) {
 		super();
+		setBounds(new Rectangle(59, 24, 500, 500));
 		this.library = library;
 		this.books = library.getBookList();
 		this.book = book;
@@ -124,6 +126,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			editFrame = new BookDetail(library, book);
 			editFramesDict.put(book, editFrame);
 		}
+		
 		editFrame.setVisible(true);
 	}
 
@@ -136,6 +139,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		} else {
 			setBookValuesToView();
 		}
+		
+		setTitle( Messages.getString("BookDetail.this.title", book.getName() ) );
 	}
 
 	/**
@@ -143,8 +148,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	 */
 	private void initialize() {
 		try {
+			setMinimumSize( new Dimension(500, 444) );
 			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-			setBounds(100, 100, 466, 281);
 			getContentPane().setLayout( new BoxLayout( this.getContentPane(), BoxLayout.Y_AXIS ) );
 			
 			/////////////////////////////////////////////////

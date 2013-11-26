@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -67,6 +68,7 @@ public class CustomerDetail extends JFrame {
 		super();
 		this.customers = customers;
 		this.customer = customer;
+		
 		initialize();
 	}
 
@@ -84,16 +86,15 @@ public class CustomerDetail extends JFrame {
 			editFrame = new CustomerDetail(customers, customer);
 			editFramesDict.put(customer, editFrame);
 		}
-
 		editFrame.setVisible(true);
 	}
 
 	private void initialize() {
 		try {
+			setTitle( Messages.getString("CustomerDetail.this.title", customer.getName()+" "+customer.getSurname() ) );
+			setMinimumSize( new Dimension(400, 300) );
 			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-			setBounds(100, 100, 466, 281);
-			getContentPane().setLayout(
-					new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+			getContentPane().setLayout( new BoxLayout( this.getContentPane(), BoxLayout.Y_AXIS ) );
 
 			// ///////////////////////////////////////////////
 			// ACTIONS
@@ -127,10 +128,8 @@ public class CustomerDetail extends JFrame {
 			GridBagLayout gbl_pnlInformation = new GridBagLayout();
 			gbl_pnlInformation.columnWidths = new int[] { 0, 0, 0, 0, 0 };
 			gbl_pnlInformation.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
-			gbl_pnlInformation.columnWeights = new double[] { 0.0, 0.0, 1.0,
-					0.0, Double.MIN_VALUE };
-			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
-					0.0, 0.0, Double.MIN_VALUE };
+			gbl_pnlInformation.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 			pnlInformation.setLayout(gbl_pnlInformation);
 
 			// ///////////////////////////////////////////////

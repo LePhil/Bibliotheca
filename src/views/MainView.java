@@ -97,7 +97,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			// INITIAL SETUP
 			///////////////////////////////////////////////////////////////////
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			this.setTitle(Messages.getString("BookMaster.frmTodoTitle.title"));
+			this.setTitle(Messages.getString("MainView.title"));
 			this.setBounds(100, 100, 700, 550);
 			
 			pnlMainButtons = new JPanel();

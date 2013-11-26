@@ -106,6 +106,7 @@ public class LoanDetail extends JFrame {
 	 */
 	public LoanDetail(Loan loan, LoanList loanList, Library library) {
 		super();
+		setTitle(Messages.getString("LoanDetail.this.title"));
 		this.loan = loan;
 		this.loans = loanList;
 		this.copies = new CopyList();
@@ -149,6 +150,7 @@ public class LoanDetail extends JFrame {
 	 */
 	private void initialize() {
 		try {
+			setMinimumSize( new Dimension(700, 600) );
 			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			setBounds(100, 100, 900, 600);
 			setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
