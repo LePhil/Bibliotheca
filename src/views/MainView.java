@@ -24,19 +24,9 @@ import viewModels.LoanTableModel;
 import domain.Library;
 
 public class MainView extends javax.swing.JFrame implements Observer {
-
 	private static final long serialVersionUID = 1L;
 
 	private JTabbedPane tbsMain;
-	private JMenu viewMenu;
-	private JMenuBar jMenuBar;
-	
-	private JCheckBoxMenuItem showUnavailableMenuItem;
-	
-	private JMenu loansSubMenu;
-	private JMenuItem loansShowAll;
-	private JMenuItem loansShowLentOnly;
-	private JMenuItem loansShowOverdueOnly;
 	
 	private BooksTab booksTab;
 	private LoansTab loansTab;
@@ -50,8 +40,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	private CustomerTableModel customerTableModel;
 	private JPanel pnlMainButtons;
 	private JButton btnCloseApp;
-
-	private static MainView mainFrame;
 	
 	/**
 	 * Create the application.
@@ -68,8 +56,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		bookTableModel = new BookTableModel( this.library );
 		loanTableModel = new LoanTableModel( this.library );
 		customerTableModel = new CustomerTableModel( library.getCustomerList() );
-		
-		mainFrame = this;
 		
 		initialize();
 		library.addObserver( this );
@@ -132,53 +118,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			customerTab = new CustomerTab(customerTableModel, library);
 			tbsMain.addTab( Messages.getString( "MainView.Tab.Customers"), new ImageIcon("icons/user_32.png"), customerTab, null );
 			tbsMain.setMnemonicAt(2, KeyEvent.VK_3);
-			
-			///////////////////////////////////////////////////////////////////
-			// MENU
-			///////////////////////////////////////////////////////////////////
-			jMenuBar = new JMenuBar();
-			getContentPane().add(jMenuBar, BorderLayout.NORTH);
-			
-			viewMenu = new JMenu();
-			viewMenu.setText(Messages.getString("BookMasterTable.viewMenu.text")); //$NON-NLS-1$
-			viewMenu.setMnemonic(KeyEvent.VK_V);
-			{
-				showUnavailableMenuItem = new JCheckBoxMenuItem();
-				viewMenu.add(showUnavailableMenuItem);
-				showUnavailableMenuItem.setText(Messages.getString("BookMasterTable.showUnavailableMenuItem.text")); //$NON-NLS-1$
-				showUnavailableMenuItem.setMnemonic(KeyEvent.VK_U);
-			}
-			
-			loansSubMenu = new JMenu();
-			loansSubMenu.setText( Messages.getString( "BookMaster.Tab.Loans" ) );
-			loansSubMenu.setMnemonic( KeyEvent.VK_L );
-			
-			viewMenu.add(loansSubMenu);
-			jMenuBar.add(viewMenu);
-			showUnavailableMenuItem.setAction(booksTab.getToggleShowUnavailableAction());
-			{
-				/*
-				booksShowAll = new JMenuItem();
-				booksShowLentOnly = new JMenuItem();
-				booksShowOverdueOnly = new JMenuItem();
-				
-				booksShowAll.setText( Messages.getString( "BookMastertable.BookTableModes.All" ) );
-				booksShowLentOnly.setText( Messages.getString( "BookMastertable.BookTableModes.LentOnly" ) );
-				booksShowOverdueOnly.setText( Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" ) );
-				
-				booksShowAll.setMnemonic( KeyEvent.VK_A );
-				booksShowLentOnly.setMnemonic( KeyEvent.VK_L );
-				booksShowOverdueOnly.setMnemonic( KeyEvent.VK_O );
-				
-				booksShowAll.addActionListener( booksTab.getChangeBookTableModeAction() );
-				booksShowLentOnly.addActionListener( booksTab.getChangeBookTableModeAction() );
-				booksShowOverdueOnly.addActionListener( booksTab.getChangeBookTableModeAction() );
-				
-				booksSubMenu.add(booksShowAll);
-				booksSubMenu.add(booksShowLentOnly);
-				booksSubMenu.add(booksShowOverdueOnly);
-				*/
-			}
 						
 			///////////////////////////////////////////////////////////////////
 			// Initialize the buttons, actions, etc.
