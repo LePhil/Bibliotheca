@@ -145,8 +145,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		try {
 			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			setBounds(100, 100, 466, 281);
-			getContentPane().setLayout(
-					new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+			getContentPane().setLayout( new BoxLayout( this.getContentPane(), BoxLayout.Y_AXIS ) );
 			
 			/////////////////////////////////////////////////
 			// ACTIONS
@@ -169,19 +168,13 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			// INFORMATION PANEL
 			/////////////////////////////////////////////////
 			pnlInformation = new JPanel();
-			pnlInformation
-					.setBorder(new TitledBorder(
-							new LineBorder(new Color(0, 0, 0)),
-							Messages.getString("BookDetail.pnlInformation.borderTitle"), TitledBorder.LEADING, //$NON-NLS-1$
-							TitledBorder.TOP, null, null));
+			pnlInformation .setBorder(new TitledBorder( new LineBorder(new Color(0, 0, 0)), Messages.getString("BookDetail.pnlInformation.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			getContentPane().add(pnlInformation);
 			GridBagLayout gbl_pnlInformation = new GridBagLayout();
 			gbl_pnlInformation.columnWidths = new int[] { 0, 0, 0, 0, 0 };
 			gbl_pnlInformation.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
-			gbl_pnlInformation.columnWeights = new double[] { 0.0, 0.0, 1.0,
-					0.0, Double.MIN_VALUE };
-			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0,
-					Double.MIN_VALUE };
+			gbl_pnlInformation.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+			gbl_pnlInformation.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 			pnlInformation.setLayout(gbl_pnlInformation);
 
 			lblTitle = new JLabel( Messages.getString("BookDetail.lblTitle.text") );

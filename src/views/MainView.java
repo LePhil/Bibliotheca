@@ -38,7 +38,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	private JMenuItem loansShowLentOnly;
 	private JMenuItem loansShowOverdueOnly;
 	
-	
 	private BooksTab booksTab;
 	private LoansTab loansTab;
 	private CustomerTab customerTab;
