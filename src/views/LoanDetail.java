@@ -1,5 +1,7 @@
 package views;
 
+import i18n.Messages;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -46,6 +48,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableRowSorter;
 
+import renderers.LoanTableCellRenderer;
 import viewModels.CopyTableModel;
 import viewModels.CustomerLoanTableModel;
 import domain.Copy;

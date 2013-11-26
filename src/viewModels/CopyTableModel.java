@@ -1,11 +1,11 @@
 package viewModels;
 
+import i18n.Messages;
+
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.table.AbstractTableModel;
-
-import views.Messages;
 
 import domain.Book;
 import domain.Copy;

@@ -1,5 +1,7 @@
 package views;
 
+import i18n.Messages;
+
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -36,6 +38,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
+import renderers.LoanTableCellRenderer;
 import viewModels.LoanTableModel;
 import domain.Library;
 import domain.Loan;

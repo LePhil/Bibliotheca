@@ -1,5 +1,7 @@
 package views;
 
+import i18n.Messages;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;

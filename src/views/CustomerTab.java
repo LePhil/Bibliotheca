@@ -1,5 +1,7 @@
 package views;
 
+import i18n.Messages;
+
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
