@@ -19,6 +19,7 @@ import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -47,6 +48,7 @@ import domain.Copy;
 import domain.CopyList;
 import domain.Library;
 import domain.Loan;
+import domain.Copy.Condition;
 import domain.Shelf;
 
 public class BookDetail extends javax.swing.JFrame implements Observer {
