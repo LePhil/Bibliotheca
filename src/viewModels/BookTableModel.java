@@ -143,6 +143,7 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 				if (pos >= 0){
 					//insert happend
 					fireTableRowsInserted(pos, pos);
+					fireTableDataChanged();
 				}else{
 					fireTableDataChanged();
 				}

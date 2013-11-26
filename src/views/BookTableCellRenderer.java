@@ -21,7 +21,9 @@ public class BookTableCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected,	boolean hasFocus, int row, int column) {
 		Component cellRenderer = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column);
 		Book book = library.getBookList().getBooks().get(table.convertRowIndexToModel(row));
-		Boolean available = library.getCopiesOfBook(book).size() != 1;
+		int numberOfCopies = library.getCopiesOfBook(book).size();
+		int numberOfLentCopies = library.getLentCopiesOfBook(book).size();
+		boolean available = numberOfCopies - numberOfLentCopies > 0;
 		Color fgColor = Color.BLACK,
 			  bgColor = Color.WHITE;
 		
