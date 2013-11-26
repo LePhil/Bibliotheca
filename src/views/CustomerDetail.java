@@ -513,15 +513,11 @@ public class CustomerDetail extends JFrame {
 					JOptionPane.YES_NO_OPTION);
 
 			if (delete == 0) {
-				if (customers.removeCustomer(customer)) {
-					// SUCCESS
+				if (customers.removeCustomer(customer)) { // SUCCESS
 					editFrame.setVisible(false);
-				} else {
-					// FAILED.
+				} else { // FAILED.
 					try {
-						// TODO: show a better dialog.
-						throw new Exception(
-								"Yeah, deleting that guy didn't really work. Sorry about that, please restart the application.");
+						throw new Exception( "Deleting that customer didn't really work. Sorry about that, please restart the application.");
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}

@@ -97,7 +97,6 @@ public class LoanDetail extends JFrame {
 	private JPanel pnlCustomer;
 	private JPanel pnlButtons;
 
-	private static boolean newlyCreated;
 	private static LoanDetail editFrame;
 
 	private static int customerNo;
@@ -120,14 +119,10 @@ public class LoanDetail extends JFrame {
 	}
 
 	public static void editLoan( Loan loan, Library library ) {
-		newlyCreated = false;
-
 		if ( loan == null ) {
 			// create new loan
 			loan = new Loan( null, null );
-			newlyCreated = true;
 			customerNo = -1;
-
 		} else {
 			customerNo = loan.getCustomer().getCustomerNo();
 		}
@@ -157,8 +152,7 @@ public class LoanDetail extends JFrame {
 			setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			setBounds(100, 100, 900, 600);
 			setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-			getContentPane().setLayout(
-					new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+			getContentPane().setLayout( new BoxLayout( getContentPane(), BoxLayout.Y_AXIS ) );
 
 			// ///////////////////////////////////////////////
 			// CUSTOMER PANEL
@@ -224,7 +218,7 @@ public class LoanDetail extends JFrame {
 			});
 
 			lblCustomer = new JLabel(
-					Messages.getString("LoanDetail.lblCustomer.text")); //$NON-NLS-1$
+					Messages.getString("LoanDetail.lblCustomer.text"));
 			GridBagConstraints gbc_lblCustomer = new GridBagConstraints();
 			gbc_lblCustomer.anchor = GridBagConstraints.EAST;
 			gbc_lblCustomer.insets = new Insets(0, 0, 0, 5);
@@ -282,11 +276,10 @@ public class LoanDetail extends JFrame {
 			gbc_pnlCustomerLoanInfo.fill = GridBagConstraints.BOTH;
 			gbc_pnlCustomerLoanInfo.gridx = 0;
 			gbc_pnlCustomerLoanInfo.gridy = 0;
-			pnlLoans.add(pnlCustomerLoanInfo, gbc_pnlCustomerLoanInfo);
+			pnlLoans.add( pnlCustomerLoanInfo, gbc_pnlCustomerLoanInfo );
 
-			lblAnzahlAusleihen = new JLabel(Messages.getString(
-					"LoanDetail.nrOfLoansOfCustomer.text", loans.getLoanList().size() + ""));
-			pnlCustomerLoanInfo.add(lblAnzahlAusleihen);
+			lblAnzahlAusleihen = new JLabel( Messages.getString( "LoanDetail.nrOfLoansOfCustomer.text", loans.getLoanList().size() + "") );
+			pnlCustomerLoanInfo.add( lblAnzahlAusleihen );
 
 			pnlCustomerLoans = new JPanel();
 			GridBagConstraints gbc_pnlCustomerLoans = new GridBagConstraints();
@@ -614,73 +607,7 @@ public class LoanDetail extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("CLOSE DIALOG NOW.");
 			editFrame.setVisible(false);
 		}
 	}
-
-	/**
-	 * Saves the (changed) entries for the currently opened loan.
-	 * 
-	 * @author PCHR
-	 */
-	class SaveAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-
-		public SaveAction(String text, String desc) {
-			super(text);
-			putValue(SHORT_DESCRIPTION, desc);
-			putValue(MNEMONIC_KEY, KeyEvent.VK_S);
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			/*
-			 * if ( customer.getCity() != txtCity.getText() ) {
-			 * customer.setCity( txtCity.getText() ); } if ( customer.getName()
-			 * != txtName.getText() ) { customer.setName( txtName.getText() ); }
-			 * if ( customer.getSurname() != txtSurname.getText() ) {
-			 * customer.setSurname( txtSurname.getText() ); } if (
-			 * customer.getStreet() != txtStreet.getText() ) {
-			 * customer.setStreet( txtStreet.getText() ); } if (
-			 * customer.getZip() != Integer.valueOf( txtZip.getText() ) ) {
-			 * customer.setZip( Integer.valueOf( txtZip.getText() ) ); } if (
-			 * customer.getCity() != txtCity.getText() ) { customer.setCity(
-			 * txtCity.getText() ); }
-			 * 
-			 * btnSave.setEnabled(false); btnReset.setEnabled(false);
-			 */
-
-			if (newlyCreated) {
-				// Saving a loan that we just created.
-				// we can only add it now, because before it shouldn't
-				// belong to the library, only on saving.
-
-				loans.addLoan(loan);
-
-				newlyCreated = false;
-				// btnDelete.setEnabled(true);
-			}
-		}
-	}
-
-	/**
-	 * Reset the form
-	 * 
-	 * @author PCHR
-	 */
-	class ResetAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-
-		public ResetAction(String text, String desc) {
-			super(text);
-			putValue(SHORT_DESCRIPTION, desc);
-			putValue(MNEMONIC_KEY, KeyEvent.VK_R);
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			// fillForm();
-			// btnSave.setEnabled(false);
-		}
-	}
-
 }

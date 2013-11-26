@@ -458,7 +458,7 @@ public class LoansTab extends LibraryTab {
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("NEW LOAN");
+			System.out.println("NEW LOAN");			
 			LoanDetail.editLoan( null, getLibrary() );
 		}
 	}

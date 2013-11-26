@@ -81,7 +81,7 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		
+		System.out.println( "update CustomerTableModel" );
 		int pos = customers.getEditedCustomerPos();
 			
 		if ( pos >= 0 ) {
@@ -99,6 +99,7 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 				if ( pos >= 0 ) {
 					// Customer was added
 					fireTableRowsInserted( pos, pos );
+				} else {
 					fireTableDataChanged();
 				}
 			}

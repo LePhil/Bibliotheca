@@ -49,7 +49,6 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public int getRowCount() {
-		//return library.getLentOutBooks().size();
 		return library.getLoans().size();
 	}
 
@@ -120,7 +119,6 @@ public class LoanTableModel extends AbstractTableModel implements Observer {
 				}
 			}
 		}
-		
 	}
 
 	public Loan getLoan(Object identifier) {
