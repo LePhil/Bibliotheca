@@ -49,6 +49,15 @@ public class Library extends Observable implements Observer {
 	public void removeCopy(Copy copy){
 		copies.removeCopy( copy );
 	}
+	
+	public void returnLoan(Loan loan){
+		for(Loan l : this.getLoans()){
+			if(loan.equals(l)){
+				l.returnCopy();
+			}
+		}
+		doNotify();
+	}
 
 	public boolean isCopyLent(Copy copy) {
 		for (Loan l : loans) {
