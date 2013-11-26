@@ -6,12 +6,11 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.Date;
 import java.util.Dictionary;
-import java.util.EventObject;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Observable;
@@ -20,7 +19,6 @@ import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -38,10 +36,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.CellEditorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableRowSorter;
 
 import viewModels.CopyTableModel;
@@ -52,9 +48,6 @@ import domain.CopyList;
 import domain.Library;
 import domain.Loan;
 import domain.Shelf;
-import domain.Copy.Condition;
-
-import java.awt.Rectangle;
 
 public class BookDetail extends javax.swing.JFrame implements Observer {
 
@@ -273,11 +266,13 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			for (Shelf shelf : Shelf.values()) {
 				cmbShelf.addItem(shelf);
 			}
+			cmbShelf.addActionListener(new ShelfAction());
 			GridBagConstraints gbc_cmbShelf = new GridBagConstraints();
 			gbc_cmbShelf.insets = new Insets(0, 0, 5, 5);
 			gbc_cmbShelf.fill = GridBagConstraints.HORIZONTAL;
 			gbc_cmbShelf.gridx = 2;
 			gbc_cmbShelf.gridy = 3;
+			
 			pnlInformation.add(cmbShelf, gbc_cmbShelf);
 			
 			pnlBookButtons = new JPanel();
@@ -465,6 +460,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		txtPublisher.setText(book.getPublisher());
 		txtTitle.setText(book.getName());
 		cmbShelf.setSelectedItem(book.getShelf());
+		btnSave.setEnabled(false);
 	}
 	
 	public void updateLabels() {
@@ -502,6 +498,17 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	/////////////////////////////////////////////////
 	// Action Subclasses
 	/////////////////////////////////////////////////
+	/**
+	 * Change Shelf Action.
+	 * @author PFOR
+	 */
+	class ShelfAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+	    
+		public void actionPerformed(ActionEvent e) {
+			validateInformation();
+	    }
+	}
 	/**
 	 * Closes the current dialog.
 	 * @author PCHR
