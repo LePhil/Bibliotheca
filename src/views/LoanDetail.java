@@ -478,11 +478,13 @@ public class LoanDetail extends JFrame {
 				public void valueChanged(ListSelectionEvent evt) {
 					SwingUtilities.invokeLater(new Runnable() {  
 						public void run() {
-							int index = customerLoanTable.convertRowIndexToModel(customerLoanTable.getSelectedRow());
-							if(index >= 0 && index < loans.getLoanList().size()){
-								Loan loan = loans.getLoanAt(index);
-								boolean isLent = loan != null && loan.isLent();
-								btnReturnSelectedLoan.setEnabled(isLent);
+							if(customerLoanTable.getSelectedRow() >= 0){
+								int index = customerLoanTable.convertRowIndexToModel(customerLoanTable.getSelectedRow());
+								if(index >= 0 && index < loans.getLoanList().size()){
+									Loan loan = loans.getLoanAt(index);
+									boolean isLent = loan != null && loan.isLent();
+									btnReturnSelectedLoan.setEnabled(isLent);
+								}
 							}
 						}
 					});
@@ -508,7 +510,6 @@ public class LoanDetail extends JFrame {
 						public void run() {
 							// Update the "Show Selected" button
 							updateListButtons();
-							updateBtnAddLoan();
 						}
 					});
 				}
@@ -519,6 +520,7 @@ public class LoanDetail extends JFrame {
 	public void updateListButtons() {
 		// Enables or disables the buttons
 		btnAddLoan.setEnabled( copyTable.getSelectedRowCount()>0);
+		updateBtnAddLoan();
 	}
 	
 	private void updateCustomerDropdown(Customer customer) {
@@ -577,8 +579,7 @@ public class LoanDetail extends JFrame {
 			int selectedRow = copyTable.convertRowIndexToModel(copyTable.getSelectedRow());
 			Copy copy = copies.getCopyAt(selectedRow);
 			Customer customer = (Customer) cmbCustomer.getSelectedItem();
-			Loan newLoan = new Loan(customer, copy);
-			library.getLoans().add(newLoan);
+			Loan newLoan = library.createAndAddLoan(customer, copy);
 			copies.setCopyList(library.getAvailableCopies());
 			loans.addLoan(newLoan);
 			
@@ -608,14 +609,8 @@ public class LoanDetail extends JFrame {
 						JOptionPane.YES_NO_OPTION
 					);
 				}
-				for(Loan l : library.getLoans()){
-					if(loan.equals(l)){
-						l.returnCopy();
-					}
-				}
+				library.returnLoan(loan);
 				loan.returnCopy();
-				loans.notifyObservers();
-				// TODO: doesn't update the loanTable!
 				copies.setCopyList(library.getAvailableCopies());
 				btnReturnSelectedLoan.setEnabled(false);
 				updateBtnAddLoan();
