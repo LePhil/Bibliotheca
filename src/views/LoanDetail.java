@@ -543,7 +543,7 @@ public class LoanDetail extends JFrame {
 	}
 
 	// ///////////////////////////////////////////////
-	// Action Subclasses TODO pforster: use them or delete them
+	// Action Subclasses
 	// ///////////////////////////////////////////////
 	/**
 	 * @author PCHR
@@ -613,6 +613,7 @@ public class LoanDetail extends JFrame {
 				}
 				loan.returnCopy();
 				loans.notifyObservers();
+				// TODO: doesn't update the loanTable!
 				copies.setCopyList(library.getAvailableCopies());
 				btnReturnSelectedLoan.setEnabled(false);
 				updateBtnAddLoan();
