@@ -184,8 +184,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 					Double.MIN_VALUE };
 			pnlInformation.setLayout(gbl_pnlInformation);
 
-			lblTitle = new JLabel(
-					Messages.getString("BookDetail.lblTitle.text")); //$NON-NLS-1$
+			lblTitle = new JLabel( Messages.getString("BookDetail.lblTitle.text") );
 			GridBagConstraints gbc_lblTitle = new GridBagConstraints();
 			gbc_lblTitle.anchor = GridBagConstraints.EAST;
 			gbc_lblTitle.insets = new Insets(0, 0, 5, 5);
@@ -208,14 +207,13 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			pnlInformation.add(txtTitle, gbc_txtTitle);
 			txtTitle.setColumns(10);
 
-			lblAuthor = new JLabel(
-					Messages.getString("BookDetail.lblAuthor.text")); //$NON-NLS-1$
+			lblAuthor = new JLabel( Messages.getString("BookDetail.lblAuthor.text") );
 			GridBagConstraints gbc_lblAuthor = new GridBagConstraints();
 			gbc_lblAuthor.insets = new Insets(0, 0, 5, 5);
 			gbc_lblAuthor.anchor = GridBagConstraints.EAST;
 			gbc_lblAuthor.gridx = 1;
 			gbc_lblAuthor.gridy = 1;
-			pnlInformation.add(lblAuthor, gbc_lblAuthor);
+			pnlInformation.add( lblAuthor, gbc_lblAuthor );
 
 			txtAuthor = new JTextField();
 			GridBagConstraints gbc_txtAuthor = new GridBagConstraints();
@@ -232,8 +230,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				}
 			});
 
-			lblPublisher = new JLabel(
-					Messages.getString("BookDetail.lblPublisher.text")); //$NON-NLS-1$
+			lblPublisher = new JLabel( Messages.getString("BookDetail.lblPublisher.text") );
 			GridBagConstraints gbc_lblPublisher = new GridBagConstraints();
 			gbc_lblPublisher.insets = new Insets(0, 0, 5, 5);
 			gbc_lblPublisher.anchor = GridBagConstraints.EAST;
@@ -256,8 +253,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				}
 			});
 
-			lblShelf = new JLabel(
-					Messages.getString("BookDetail.lblShelf.text")); //$NON-NLS-1$
+			lblShelf = new JLabel( Messages.getString("BookDetail.lblShelf.text") );
 			GridBagConstraints gbc_lblShelf = new GridBagConstraints();
 			gbc_lblShelf.insets = new Insets(0, 0, 5, 5);
 			gbc_lblShelf.anchor = GridBagConstraints.EAST;
@@ -286,7 +282,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			pnlBookButtons.setLayout( new BoxLayout( pnlBookButtons, BoxLayout.X_AXIS ) );
 			
 			horizontalGlue = Box.createHorizontalGlue();
-			pnlBookButtons.add(horizontalGlue);
+			pnlBookButtons.add( horizontalGlue );
 			
 			///////////////////////////////////////////////////
 			// BOOK-BUTTONS
@@ -299,31 +295,26 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			// RESET
 			btnReset = new JButton( reset );
 			btnReset.setEnabled( false );
-			pnlBookButtons.add(btnReset);
+			pnlBookButtons.add( btnReset );
 			
 			// SAVE
 			btnSave = new JButton( save );
-			btnSave.setEnabled(false);
-			pnlBookButtons.add(btnSave);
+			btnSave.setEnabled( false );
+			pnlBookButtons.add( btnSave );
 						
 			/////////////////////////////////////////////////
 			// COPY AREA
 			/////////////////////////////////////////////////
 			pnlCopiesEdit = new JPanel();
-			pnlCopiesEdit.setBorder(new TitledBorder(
-							new LineBorder(new Color(0, 0, 0)),
-							Messages.getString("BookDetail.pnlSpecimensEdit.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP,
-							null, null));
+			pnlCopiesEdit.setBorder(new TitledBorder( new LineBorder(new Color(0, 0, 0)), Messages.getString("BookDetail.pnlSpecimensEdit.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			getContentPane().add(pnlCopiesEdit);
-			pnlCopiesEdit.setLayout(new BoxLayout(pnlCopiesEdit,
-					BoxLayout.Y_AXIS));
+			pnlCopiesEdit.setLayout(new BoxLayout(pnlCopiesEdit, BoxLayout.Y_AXIS));
 
 			pnlAction = new JPanel();
 			pnlCopiesEdit.add(pnlAction);
 			pnlAction.setLayout(new BoxLayout(pnlAction, BoxLayout.X_AXIS));
 
-			lblAmount = new JLabel(
-					Messages.getString("BookDetail.lblAmount.text"));
+			lblAmount = new JLabel( Messages.getString("BookDetail.lblAmount.text") );
 			pnlAction.add(lblAmount);
 
 			Component hglCopiesEdit = Box.createHorizontalGlue();
@@ -353,8 +344,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			gbc_pnlCopies.fill = GridBagConstraints.BOTH;
 			gbc_pnlCopies.gridx = 0;
 			gbc_pnlCopies.gridy = 1;
-			pnlCopies.setLayout(new BoxLayout( pnlCopies,
-					BoxLayout.Y_AXIS));
+			pnlCopies.setLayout(new BoxLayout( pnlCopies, BoxLayout.Y_AXIS));
 			pnlCopiesEdit.add( pnlCopies, gbc_pnlCopies);
 
 			scrollPane = new JScrollPane();
@@ -380,10 +370,10 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			btnCancel.setEnabled( true );
 			btnCancel.setIcon( new ImageIcon("icons/close_32.png") );
 			pnlButtons.add( btnCancel );
-
 			
 			displayBook();
 			
+			updateLabels();
 			updateListButtons();
 			
 			pack();
@@ -458,6 +448,9 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		cmbShelf.setSelectedItem(book.getShelf());
 	}
 	
+	public void updateLabels() {
+		lblAmount.setText( Messages.getString("BookDetail.lblAmount.text", String.valueOf( library.getCopiesOfBook( book ).size() ) ) );
+	}
 	public void updateListButtons() {
 		// Enables or disables the buttons
 		
@@ -483,6 +476,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		displayBook();
+		updateLabels();
+		updateListButtons();
 	}
 	
 	/////////////////////////////////////////////////
@@ -531,6 +526,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				if ( library.getCopiesOfBook( book ).size() == 0 ) {
 					library.createAndAddCopy( book );
 				}
+				
+				updateLabels();
 			}
 	    }
 	}
@@ -569,6 +566,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		public void actionPerformed(ActionEvent e) {
 			library.createAndAddCopy(book);
 			copies.setCopyList( library.getCopiesOfBook( book ) );
+			
+			updateLabels();
 		}
 	}
 	/**
@@ -603,6 +602,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 				library.removeCopy(copy);				
 				copies.setCopyList( library.getCopiesOfBook( book ) );
 			}
+			
+			updateLabels();
 		}
 	}
 	/**
