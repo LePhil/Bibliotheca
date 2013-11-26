@@ -383,12 +383,12 @@ public class LoanDetail extends JFrame {
 			scrollPaneCopies.setViewportView(copyTable);
 			pnlAvailableCopies.add(scrollPaneCopies);
 
-			btnAddLoan = new JButton("Exemplar ausleihen");
+			btnAddLoan = new JButton();
 			GridBagConstraints gbc_btnExemplarAusleihen = new GridBagConstraints();
 			gbc_btnExemplarAusleihen.anchor = GridBagConstraints.WEST;
 			gbc_btnExemplarAusleihen.gridx = 0;
 			gbc_btnExemplarAusleihen.gridy = 2;
-			updateBtnAddLoan();
+			btnAddLoan.setText( Messages.getString("LoanDetail.addLoanBtn.text") );
 			btnAddLoan.setEnabled( false );
 			updateBtnAddLoan();
 			btnAddLoan.addActionListener(new ActionListener() {
