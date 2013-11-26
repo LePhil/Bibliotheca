@@ -10,11 +10,13 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Dictionary;
+import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -354,15 +356,14 @@ public class LoanDetail extends JFrame {
 			gbc_panel.fill = GridBagConstraints.BOTH;
 			gbc_panel.gridx = 0;
 			gbc_panel.gridy = 2;
-			Date returnDate = new Date( new Date().getTime() + ( 30 * 1000 * 60 * 60 * 24));
 			pnlCopies.add(panel, gbc_panel);
 			panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 	
 			btnAddLoan = new JButton( addLoanAction );
 			panel.add(btnAddLoan);
 			btnAddLoan.setEnabled( false );
-			
-			JLabel lblReturnDate = new JLabel( Messages.getString( "LoanDetail.returnDateLabel.text", new SimpleDateFormat("dd.MM.yyyy").format( returnDate ).toString() ) );
+	
+			JLabel lblReturnDate = new JLabel( Messages.getString( "LoanDetail.returnDateLabel.text", getDueDateString() ) );
 			panel.add(lblReturnDate);
 
 			updateBtnAddLoan();
@@ -453,6 +454,17 @@ public class LoanDetail extends JFrame {
 		}
 		
 		copySorter.setRowFilter( RowFilter.andFilter(copyFilters) );
+	}
+	
+	public String getDueDateString(){
+		GregorianCalendar dueDate = new GregorianCalendar();
+		dueDate.add(GregorianCalendar.DAY_OF_YEAR, 30);
+		dueDate.add(GregorianCalendar.HOUR_OF_DAY, 23);
+		dueDate.add(GregorianCalendar.MINUTE, 59);
+		dueDate.add(GregorianCalendar.SECOND, 59);
+		
+		DateFormat f = SimpleDateFormat.getDateInstance();
+		return f.format(dueDate.getTime());
 	}
 	
 	private void initLoanTable() {
