@@ -10,6 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Dictionary;
@@ -432,8 +433,9 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			}
 		});
 		
-		tblCopies.getColumnModel().getColumn( 2 ).setCellEditor(new DefaultCellEditor(new JComboBox<>(Condition.values())));
-		// TODO: make cell editable (already prepared in CopyTableModel!), but TODO: save changes!
+		JComboBox<Condition> comboBox = new JComboBox<>( Condition.values() );
+		
+		tblCopies.getColumnModel().getColumn( 2 ).setCellEditor( new DefaultCellEditor( comboBox ) );
 		
 		// Add Listeners
 		tblCopies.getSelectionModel().addListSelectionListener(
@@ -481,6 +483,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 	public void updateLabels() {
 		lblAmount.setText( Messages.getString("BookDetail.lblAmount.text", String.valueOf( library.getCopiesOfBook( book ).size() ) ) );
 	}
+	
 	public void updateListButtons() {
 		// Enables or disables the buttons
 		

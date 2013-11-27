@@ -23,6 +23,7 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -50,6 +51,7 @@ import renderers.LoanTableCellRenderer;
 import viewModels.CopyTableModel;
 import viewModels.CustomerLoanTableModel;
 import domain.Copy;
+import domain.Copy.Condition;
 import domain.CopyList;
 import domain.Customer;
 import domain.Library;
@@ -509,6 +511,7 @@ public class LoanDetail extends JFrame {
 				return label;
 			}
 		});
+		
 		// Add Listeners
 		customerLoanTable.getSelectionModel().addListSelectionListener(
 			new ListSelectionListener() {
@@ -538,6 +541,9 @@ public class LoanDetail extends JFrame {
 		
 		// Ignore the status in this view, because only available copies should show up here anyway!
 		copyTable.getColumnModel().removeColumn( copyTable.getColumnModel().getColumn(3) );
+		
+		JComboBox<Condition> comboBox = new JComboBox<>( Condition.values() );
+		copyTable.getColumnModel().getColumn( 3 ).setCellEditor( new DefaultCellEditor( comboBox ) );
 		
 		// Add Listeners
 		copyTable.getSelectionModel().addListSelectionListener(

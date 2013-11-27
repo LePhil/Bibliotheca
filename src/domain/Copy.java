@@ -1,13 +1,19 @@
 package domain;
 
-public class Copy {
+import i18n.Messages;
 
+public class Copy {
 	public enum Condition {
 		NEW,
 		GOOD,
 		DAMAGED,
 		WASTE,
-		LOST
+		LOST;
+		
+		@Override
+		public String toString() {
+			return Messages.getString("Copy.Condition." + name());
+		};
 	}
 
 	public static long nextInventoryNumber = 1;
