@@ -15,8 +15,6 @@ import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Dictionary;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
@@ -493,6 +491,7 @@ public class LoanDetail extends JFrame {
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 				
+				System.out.println("loan rendered with value: "+value);
 				// get value from TableModel
 				boolean isOverdue = value.equals(0);
 				boolean isLent = value.equals(1);
@@ -654,7 +653,8 @@ public class LoanDetail extends JFrame {
 					);
 				}
 				library.returnLoan(loan);
-				loan.returnCopy();
+				Customer customer = (Customer) cmbCustomer.getSelectedItem();
+				loans.setLoanList(library.getCustomerLoans(customer));
 				copies.setCopyList(library.getAvailableCopies());
 				btnReturnSelectedLoan.setEnabled(false);
 				updateBtnAddLoan();
