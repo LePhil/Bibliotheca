@@ -63,7 +63,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		initialize();
 		library.addObserver( this );
 		setLocationRelativeTo(null);
-		setVisible(true);
+		//setVisible(true);
 	}
 
 	/**

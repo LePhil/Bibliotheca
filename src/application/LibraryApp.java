@@ -1,8 +1,6 @@
 package application;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.SplashScreen;
+import application.SplashScreen;
 import java.io.File;
 import java.io.IOException;
 import java.util.GregorianCalendar;
@@ -32,69 +30,37 @@ import domain.Shelf;
 public class LibraryApp {
 	
 	public static void main(String[] args) throws Exception {
-	
-		// Get Splash Screen
-		final SplashScreen splash;
-		splash = SplashScreen.getSplashScreen();
-			
+		
+		SplashScreen splash = new SplashScreen();
+		
 		// Create Model and stuff
 		Library library = new Library();
 		
-		initLibrary(library, new ProgressMonitor( 100 ) {
-			private Graphics2D graphics;
-			
-			@Override
-			protected void progressUpdated() {
-				if ( graphics == null && splash != null ) {
-					graphics = splash.createGraphics();
-				}
-				
-				if ( graphics != null ) {
-					graphics.setColor( Color.BLUE );
-					graphics.drawRect( 28, 320, 584, 6 );
-					
-					int width = 21 + 560 / getMaxValue() * getCurrentValue();
-					graphics.fillRect( 30, 322, width, 4 );
-					
-					splash.update();
-				}
-			}
-		});
+		initLibrary( library );
 		
 		// Much beautiful. Wow. Very shiny.
 		UIManager.setLookAndFeel(new NimbusLookAndFeel());
 		
 		// Create Master Book View
-		new MainView( library );
-		
-		if (splash != null && splash.isVisible()) {
-			splash.close();
-		}
+		// Get Splash Screen
+		splash.initUI( new MainView( library ) );
 	}
 
-	private static void initLibrary( Library library, ProgressMonitor progress ) throws ParserConfigurationException, SAXException, IOException, IllegalLoanOperationException {
-		progress.updateProgress( 0 );
+	private static void initLibrary( Library library ) throws ParserConfigurationException, SAXException, IOException, IllegalLoanOperationException {
 		
 		// Set locale:
-		Locale.setDefault( new Locale( "de", "CH" ) );
+		Locale.setDefault( new Locale( "en", "UK" ) );
 		
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		
-		progress.updateProgress( 20 );
-		
 		loadCustomersFromXml(library, builder,new File("data/customers.xml"));
-		
-		progress.updateProgress( 40 );
 		
 		loadBooksFromXml(library, builder,new File("data/books.xml"));
 		
-		progress.updateProgress( 60 );
 		
 		// create pseudo random books and loans
 		createBooksAndLoans(library);
 		
-		progress.updateProgress( 80 );
-	
 		System.out.println("Initialisation of the library was successful!\n");
 		System.out.println("Books in library: " + library.getBookList().getBooks().size());
 		System.out.println("Customers: " + library.getCustomerList().getCustomers().size() + "\n");
@@ -103,8 +69,6 @@ public class LibraryApp {
 		int lentBooksPercentage = (int)(((double)library.getLentOutBooks().size()) / library.getCopies().size() * 100);
 		System.out.println("Percent copies on loan: " + lentBooksPercentage + "%");
 		System.out.println("Copies currently overdue: " + library.getOverdueLoans().size());
-		
-		progress.updateProgress( 90 );
 	}
 
 	private static void createBooksAndLoans(Library library) throws IllegalLoanOperationException {
@@ -201,33 +165,5 @@ public class LibraryApp {
 			}
 		}
 		return "";
-	}
-	
-	
-	private static abstract class ProgressMonitor {
-		private int currentVal, maxVal;
-
-		public ProgressMonitor( int maxVal ) {
-			this.maxVal = maxVal;
-		}
-
-		public void updateProgress( int currentVal ) {
-			if (currentVal > maxVal) {
-				currentVal = maxVal;
-			}
-			this.currentVal = currentVal;
-			progressUpdated();
-		}
-
-		protected abstract void progressUpdated();
-
-		public int getMaxValue() {
-			return maxVal;
-		}
-
-		public int getCurrentValue() {
-			return currentVal;
-		}
-
 	}
 }
