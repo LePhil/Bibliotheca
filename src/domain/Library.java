@@ -138,7 +138,7 @@ public class Library extends Observable implements Observer {
 	}
 
 	public List<Customer> getCustomers() {
-		return customers;
+		return customerList.getCustomers();
 	}
 	
 	private void doNotify() {
