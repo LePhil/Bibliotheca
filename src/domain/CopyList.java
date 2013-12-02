@@ -3,21 +3,15 @@ package domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 
-public class CopyList extends Observable implements Observer {
+public class CopyList extends Observable {
 	private List<Copy> copyList = new ArrayList<Copy>();
 	private int editedCopyIndex;
 	private int addCopyIndex;
 	private int removeCopyIndex;
 
-	public void addCopy() {
-		// TODO pforster
-	}
-
 	public void addCopy(Copy copy) {
 		copyList.add(copy);
-
 	}
 
 	public Copy getCopyAt(int index) {
@@ -44,12 +38,6 @@ public class CopyList extends Observable implements Observer {
 	private void doNotify() {
 		setChanged();
 		notifyObservers();
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO pforster
-
 	}
 
 	public int getEditedCopyIndex() {

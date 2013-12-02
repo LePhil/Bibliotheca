@@ -11,8 +11,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
@@ -32,12 +34,15 @@ import javax.swing.border.TitledBorder;
 
 import domain.Customer;
 import domain.CustomerList;
+import domain.Library;
+import domain.Loan;
 
 public class CustomerDetail extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private static Dictionary<Customer, CustomerDetail> editFramesDict = new Hashtable<Customer, CustomerDetail>();
 
+	private Library library;
 	private Customer customer;
 	private CustomerList customers;
 
@@ -70,15 +75,16 @@ public class CustomerDetail extends JFrame {
 
 	private static CustomerDetail editFrame;
 
-	public CustomerDetail(CustomerList customers, Customer customer) {
+	public CustomerDetail(Library library, CustomerList customers, Customer customer) {
 		super();
+		this.library = library;
 		this.customers = customers;
 		this.customer = customer;
 		
 		initialize();
 	}
 
-	public static void editCustomer(CustomerList customers, Customer customer) {
+	public static void editCustomer(Library library, CustomerList customers, Customer customer) {
 		newlyCreated = false;
 
 		if (customer == null) {
@@ -89,7 +95,7 @@ public class CustomerDetail extends JFrame {
 
 		editFrame = editFramesDict.get(customer);
 		if (editFrame == null) {
-			editFrame = new CustomerDetail(customers, customer);
+			editFrame = new CustomerDetail(library, customers, customer);
 			editFramesDict.put(customer, editFrame);
 		}
 		editFrame.setVisible(true);
@@ -386,7 +392,6 @@ public class CustomerDetail extends JFrame {
 	 * @author PCHR
 	 */
 	private void validateInformation() {
-		// TODO: validateInformation
 		boolean validated = true;
 
 		if (txtName.getText().length() == 0
@@ -501,7 +506,7 @@ public class CustomerDetail extends JFrame {
 	}
 
 	/**
-	 * Deletes this customer. TODO: check if customer has open loans. Prompt
+	 * Deletes this customer.
 	 * question "really wanna do this?"
 	 * 
 	 * @author PCHR
@@ -521,15 +526,25 @@ public class CustomerDetail extends JFrame {
 					Messages.getString("CustomerDetail.deleteDlg.message"),
 					Messages.getString("CustomerDetail.deleteDlg.title"),
 					JOptionPane.YES_NO_OPTION);
-
 			if (delete == 0) {
-				if (customers.removeCustomer(customer)) { // SUCCESS
-					dispose();
-				} else { // FAILED.
-					try {
-						throw new Exception( "Deleting that customer didn't really work. Sorry about that, please restart the application.");
-					} catch (Exception e1) {
-						e1.printStackTrace();
+				List<Loan> customerLoans = library.getCustomerLoans(customer);
+				List<Loan> lentLoans = new ArrayList<>();
+				for(Loan loan : customerLoans){
+					if(loan.isLent()){
+						lentLoans.add(loan);
+					}
+				}
+				if(lentLoans.size() > 0){
+					JOptionPane.showMessageDialog(editFrame, Messages.getString("CustomerDetail.deleteDlg.error"));
+				}else {
+					if (customers.removeCustomer(customer)) { // SUCCESS
+						dispose();
+					} else { // FAILED.
+						try {
+							throw new Exception( "Deleting that customer didn't really work. Sorry about that, please restart the application.");
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
 			}

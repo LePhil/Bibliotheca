@@ -49,7 +49,7 @@ public class LibraryApp {
 	private static void initLibrary( Library library ) throws ParserConfigurationException, SAXException, IOException, IllegalLoanOperationException {
 		
 		// Set locale:
-		Locale.setDefault( new Locale( "en", "UK" ) );
+		Locale.setDefault( new Locale( "de", "CH" ) );
 		
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		

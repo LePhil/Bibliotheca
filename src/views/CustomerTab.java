@@ -195,11 +195,6 @@ public class CustomerTab extends LibraryTab {
 		TableColumn customerNoColumn = tblCustomers.getColumnModel().getColumn(0);
 		customerNoColumn.setMinWidth(100);
 		customerNoColumn.setMaxWidth(100);
-		//customerNoColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
-		
-		// TODO: was haben wir hier versucht? Oo
-		tblCustomers.getColumnModel().getColumn(1);
-		tblCustomers.getColumnModel().getColumn(2);
 		
 		// Add Listeners
 		tblCustomers.getSelectionModel().addListSelectionListener(
@@ -302,7 +297,7 @@ public class CustomerTab extends LibraryTab {
 		public ShowSelectedCustomerAction( String text, String desc ) {
 	        super( text );
 	        putValue( SHORT_DESCRIPTION, desc );
-	        putValue( MNEMONIC_KEY, KeyEvent.VK_ENTER );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_S );
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -311,7 +306,7 @@ public class CustomerTab extends LibraryTab {
 			//Convert to model
 			selectedRow = tblCustomers.convertRowIndexToModel( selectedRow );
 			Customer selectedCustomer= getLibrary().getCustomerList().getCustomers().get(selectedRow);
-			CustomerDetail.editCustomer(getLibrary().getCustomerList(), selectedCustomer);
+			CustomerDetail.editCustomer(getLibrary(), getLibrary().getCustomerList(), selectedCustomer);
 		}	
 	}
 	class AddCustomerAction extends AbstractAction {
@@ -323,7 +318,7 @@ public class CustomerTab extends LibraryTab {
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			CustomerDetail.editCustomer( getLibrary().getCustomerList(), null );
+			CustomerDetail.editCustomer( getLibrary(), getLibrary().getCustomerList(), null );
 		}
 	}
 }
