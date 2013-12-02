@@ -7,7 +7,6 @@ import java.util.Observer;
 
 public class Library extends Observable implements Observer {
 
-	private List<Customer> customers;
 	private List<Loan> loans;
 	
 	private CustomerList customerList;

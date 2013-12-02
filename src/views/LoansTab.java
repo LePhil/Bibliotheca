@@ -444,7 +444,7 @@ public class LoansTab extends LibraryTab {
 		public ShowSelectedLoanAction( String text, String desc ) {
 	        super( text );
 	        putValue( SHORT_DESCRIPTION, desc );
-	        putValue( MNEMONIC_KEY, KeyEvent.VK_ENTER );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_S );
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {

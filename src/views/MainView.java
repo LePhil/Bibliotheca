@@ -172,7 +172,7 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		public CloseAction( String text, String desc ) {
 			super( text );
 			putValue( SHORT_DESCRIPTION, desc );
-			putValue( MNEMONIC_KEY, KeyEvent.VK_S );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_X );
 		}
 		public void actionPerformed(ActionEvent e) {
 			System.exit(0);
