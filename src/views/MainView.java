@@ -132,7 +132,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		updateButtons();
-		booksTab.updateShowUnavailableCheckbox();
 		updateStatistics();
 	}
 		

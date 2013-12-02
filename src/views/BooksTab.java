@@ -74,12 +74,9 @@ public class BooksTab extends LibraryTab {
 	private BookTableModel bookTableModel;
 	private TableRowSorter<BookTableModel> sorter;
 	
-	// Actions
-	private AbstractAction toggleShowUnavailabeAction;
-	
 	// Filter variables. filters contains all filters that can be applied to the jTable.
 	private List<RowFilter<Object,Object>> bookFilters;
-	private boolean showUnavailable = true;
+	private boolean showUnavailable = false;
 	private String searchText;
 
 	BooksTab(BookTableModel bookTableModel, Library library) {
@@ -95,7 +92,11 @@ public class BooksTab extends LibraryTab {
 		AbstractAction showSelected = new ShowSelectedBookAction( Messages.getString("BookMaster.btnShowSelected.text"), "Show the books that have been selected in the list" );
 		// Add Book
 		AbstractAction addBook = new AddBookAction( Messages.getString("BookMaster.btnAddNewBook.text"), "Adds a new book" );
-
+		// Toggle Show Unavailable Book
+		AbstractAction toggleUnavailableBooks = new ToggleShowUnavailableAction(
+			Messages.getString("BookMasterTable.showAvailable.text"),
+			Messages.getString("BookMasterTable.showAvailable.desc")
+		);
 		
 		pnlBookInventoryStats = new JPanel();
 		pnlBookInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlBookInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -144,8 +145,7 @@ public class BooksTab extends LibraryTab {
 			// Search field i.e. Searchbox
 			initSearchField();
 			
-			chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text"));
-			chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
+			chckbxOnlyAvailable = new JCheckBox( toggleUnavailableBooks );
 			
 			GridBagConstraints gbc_chckBox = new GridBagConstraints();
 			gbc_chckBox.insets = new Insets(0, 0, 0, 5);
@@ -201,7 +201,6 @@ public class BooksTab extends LibraryTab {
 			
 		initTable();
 		updateListButtons();
-		updateShowUnavailableCheckbox();
 		updateStatistics();
 		
 		// Enable opening selected items on ENTER
@@ -359,39 +358,7 @@ public class BooksTab extends LibraryTab {
 		
 		sorter.setRowFilter( RowFilter.andFilter(bookFilters) );
 	}
-	
-	public AbstractAction getToggleShowUnavailableAction() {
-		if(toggleShowUnavailabeAction == null) {
-			toggleShowUnavailabeAction = new ToggleShowUnavailableAction();
-		}
-		return toggleShowUnavailabeAction;
-	}
-	
-	private class ToggleShowUnavailableAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
 		
-		ToggleShowUnavailableAction() {
-			super(Messages.getString("BookMasterTable.showAvailable.text"), null);
-			putValue(MNEMONIC_KEY, KeyEvent.VK_U);
-			putValue(SHORT_DESCRIPTION, Messages.getString("BookMasterTable.showAvailable.desc"));
-			putValue(ACCELERATOR_KEY, 
-					KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
-		}
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			showUnavailable=!showUnavailable;
-			
-			// Re-Filter
-			updateFilters();
-			updateListButtons();
-			updateShowUnavailableCheckbox();
-		}
-	}
-	
-	public void updateShowUnavailableCheckbox() {
-		chckbxOnlyAvailable.setSelected( showUnavailable );
-	}
-	
 	public void updateListButtons() {
 		// Enables or disables the "Show Selected" buttons
 		// depending on whether a book is selected.
@@ -440,6 +407,25 @@ public class BooksTab extends LibraryTab {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			editBook( null );
+		}
+	}
+	// Show/Hide unavailable books
+	private class ToggleShowUnavailableAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		
+		ToggleShowUnavailableAction(String text, String desc) {
+			super(text);
+			putValue(SHORT_DESCRIPTION, desc);
+			putValue(MNEMONIC_KEY, KeyEvent.VK_U);
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			showUnavailable=!showUnavailable;
+			
+			// Re-Filter
+			updateFilters();
+			updateListButtons();
 		}
 	}
 }
