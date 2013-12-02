@@ -626,7 +626,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		public RemoveCopyAction( String text, String desc ) {
 	        super( text );
 	        putValue( SHORT_DESCRIPTION, desc );
-	        //putValue( MNEMONIC_KEY, KeyEvent.VK_R );
+	        //putValue( MNEMONIC_KEY, KeyEvent.VK_R ); //TODO: find good key.
 	    }
 		public void actionPerformed(ActionEvent e) {
 			Copy copy = copies.getCopyAt( tblCopies.convertRowIndexToModel( tblCopies.getSelectedRow() ) );
@@ -637,6 +637,9 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 					copyIsLent = true;
 				}
 			}
+			
+			// The following scenario should never happen, as we disable the removeCopy-Button when the selected copy is lent.
+			// We'll leave it here for legacy reasons.
 			if(copyIsLent){
 				JOptionPane.showMessageDialog(
 					editFrame,
@@ -669,6 +672,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			canDelete = library.getLentCopiesOfBook(book).size() == 0;
 
 			if ( canDelete ) {
+				// Necessary for setting selected button
 				Object[] options = {
 					Messages.getString("Common.Yes"),
 					Messages.getString("Common.No")
