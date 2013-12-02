@@ -335,7 +335,6 @@ public class LoansTab extends LibraryTab {
 				updateFilters();
 			}
 		});
-		txtSearchLoans.setText(Messages.getString("BookMasterTable.textField.text"));
 		txtSearchLoans.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
     	    public void focusGained(java.awt.event.FocusEvent evt) {

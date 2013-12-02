@@ -290,7 +290,6 @@ public class BooksTab extends LibraryTab {
 				updateFilters();
 			}
 		});
-		txtSearch.setText(Messages.getString("BookMasterTable.txtSearch.text"));
 		txtSearch.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
     	    public void focusGained(java.awt.event.FocusEvent evt) {
