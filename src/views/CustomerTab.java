@@ -195,11 +195,6 @@ public class CustomerTab extends LibraryTab {
 		TableColumn customerNoColumn = tblCustomers.getColumnModel().getColumn(0);
 		customerNoColumn.setMinWidth(100);
 		customerNoColumn.setMaxWidth(100);
-		//customerNoColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
-		
-		// TODO: was haben wir hier versucht? Oo
-		tblCustomers.getColumnModel().getColumn(1);
-		tblCustomers.getColumnModel().getColumn(2);
 		
 		// Add Listeners
 		tblCustomers.getSelectionModel().addListSelectionListener(
