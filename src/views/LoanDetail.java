@@ -646,10 +646,10 @@ public class LoanDetail extends JFrame {
 				if(loan.isOverdue()){
 					JOptionPane.showMessageDialog(
 						editFrame,
-						"Diese Ausleihe ist überfallig. Es muss eine Gebühr von 3.- CHF bezahlt werden.",
-						Messages.getString("Ausleihe überfällig"),
+						Messages.getString("LoanDetail.LoanOverdueDialog.text"),
+						Messages.getString("LoanDetail.LoanOverdueDialog.title"),
 						JOptionPane.YES_NO_OPTION
-					); // TODO: I18N
+					);
 				}
 				library.returnLoan(loan);
 				Customer customer = (Customer) cmbCustomer.getSelectedItem();

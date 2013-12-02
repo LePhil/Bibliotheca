@@ -640,8 +640,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			if(copyIsLent){
 				JOptionPane.showMessageDialog(
 					editFrame,
-					"Dieses Exemplar ist zur Zeit ausgeliehen und kann nicht gelöscht werden.",
-					Messages.getString("Exemplar ausgeliehen"),
+					Messages.getString("BookDetail.CantDeleteLentCopy.text"),
+					Messages.getString("BookDetail.CantDeleteLentCopy.title"),
 					JOptionPane.YES_NO_OPTION
 				);
 			}else {
