@@ -507,7 +507,7 @@ public class CustomerDetail extends JFrame {
 	}
 
 	/**
-	 * Deletes this customer. TODO: check if customer has open loans. Prompt
+	 * Deletes this customer.
 	 * question "really wanna do this?"
 	 * 
 	 * @author PCHR
