@@ -313,7 +313,7 @@ public class CustomerTab extends LibraryTab {
 			selectedRow = tblCustomers.convertRowIndexToModel( selectedRow );
 			System.out.println(selectedRow);
 			Customer selectedCustomer= getLibrary().getCustomerList().getCustomers().get(selectedRow);
-			CustomerDetail.editCustomer(getLibrary().getCustomerList(), selectedCustomer);
+			CustomerDetail.editCustomer(getLibrary(), getLibrary().getCustomerList(), selectedCustomer);
 		}	
 	}
 	class AddCustomerAction extends AbstractAction {
@@ -326,7 +326,7 @@ public class CustomerTab extends LibraryTab {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("NEW CUSTOMER");
-			CustomerDetail.editCustomer( getLibrary().getCustomerList(), null );
+			CustomerDetail.editCustomer(getLibrary(), getLibrary().getCustomerList(), null );
 		}
 	}
 }
