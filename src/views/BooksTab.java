@@ -412,16 +412,16 @@ public class BooksTab extends LibraryTab {
 		private static final long serialVersionUID = 1L;
 
 		public ShowSelectedBookAction(String text, String desc) {
-			super(text);
-			putValue(SHORT_DESCRIPTION, desc);
-			putValue(MNEMONIC_KEY, KeyEvent.VK_ENTER);
+			super( text );
+			putValue( SHORT_DESCRIPTION, desc );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_S );
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int[] selectedRows = tblBooks.getSelectedRows();
 			
-			for (int selectedRow : selectedRows) {
+			for ( int selectedRow : selectedRows ) {
 				Book book = getLibrary().getBookList().getBooks().get( tblBooks.convertRowIndexToModel( selectedRow ) );
 				editBook(book);
 			}

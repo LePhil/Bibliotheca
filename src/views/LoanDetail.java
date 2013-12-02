@@ -173,7 +173,7 @@ public class LoanDetail extends JFrame {
 			// ///////////////////////////////////////////////
 			
 			AddLoanAction addLoanAction = new AddLoanAction( Messages.getString("LoanDetail.addLoanBtn.text"), "" );
-			CloseAction closeAction = new CloseAction( Messages.getString( "MainView.btnExit.text"), "" );
+			CloseAction closeAction = new CloseAction( Messages.getString( "DetailDialogs.btnClose.text"), "" );
 			ReturnLoanAction returnLoanAction = new ReturnLoanAction( Messages.getString( "LoanDetail.returnCopyBtn.text" ), "" );
 			ChangeCustomerAction changeCustomerSelection = new ChangeCustomerAction(  );
 			
@@ -649,7 +649,7 @@ public class LoanDetail extends JFrame {
 						"Diese Ausleihe ist überfallig. Es muss eine Gebühr von 3.- CHF bezahlt werden.",
 						Messages.getString("Ausleihe überfällig"),
 						JOptionPane.YES_NO_OPTION
-					);
+					); // TODO: I18N
 				}
 				library.returnLoan(loan);
 				Customer customer = (Customer) cmbCustomer.getSelectedItem();

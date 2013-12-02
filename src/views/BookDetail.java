@@ -164,7 +164,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			// ACTIONS
 			/////////////////////////////////////////////////
 			// Close (via Esc-Key (?), Button)
-			AbstractAction cancel = new CloseAction( Messages.getString( "MainView.btnExit.text"), "Revert Changes, close dialog" );
+			AbstractAction cancel = new CloseAction( Messages.getString( "DetailDialogs.btnClose.text"), "Revert Changes, close dialog" );
 			// Save (via S, Button)
 			AbstractAction save = new SaveAction( Messages.getString( "BookDetail.btnSave.text"), "Save changes" );
 			// Reset (via R, Button)

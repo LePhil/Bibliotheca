@@ -113,7 +113,7 @@ public class CustomerDetail extends JFrame {
 			// ///////////////////////////////////////////////
 			// Close (via Esc-Key (?), Button)
 			AbstractAction cancel = new CloseAction(
-					Messages.getString("MainView.btnExit.text"),
+					Messages.getString("DetailDialogs.btnClose.text"),
 					"Revert Changes, close dialog");
 			// Save (via S, Button)
 			AbstractAction save = new SaveAction(
