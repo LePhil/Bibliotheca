@@ -407,7 +407,7 @@ public class LoanDetail extends JFrame {
 					updateFilters(searchText);
 			}
 		});
-		txtSearchCopies.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
+		txtSearchCopies.setText(Messages.getString("BookMasterTable.textField.text"));
 		txtSearchCopies.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
 		    public void focusGained(java.awt.event.FocusEvent evt) {
@@ -491,7 +491,6 @@ public class LoanDetail extends JFrame {
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 				
-				System.out.println("loan rendered with value: "+value);
 				// get value from TableModel
 				boolean isOverdue = value.equals(0);
 				boolean isLent = value.equals(1);

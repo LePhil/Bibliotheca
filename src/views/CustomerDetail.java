@@ -360,7 +360,6 @@ public class CustomerDetail extends JFrame {
 	 * @author PCHR
 	 */
 	private void fillForm() {
-		System.out.println(newlyCreated);
 		if (newlyCreated) {
 			txtCustomerNo.setText("" + customer.getCustomerNo());
 			txtName.setText("");

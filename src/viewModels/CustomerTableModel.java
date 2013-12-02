@@ -44,7 +44,6 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public int getRowCount() {
-		System.out.println( "CustomerTableModel: getRowCount = "+customers.getCustomers().size() );
 		return customers.getCustomers().size();
 	}
 	@Override
@@ -82,7 +81,6 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println( "update CustomerTableModel" );
 		int pos = customers.getEditedCustomerPos();
 			
 		if ( pos >= 0 ) {

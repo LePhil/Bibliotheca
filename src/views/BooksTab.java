@@ -98,7 +98,7 @@ public class BooksTab extends LibraryTab {
 
 		
 		pnlBookInventoryStats = new JPanel();
-		pnlBookInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlBookInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+		pnlBookInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlBookInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		this.add(pnlBookInventoryStats);
 		pnlBookInventoryStats.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
@@ -108,7 +108,7 @@ public class BooksTab extends LibraryTab {
 		horizontalStrut = Box.createHorizontalStrut(20);
 		pnlBookInventoryStats.add(horizontalStrut);
 		
-		lblNrOfCopies = new JLabel(); //$NON-NLS-1$
+		lblNrOfCopies = new JLabel();
 		pnlBookInventoryStats.add(lblNrOfCopies);
 		
 		pnlBookInventory = new JPanel();
@@ -144,7 +144,7 @@ public class BooksTab extends LibraryTab {
 			// Search field i.e. Searchbox
 			initSearchField();
 			
-			chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text")); //$NON-NLS-1$
+			chckbxOnlyAvailable = new JCheckBox(Messages.getString("BookMasterTable.chckbxOnlySelected.text"));
 			chckbxOnlyAvailable.setAction(getToggleShowUnavailableAction());
 			
 			GridBagConstraints gbc_chckBox = new GridBagConstraints();
@@ -289,7 +289,7 @@ public class BooksTab extends LibraryTab {
 				updateFilters();
 			}
 		});
-		txtSearch.setText(Messages.getString("BookMasterTable.txtSearch.text")); //$NON-NLS-1$
+		txtSearch.setText(Messages.getString("BookMasterTable.txtSearch.text"));
 		txtSearch.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
     	    public void focusGained(java.awt.event.FocusEvent evt) {
@@ -347,7 +347,6 @@ public class BooksTab extends LibraryTab {
 						// all copies are lent.
 						return false;
 					}
-					System.out.println(book.getName());
 					return true;
 				}
 		    } );
@@ -420,7 +419,6 @@ public class BooksTab extends LibraryTab {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("SHOW BOOKS");
 			int[] selectedRows = tblBooks.getSelectedRows();
 			
 			for (int selectedRow : selectedRows) {
@@ -441,7 +439,6 @@ public class BooksTab extends LibraryTab {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("NEW BOOK");
 			editBook( null );
 		}
 	}

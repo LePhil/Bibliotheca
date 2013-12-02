@@ -110,31 +110,31 @@ public class LoansTab extends LibraryTab {
 		// Inventory
 		{
 			pnlLoansInventoryStats = new JPanel();
-			pnlLoansInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlLoansInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+			pnlLoansInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlLoansInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			this.add(pnlLoansInventoryStats);
 			pnlLoansInventoryStats.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			
 			lblNrOfLoans = new JLabel();
-			lblNrOfLoans.setText(Messages.getString("BookMasterTable.lblNrOfLoans.text")); //$NON-NLS-1$
+			lblNrOfLoans.setText(Messages.getString("BookMasterTable.lblNrOfLoans.text"));
 			pnlLoansInventoryStats.add(lblNrOfLoans);
 			
 			horizontalStrut_3 = Box.createHorizontalStrut(20);
 			pnlLoansInventoryStats.add(horizontalStrut_3);
 			
-			lblNrOfCurrentLoans = new JLabel(); //$NON-NLS-1$
-			lblNrOfCurrentLoans.setText(Messages.getString("BookMasterTable.lblNrOfCurrentLoans.text")); //$NON-NLS-1$
+			lblNrOfCurrentLoans = new JLabel();
+			lblNrOfCurrentLoans.setText(Messages.getString("BookMasterTable.lblNrOfCurrentLoans.text"));
 			pnlLoansInventoryStats.add(lblNrOfCurrentLoans);
 			
 			horizontalStrut_4 = Box.createHorizontalStrut(20);
 			pnlLoansInventoryStats.add(horizontalStrut_4);
 			
-			lblNrOfDueLoans = new JLabel(); //$NON-NLS-1$
-			lblNrOfDueLoans.setText(Messages.getString("BookMasterTable.lblNrOfDueLoans.text")); //$NON-NLS-1$
+			lblNrOfDueLoans = new JLabel();
+			lblNrOfDueLoans.setText(Messages.getString("BookMasterTable.lblNrOfDueLoans.text"));
 			pnlLoansInventoryStats.add(lblNrOfDueLoans);
 		}
 		
 		pnlLoansInventory = new JPanel();
-		pnlLoansInventory.setBorder(new TitledBorder(null, Messages.getString("BookMasterTable.pnlLoansInventory.TitledBorder.text"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+		pnlLoansInventory.setBorder(new TitledBorder(null, Messages.getString("BookMasterTable.pnlLoansInventory.TitledBorder.text"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		this.add(pnlLoansInventory);
 		gbl_pnlLoansInventory = new GridBagLayout();
 		gbl_pnlLoansInventory.columnWidths = new int[] {0};
@@ -196,7 +196,7 @@ public class LoansTab extends LibraryTab {
 			gbc_btnShow.gridy = 0;
 			pnlLoansInvTop.add(btnShowSelectedLoans, gbc_btnShow);
 			
-			btnAddNewLoan= new JButton( addLoan ); //$NON-NLS-1$
+			btnAddNewLoan= new JButton( addLoan );
 			btnAddNewLoan.setIcon( new ImageIcon("icons/basket_add_32.png") );
 			GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 			gbc_btnAdd.gridx = 5;
@@ -333,7 +333,7 @@ public class LoansTab extends LibraryTab {
 				updateFilters();
 			}
 		});
-		txtSearchLoans.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
+		txtSearchLoans.setText(Messages.getString("BookMasterTable.textField.text"));
 		txtSearchLoans.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
     	    public void focusGained(java.awt.event.FocusEvent evt) {
@@ -448,7 +448,6 @@ public class LoansTab extends LibraryTab {
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("SHOW LOANS");
 			int[] selectedRows = tblLoans.getSelectedRows();
 			
 			for (int selectedRow : selectedRows) {
@@ -466,7 +465,6 @@ public class LoansTab extends LibraryTab {
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("NEW LOAN");			
 			LoanDetail.editLoan( null, getLibrary() );
 		}
 	}

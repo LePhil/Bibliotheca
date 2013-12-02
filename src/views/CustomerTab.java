@@ -82,7 +82,7 @@ public class CustomerTab extends LibraryTab {
 		// CustomerStats
 		{
 			pnlCustomerStats = new JPanel();
-			pnlCustomerStats.setBorder(new TitledBorder(null, Messages.getString("CustomerTab.CustomerStats.Title"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+			pnlCustomerStats.setBorder(new TitledBorder(null, Messages.getString("CustomerTab.CustomerStats.Title"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			this.add(pnlCustomerStats);
 			pnlCustomerStats.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			
@@ -92,7 +92,7 @@ public class CustomerTab extends LibraryTab {
 		// Inventory (Customer table)
 		{
 			pnlCustomerInventory = new JPanel();
-			pnlCustomerInventory.setBorder(new TitledBorder(null, Messages.getString("Customertab.pnlCustomerInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+			pnlCustomerInventory.setBorder(new TitledBorder(null, Messages.getString("Customertab.pnlCustomerInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			this.add(pnlCustomerInventory);
 			GridBagLayout gbl_pnlCustomerInventory = new GridBagLayout();
 			gbl_pnlCustomerInventory.columnWidths = new int[] {0};
@@ -239,7 +239,7 @@ public class CustomerTab extends LibraryTab {
 				updateFilters();
 			}
 		});
-		txtSearch.setText(Messages.getString("BookMasterTable.txtSearch.text")); //$NON-NLS-1$
+		txtSearch.setText(Messages.getString("BookMasterTable.txtSearch.text"));
 		txtSearch.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
     	    public void focusGained(java.awt.event.FocusEvent evt) {
@@ -306,12 +306,10 @@ public class CustomerTab extends LibraryTab {
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("SHOW CUSTOMER");
 			int selectedRow = tblCustomers.getSelectedRow();
 			
 			//Convert to model
 			selectedRow = tblCustomers.convertRowIndexToModel( selectedRow );
-			System.out.println(selectedRow);
 			Customer selectedCustomer= getLibrary().getCustomerList().getCustomers().get(selectedRow);
 			CustomerDetail.editCustomer(getLibrary().getCustomerList(), selectedCustomer);
 		}	
@@ -325,7 +323,6 @@ public class CustomerTab extends LibraryTab {
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("NEW CUSTOMER");
 			CustomerDetail.editCustomer( getLibrary().getCustomerList(), null );
 		}
 	}

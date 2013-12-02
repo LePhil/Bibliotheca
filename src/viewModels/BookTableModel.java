@@ -126,7 +126,6 @@ public class BookTableModel extends AbstractTableModel implements Observer {
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("UPDATE IN BOOKTABLEMODEL CALLED");
 		int pos = books.getEditedBookPos();
 		
 		if ( pos >= 0 ) {
