@@ -227,6 +227,8 @@ public class CustomerTab extends LibraryTab {
 		pnlCustomersInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
 		
 		txtSearch = new JTextField( 10 );
+		// enables to focus on the searchfield by pressing Alt-F
+		txtSearch.setFocusAccelerator('F');
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {

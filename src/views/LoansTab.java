@@ -325,7 +325,9 @@ public class LoansTab extends LibraryTab {
 		gbc_Icon.gridy = 0;
 		pnlLoansInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
 		
-		txtSearchLoans = new JTextField();
+		txtSearchLoans = new JTextField(10);
+		// enables to focus on the searchfield by pressing Alt-F
+		txtSearchLoans.setFocusAccelerator('F');
 		txtSearchLoans.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
