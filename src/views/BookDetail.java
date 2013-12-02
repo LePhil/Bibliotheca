@@ -669,12 +669,18 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			canDelete = library.getLentCopiesOfBook(book).size() == 0;
 
 			if ( canDelete ) {
-				int delete = JOptionPane.showConfirmDialog(
+				Object[] options = {
+					Messages.getString("Common.Yes"),
+					Messages.getString("Common.No")
+				};
+				int delete = JOptionPane.showOptionDialog(
 					editFrame,
 					Messages.getString("BookDetail.deleteDlg.message"),
 					Messages.getString("BookDetail.deleteDlg.title"),
-					JOptionPane.YES_NO_OPTION
-				);
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE, 
+	                null, options, options[1]
+	            );
 				
 				if ( delete == 0 ) {
 					if ( books.removeBook( book ) ) {

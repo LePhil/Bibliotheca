@@ -76,7 +76,7 @@ public class CopyTableModel extends AbstractTableModel implements
 		case 3:
 			return library.isCopyLent( copy );
 		case 4:
-			return conditionToString( copy.getCondition() ); // TODO: make editable!!!
+			return conditionToString( copy.getCondition() );
 		default:
 			return null;
 		}
