@@ -46,7 +46,6 @@ public class Copy {
 
 	@Override
 	public String toString() {
-		// TODO pforster: optimize as soon as loan information are available
 		return this.inventoryNumber + book.getName();
 	}
 }

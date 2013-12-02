@@ -372,9 +372,9 @@ public class BooksTab extends LibraryTab {
 		private static final long serialVersionUID = 1L;
 		
 		ToggleShowUnavailableAction() {
-			super("Show Unvailable", null);	//TODO: I18N
+			super(Messages.getString("BookMasterTable.showAvailable.text"), null);
 			putValue(MNEMONIC_KEY, KeyEvent.VK_U);
-			putValue(SHORT_DESCRIPTION, "Show or Hide Unavailable Books");	//TODO: I18N
+			putValue(SHORT_DESCRIPTION, Messages.getString("BookMasterTable.showAvailable.desc"));
 			putValue(ACCELERATOR_KEY, 
 					KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 		}

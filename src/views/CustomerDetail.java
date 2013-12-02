@@ -387,7 +387,6 @@ public class CustomerDetail extends JFrame {
 	 * @author PCHR
 	 */
 	private void validateInformation() {
-		// TODO: validateInformation
 		boolean validated = true;
 
 		if (txtName.getText().length() == 0

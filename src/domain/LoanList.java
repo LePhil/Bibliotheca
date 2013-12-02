@@ -3,17 +3,12 @@ package domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 
-public class LoanList extends Observable implements Observer {
+public class LoanList extends Observable {
 	private List<Loan> loanList = new ArrayList<Loan>();
 	private int editedLoanIndex;
 	private int addLoanIndex;
 	private int removeLoanIndex;
-
-	public void addLoan() {
-		// TODO pforster
-	}
 
 	public void addLoan(Loan loan) {
 		doNotify();
@@ -43,12 +38,6 @@ public class LoanList extends Observable implements Observer {
 	private void doNotify() {
 		setChanged();
 		notifyObservers();
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO pforster
-
 	}
 
 	public int getEditedLoanIndex() {
