@@ -646,7 +646,7 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 		public RemoveCopyAction( String text, String desc ) {
 	        super( text );
 	        putValue( SHORT_DESCRIPTION, desc );
-	        //putValue( MNEMONIC_KEY, KeyEvent.VK_R ); //TODO: find good key.
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_V );
 	    }
 		public void actionPerformed(ActionEvent e) {
 			Copy copy = copies.getCopyAt( tblCopies.convertRowIndexToModel( tblCopies.getSelectedRow() ) );
