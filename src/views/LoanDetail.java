@@ -112,6 +112,8 @@ public class LoanDetail extends JFrame {
 
 	private static int customerNo;
 	private JPanel panel;
+	private JLabel lblWarning;
+	private Component horizontalStrut;
 
 	/**
 	 * Create the application.
@@ -154,6 +156,7 @@ public class LoanDetail extends JFrame {
 			editFrame = new LoanDetail( loan, loans, library );
 			loanFramesDict.put( loan, editFrame );
 		}
+
 		editFrame.setVisible( true );
 	}
 
@@ -346,6 +349,12 @@ public class LoanDetail extends JFrame {
 			txtSearchCopies = new JTextField();
 			initCopySearchField();
 			pnlFilterCopies.add(txtSearchCopies);
+			
+			horizontalStrut = Box.createHorizontalStrut(20);
+			pnlFilterCopies.add(horizontalStrut);
+			
+			lblWarning = new JLabel();
+			pnlFilterCopies.add(lblWarning);
 
 			pnlAvailableCopies = new JPanel();
 			GridBagConstraints gbc_pnlCopies = new GridBagConstraints();
@@ -394,6 +403,8 @@ public class LoanDetail extends JFrame {
 			btnClose = new JButton( closeAction );
 			btnClose.setIcon( new ImageIcon("icons/close_32.png") );
 			pnlButtons.add(btnClose);
+			
+			rootPane.setDefaultButton( btnClose );
 			
 			updateLabels();
 			updateListButtons();
@@ -551,7 +562,7 @@ public class LoanDetail extends JFrame {
 		// Ignore the status in this view, because only available copies should show up here anyway!
 		copyTable.getColumnModel().removeColumn( copyTable.getColumnModel().getColumn(3) );
 		
-		JComboBox<Condition> comboBox = new JComboBox<>( Condition.values() );
+		JComboBox<Condition> comboBox = new JComboBox<Condition>( Condition.values() );
 		copyTable.getColumnModel().getColumn( 3 ).setCellEditor( new DefaultCellEditor( comboBox ) );
 		
 		// Add Listeners
@@ -586,16 +597,54 @@ public class LoanDetail extends JFrame {
 	private void updateBtnAddLoan(){
 		boolean displayBtn = true;
 		int countLoans = 0;
+		String attention = "";
+		
 		for(Loan loan : this.loans.getLoanList()){
 			if(loan.isOverdue()){
 				displayBtn = false;
+				attention = Messages.getString( "LoanDetail.lblWarning.overdue");
 			}
 			if(loan.isLent()){
 				countLoans++;
 			}
 		}
-		displayBtn = displayBtn && countLoans < 3 && cmbCustomer.getSelectedItem() != null;
+		
+		// not overdue, but more than 3 loans
+		if ( displayBtn && countLoans >= 3 ) {
+			attention = Messages.getString("LoanDetail.lblWarning.tooMany");
+			displayBtn = false;
+		}
+		
+		// not too many loans and not overdue. Check if a row is selected
+		if ( displayBtn ) {
+			if ( copyTable.getSelectedRowCount() > 0 ) {
+				int selectedRow = copyTable.convertRowIndexToModel(copyTable.getSelectedRow());
+				Copy copy = copies.getCopyAt(selectedRow);
+			
+				// copy is lost or destroyed ("waste")
+				if ( copy.getCondition().equals( Condition.LOST ) || copy.getCondition().equals( Condition.WASTE ) ) {
+					displayBtn = false;
+					attention = Messages.getString("LoanDetail.lblWarning.bookLost");
+				}else {
+					displayBtn = true;
+				}
+				
+			} else {
+				// no row selected.
+				displayBtn = false;
+				attention = Messages.getString("LoanDetail.lblWarning.noneSelected");
+			}
+		}
+		
 		btnAddLoan.setEnabled( displayBtn );
+		
+		// Also update the label that gives a hint to the user if and why the Add-Loan-Btn is disabled
+		lblWarning.setEnabled( !displayBtn );
+		if ( !displayBtn ) {
+			lblWarning.setText( Messages.getString("LoanDetail.lblWarning.text", attention) );
+		} else {
+			lblWarning.setText("");
+		}
 	}
 
 	// ///////////////////////////////////////////////
