@@ -288,6 +288,7 @@ public class LoansTab extends LibraryTab {
 		TableColumn copyIDColumn = tblLoans.getColumnModel().getColumn(1);
 		copyIDColumn.setMinWidth(50);
 		copyIDColumn.setMaxWidth(50);
+		copyIDColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));
 		
 		TableColumn copyTitleColumn = tblLoans.getColumnModel().getColumn(2);
 		copyTitleColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));

@@ -34,6 +34,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
+import renderers.CustomerTableCellRenderer;
+
 import viewModels.CustomerTableModel;
 import domain.Customer;
 import domain.Library;
@@ -197,9 +199,15 @@ public class CustomerTab extends LibraryTab {
 		// Handle the filtering over there:
 		updateFilters();
 		
+		CustomerTableCellRenderer cellRenderer = new CustomerTableCellRenderer();
+		
 		TableColumn customerNoColumn = tblCustomers.getColumnModel().getColumn(0);
 		customerNoColumn.setMinWidth(100);
 		customerNoColumn.setMaxWidth(100);
+		customerNoColumn.setCellRenderer( cellRenderer );
+		
+		tblCustomers.getColumnModel().getColumn(1).setCellRenderer( cellRenderer );
+		tblCustomers.getColumnModel().getColumn(2).setCellRenderer( cellRenderer );
 		
 		// Add Listeners
 		tblCustomers.getSelectionModel().addListSelectionListener(

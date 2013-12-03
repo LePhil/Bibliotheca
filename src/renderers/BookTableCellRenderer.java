@@ -6,6 +6,8 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import sun.swing.DefaultLookup;
+
 import domain.Book;
 import domain.Library;
 
@@ -24,22 +26,27 @@ public class BookTableCellRenderer extends DefaultTableCellRenderer {
 		int numberOfCopies = library.getCopiesOfBook(book).size();
 		int numberOfLentCopies = library.getLentCopiesOfBook(book).size();
 		boolean available = numberOfCopies - numberOfLentCopies > 0;
+		
 		Color fgColor = Color.BLACK,
 			  bgColor = Color.WHITE;
+			
+		Color alternateColor = DefaultLookup.getColor(this, ui, "Table.alternateRowColor");
 		
 		if (value!= null) {
+			
+			if ( row % 2 != 0 ) {
+				bgColor = alternateColor;
+			}
+			
 			if( isSelected ) {
 				fgColor = Color.WHITE;
-				bgColor = Color.GRAY;
-				
-				if(!available) {
-					bgColor = Color.GRAY.brighter();
-				}
+				bgColor = bgColor.darker();
 			}
-			// Show red text if no copies are available
-			if(!available) {
+			
+			if ( !available ) {
 				fgColor = Color.RED;
 			}
+			
 			cellRenderer.setBackground(bgColor);
 			cellRenderer.setForeground(fgColor);
 		}
