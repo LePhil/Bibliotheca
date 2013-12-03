@@ -103,9 +103,15 @@ public class LoansTab extends LibraryTab {
 		// ACTIONS
 		/////////////////////////////////////////////////
 		// Show/Edit selected loans
-		AbstractAction showSelected = new ShowSelectedLoanAction( Messages.getString("BookMaster.btnShowSelectedLoans.text"), "Show the loans that have been selected in the list" );
+		AbstractAction showSelected = new ShowSelectedLoanAction(
+			Messages.getString("BookMaster.btnShowSelectedLoans.text"),
+			Messages.getString("BookMaster.btnShowSelectedLoans.desc")
+		);
 		// Add Loan
-		AbstractAction addLoan = new AddLoanAction( Messages.getString("BookMaster.btnAddNewLoan.text"), "Adds a new loan" );
+		AbstractAction addLoan = new AddLoanAction(
+			Messages.getString("BookMaster.btnAddNewLoan.text"),
+			Messages.getString("BookMaster.btnAddNewLoan.desc")
+		);
 	
 		// Inventory
 		{
@@ -167,13 +173,14 @@ public class LoansTab extends LibraryTab {
 			// ComboBox
 			///////////////////////////////////////////////////////////
 			String[] strLoanTableModes = {
-			Messages.getString( "BookMastertable.BookTableModes.All" ),
-			Messages.getString( "BookMastertable.BookTableModes.LentOnly" ),
-			Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" )
+				Messages.getString( "BookMastertable.BookTableModes.All" ),
+				Messages.getString( "BookMastertable.BookTableModes.LentOnly" ),
+				Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" )
 			};
 			
 			cmbLoanTableModes = new JComboBox<String>( strLoanTableModes );
 			cmbLoanTableModes.setAction( getChangeLoanTableModeAction() );
+			cmbLoanTableModes.setToolTipText(Messages.getString("LoansTab.cmbLoanTableModes.desc"));
 			
 			GridBagConstraints gbc_cmbBox = new GridBagConstraints();
 			gbc_cmbBox.insets = new Insets(0, 0, 0, 5);
@@ -326,6 +333,7 @@ public class LoansTab extends LibraryTab {
 		pnlLoansInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
 		
 		txtSearchLoans = new JTextField(10);
+		txtSearchLoans.setToolTipText( Messages.getString( "LoansTab.txtSearchLoans.desc") );
 		// enables to focus on the searchfield by pressing Alt-F
 		txtSearchLoans.setFocusAccelerator('F');
 		txtSearchLoans.addKeyListener(new KeyAdapter() {

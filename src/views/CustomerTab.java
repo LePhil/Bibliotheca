@@ -74,10 +74,15 @@ public class CustomerTab extends LibraryTab {
 		// ACTIONS
 		/////////////////////////////////////////////////
 		// Show/Edit selected customer
-		AbstractAction showCustomer = new ShowSelectedCustomerAction( Messages.getString( "CustomerTab.btnShowSelected.text"), "Show the customer that has been selected in the customer list" );
+		AbstractAction showCustomer = new ShowSelectedCustomerAction(
+			Messages.getString( "CustomerTab.btnShowSelected.text"),
+			Messages.getString("CustomerTab.btnShowSelected.desc")
+		);
 		// Add Customer
-		AbstractAction addCustomer = new AddCustomerAction( Messages.getString("CustomerTab.btnAddNewCustomer.text"), "Adds a new customer" );
-
+		AbstractAction addCustomer = new AddCustomerAction(
+			Messages.getString("CustomerTab.btnAddNewCustomer.text"),
+			Messages.getString("CustomerTab.btnAddNewCustomer.desc")
+		);
 		
 		// CustomerStats
 		{
@@ -227,6 +232,7 @@ public class CustomerTab extends LibraryTab {
 		pnlCustomersInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
 		
 		txtSearch = new JTextField( 10 );
+		txtSearch.setToolTipText( Messages.getString( "CustomerTab.txtSearch.desc") );
 		// enables to focus on the searchfield by pressing Alt-F
 		txtSearch.setFocusAccelerator('F');
 		txtSearch.addKeyListener(new KeyAdapter() {

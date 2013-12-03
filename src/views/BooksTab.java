@@ -89,9 +89,15 @@ public class BooksTab extends LibraryTab {
 		// ACTIONS
 		/////////////////////////////////////////////////
 		// Show/Edit selected books
-		AbstractAction showSelected = new ShowSelectedBookAction( Messages.getString("BookMaster.btnShowSelected.text"), "Show the books that have been selected in the list" );
+		AbstractAction showSelected = new ShowSelectedBookAction(
+			Messages.getString("BookMaster.btnShowSelected.text"),
+			Messages.getString("BookMaster.btnShowSelected.desc")
+		);
 		// Add Book
-		AbstractAction addBook = new AddBookAction( Messages.getString("BookMaster.btnAddNewBook.text"), "Adds a new book" );
+		AbstractAction addBook = new AddBookAction(
+			Messages.getString("BookMaster.btnAddNewBook.text"),
+			Messages.getString("BookMaster.btnAddNewBook.desc")
+		);
 		// Toggle Show Unavailable Book
 		AbstractAction toggleUnavailableBooks = new ToggleShowUnavailableAction(
 			Messages.getString("BookMasterTable.showAvailable.text"),
@@ -281,6 +287,7 @@ public class BooksTab extends LibraryTab {
 		pnlBooksInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
 		
 		txtSearch = new JTextField(10);
+		txtSearch.setToolTipText( Messages.getString( "BookMaster.txtSearch.desc") );
 		// enables to focus on the searchfield by pressing Alt-F
 		txtSearch.setFocusAccelerator('F');
 		txtSearch.addKeyListener(new KeyAdapter() {

@@ -48,7 +48,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	public MainView( Library library ) {
 		/*
 		 * This View should listen to changes in the book list and the loans list!
-		 * Also: customerList
 		 */
 		super();
 		this.library = library;
@@ -59,7 +58,6 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		initialize();
 		library.addObserver( this );
 		setLocationRelativeTo(null);
-		//setVisible(true);
 	}
 
 	/**
@@ -76,7 +74,10 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			// ACTIONS
 			///////////////////////////////////////////////////////////////////
 			// CLOSE
-			AbstractAction close = new CloseAction( Messages.getString( "MainView.btnExit.text"), "Close the application, disregard all unsaved changes" );
+			AbstractAction close = new CloseAction(
+				Messages.getString( "MainView.btnExit.text"),
+				Messages.getString( "MainView.btnExit.desc")
+			);
 
 			///////////////////////////////////////////////////////////////////
 			// INITIAL SETUP
@@ -101,21 +102,35 @@ public class MainView extends javax.swing.JFrame implements Observer {
 			// BOOKS TAB
 			///////////////////////////////////////////////////////////////////
 			booksTab = new BooksTab( bookTableModel, library );
-			tbsMain.addTab( Messages.getString("BookMaster.Tab.Books" ), new ImageIcon("icons/book_32.png"), booksTab, null );
+			tbsMain.addTab(
+				Messages.getString("BookMaster.Tab.Books"),
+				new ImageIcon("icons/book_32.png"),
+				booksTab, 
+				Messages.getString("BookMaster.Tab.Books.desc") );
 			tbsMain.setMnemonicAt(0, KeyEvent.VK_1);
 			
 			///////////////////////////////////////////////////////////////////
 			// LOANS TAB
 			///////////////////////////////////////////////////////////////////
 			loansTab = new LoansTab( loanTableModel, library );
-			tbsMain.addTab( Messages.getString("BookMaster.Tab.Loans" ), new ImageIcon("icons/basket_32.png"), loansTab, null );
+			tbsMain.addTab(
+				Messages.getString("BookMaster.Tab.Loans"),
+				new ImageIcon("icons/basket_32.png"),
+				loansTab,
+				Messages.getString("BookMaster.Tab.Loans.desc")
+			);
 			tbsMain.setMnemonicAt(1, KeyEvent.VK_2);
 			
 			///////////////////////////////////////////////////////////////////
 			// CUSTOMERS TAB
 			///////////////////////////////////////////////////////////////////
 			customerTab = new CustomerTab(customerTableModel, library);
-			tbsMain.addTab( Messages.getString( "MainView.Tab.Customers"), new ImageIcon("icons/user_32.png"), customerTab, null );
+			tbsMain.addTab(
+				Messages.getString( "MainView.Tab.Customers"),
+				new ImageIcon("icons/user_32.png"),
+				customerTab,
+				Messages.getString( "MainView.Tab.Customers.desc")
+			);
 			tbsMain.setMnemonicAt(2, KeyEvent.VK_3);
 						
 			///////////////////////////////////////////////////////////////////
