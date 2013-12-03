@@ -172,9 +172,18 @@ public class LoanDetail extends JFrame {
 			// ACTIONS
 			// ///////////////////////////////////////////////
 			
-			AddLoanAction addLoanAction = new AddLoanAction( Messages.getString("LoanDetail.addLoanBtn.text"), "" );
-			CloseAction closeAction = new CloseAction( Messages.getString( "DetailDialogs.btnClose.text"), "" );
-			ReturnLoanAction returnLoanAction = new ReturnLoanAction( Messages.getString( "LoanDetail.returnCopyBtn.text" ), "" );
+			AddLoanAction addLoanAction = new AddLoanAction(
+				Messages.getString("LoanDetail.addLoanBtn.text"),
+				Messages.getString("LoanDetail.addLoanBtn.desc")
+					);
+			CloseAction closeAction = new CloseAction(
+				Messages.getString( "DetailDialogs.btnClose.text"),
+				Messages.getString( "DetailDialogs.btnClose.desc")
+			);
+			ReturnLoanAction returnLoanAction = new ReturnLoanAction(
+				Messages.getString( "LoanDetail.returnCopyBtn.text" ),
+				Messages.getString( "LoanDetail.returnCopyBtn.desc" )
+			);
 			ChangeCustomerAction changeCustomerSelection = new ChangeCustomerAction(  );
 			
 			// ///////////////////////////////////////////////
@@ -239,6 +248,7 @@ public class LoanDetail extends JFrame {
 			pnlCustomer.add(lblCustomer, gbc_lblCustomer);
 
 			cmbCustomer = new JComboBox<Customer>();
+			cmbCustomer.setToolTipText(Messages.getString("LoanDetail.cmbCustomer.desc"));
 			GridBagConstraints gbc_cmbCustomer = new GridBagConstraints();
 			gbc_cmbCustomer.insets = new Insets(0, 0, 0, 5);
 			gbc_cmbCustomer.fill = GridBagConstraints.HORIZONTAL;
@@ -312,7 +322,7 @@ public class LoanDetail extends JFrame {
 			// COPIES PANEL
 			// ///////////////////////////////////////////////
 			pnlCopies = new JPanel();
-			pnlCopies.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), "Exemplare", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			pnlCopies.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0)), Messages.getString("LoanDetail.pnlCopies.title"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			getContentPane().add(pnlCopies);
 			GridBagLayout gbl_pnlCopies = new GridBagLayout();
 			gbl_pnlCopies.columnWidths = new int[] { 0, 0 };
@@ -407,7 +417,7 @@ public class LoanDetail extends JFrame {
 					updateFilters(searchText);
 			}
 		});
-		txtSearchCopies.setText(Messages.getString("BookMasterTable.textField.text"));
+		txtSearchCopies.setToolTipText(Messages.getString("LoanDetail.txtSearch.desc"));
 		txtSearchCopies.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
 		    public void focusGained(java.awt.event.FocusEvent evt) {
