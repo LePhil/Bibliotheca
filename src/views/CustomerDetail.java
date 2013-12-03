@@ -111,7 +111,7 @@ public class CustomerDetail extends JFrame {
 			// ///////////////////////////////////////////////
 			// ACTIONS
 			// ///////////////////////////////////////////////
-			// Close (via Esc-Key (?), Button)	//TODO: I18N this shit
+			// Close (via Esc-Key (?), Button)
 			AbstractAction cancel = new CloseAction(
 				Messages.getString("DetailDialogs.btnClose.text"),
 				Messages.getString("DetailDialogs.btnClose.desc")
