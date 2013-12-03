@@ -1,6 +1,7 @@
 package views;
 
-import java.awt.Color;
+import i18n.Messages;
+
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -18,8 +19,8 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,13 +32,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
+import renderers.LoanTableCellRenderer;
 import viewModels.LoanTableModel;
 import domain.Library;
 import domain.Loan;
@@ -57,8 +58,6 @@ public class LoansTab extends LibraryTab {
 	
 	private Component horizontalStrut_3;
 	private Component horizontalStrut_4;
-	private Component horizontalStrut_5;
-	private Component horizontalStrut_6;
 	
 	private GridBagLayout gbl_pnlLoansInventory;
 	private GridBagLayout gbl_pnlLoansInvBottom;
@@ -71,7 +70,6 @@ public class LoansTab extends LibraryTab {
 	
 	private JTable tblLoans;
 	private JTextField txtSearchLoans;
-	private JCheckBox chckbxOnlyDueLoans;
 	private JComboBox<String> cmbLoanTableModes;
 	
 	GridBagConstraints gbc_scrollPaneLoans;
@@ -83,7 +81,6 @@ public class LoansTab extends LibraryTab {
 	
 	// Filter variables. filters contains all filters that can be applied to the jTable.
 	private List<RowFilter<Object,Object>> loanFilters;
-	private boolean showDueLoans = true;
 	private String searchTextLoans;
 	private enum loanTableMode {
 		ALL, LENTONLY, OVERDUEONLY;
@@ -91,7 +88,6 @@ public class LoansTab extends LibraryTab {
 	private loanTableMode currentTableMode;
 	
 	// Actions:
-	private AbstractAction toggleShowDueLoansAction;
 	private AbstractAction changeLoanTableModeAction;
 
 	public LoansTab(LoanTableModel loanTableModel, Library library) {
@@ -103,34 +99,48 @@ public class LoansTab extends LibraryTab {
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
+		/////////////////////////////////////////////////
+		// ACTIONS
+		/////////////////////////////////////////////////
+		// Show/Edit selected loans
+		AbstractAction showSelected = new ShowSelectedLoanAction(
+			Messages.getString("BookMaster.btnShowSelectedLoans.text"),
+			Messages.getString("BookMaster.btnShowSelectedLoans.desc")
+		);
+		// Add Loan
+		AbstractAction addLoan = new AddLoanAction(
+			Messages.getString("BookMaster.btnAddNewLoan.text"),
+			Messages.getString("BookMaster.btnAddNewLoan.desc")
+		);
+	
 		// Inventory
 		{
 			pnlLoansInventoryStats = new JPanel();
-			pnlLoansInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlLoansInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+			pnlLoansInventoryStats.setBorder(new TitledBorder(null, Messages.getString("BookMaster.pnlLoansInventoryStats.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			this.add(pnlLoansInventoryStats);
 			pnlLoansInventoryStats.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			
 			lblNrOfLoans = new JLabel();
-			lblNrOfLoans.setText(Messages.getString("BookMasterTable.lblNrOfLoans.text")); //$NON-NLS-1$
+			lblNrOfLoans.setText(Messages.getString("BookMasterTable.lblNrOfLoans.text"));
 			pnlLoansInventoryStats.add(lblNrOfLoans);
 			
 			horizontalStrut_3 = Box.createHorizontalStrut(20);
 			pnlLoansInventoryStats.add(horizontalStrut_3);
 			
-			lblNrOfCurrentLoans = new JLabel(); //$NON-NLS-1$
-			lblNrOfCurrentLoans.setText(Messages.getString("BookMasterTable.lblNrOfCurrentLoans.text")); //$NON-NLS-1$
+			lblNrOfCurrentLoans = new JLabel();
+			lblNrOfCurrentLoans.setText(Messages.getString("BookMasterTable.lblNrOfCurrentLoans.text"));
 			pnlLoansInventoryStats.add(lblNrOfCurrentLoans);
 			
 			horizontalStrut_4 = Box.createHorizontalStrut(20);
 			pnlLoansInventoryStats.add(horizontalStrut_4);
 			
-			lblNrOfDueLoans = new JLabel(); //$NON-NLS-1$
-			lblNrOfDueLoans.setText(Messages.getString("BookMasterTable.lblNrOfDueLoans.text")); //$NON-NLS-1$
+			lblNrOfDueLoans = new JLabel();
+			lblNrOfDueLoans.setText(Messages.getString("BookMasterTable.lblNrOfDueLoans.text"));
 			pnlLoansInventoryStats.add(lblNrOfDueLoans);
 		}
 		
 		pnlLoansInventory = new JPanel();
-		pnlLoansInventory.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), Messages.getString("BookMasterTable.pnlLoansInventory.TitledBorder.text"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+		pnlLoansInventory.setBorder(new TitledBorder(null, Messages.getString("BookMasterTable.pnlLoansInventory.TitledBorder.text"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		this.add(pnlLoansInventory);
 		gbl_pnlLoansInventory = new GridBagLayout();
 		gbl_pnlLoansInventory.columnWidths = new int[] {0};
@@ -147,50 +157,60 @@ public class LoansTab extends LibraryTab {
 		gbc_pnlLoansInvTop.gridx = 0;
 		gbc_pnlLoansInvTop.gridy = 0;
 		pnlLoansInventory.add(pnlLoansInvTop, gbc_pnlLoansInvTop);
-		pnlLoansInvTop.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		// Search field i.e. Searchbox
-		initLoansSearchField();
+		{
+			GridBagLayout gbl_LoansInvTop = new GridBagLayout();
+			gbl_LoansInvTop.columnWidths = new int[]{0, 100, 0, 20, 0, 0, 0};
+			gbl_LoansInvTop.rowHeights = new int[]{0, 0};
+			gbl_LoansInvTop.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_LoansInvTop.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+			pnlLoansInvTop.setLayout( gbl_LoansInvTop );
+			
+			// Search field i.e. Searchbox
+			initLoansSearchField();
+			
+			///////////////////////////////////////////////////////////
+			// ComboBox
+			///////////////////////////////////////////////////////////
+			String[] strLoanTableModes = {
+				Messages.getString( "BookMastertable.BookTableModes.All" ),
+				Messages.getString( "BookMastertable.BookTableModes.LentOnly" ),
+				Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" )
+			};
+			
+			cmbLoanTableModes = new JComboBox<String>( strLoanTableModes );
+			cmbLoanTableModes.setAction( getChangeLoanTableModeAction() );
+			cmbLoanTableModes.setToolTipText(Messages.getString("LoansTab.cmbLoanTableModes.desc"));
+			
+			GridBagConstraints gbc_cmbBox = new GridBagConstraints();
+			gbc_cmbBox.insets = new Insets(0, 0, 0, 5);
+			gbc_cmbBox.fill = GridBagConstraints.HORIZONTAL;
+			gbc_cmbBox.gridx = 2;
+			gbc_cmbBox.gridy = 0;
+			pnlLoansInvTop.add( cmbLoanTableModes, gbc_cmbBox );
+			
+			btnShowSelectedLoans = new JButton( showSelected );
+			btnShowSelectedLoans.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					showSelectedLoansButtonActionPerformed(e);
+				}
+			});
+			btnShowSelectedLoans.setIcon( new ImageIcon("icons/basket_search_32.png") );
+			
+			GridBagConstraints gbc_btnShow = new GridBagConstraints();
+			gbc_btnShow.insets = new Insets(0, 0, 0, 5);
+			gbc_btnShow.gridx = 4;
+			gbc_btnShow.gridy = 0;
+			pnlLoansInvTop.add(btnShowSelectedLoans, gbc_btnShow);
+			
+			btnAddNewLoan= new JButton( addLoan );
+			btnAddNewLoan.setIcon( new ImageIcon("icons/basket_add_32.png") );
+			GridBagConstraints gbc_btnAdd = new GridBagConstraints();
+			gbc_btnAdd.gridx = 5;
+			gbc_btnAdd.gridy = 0;
+			pnlLoansInvTop.add( btnAddNewLoan, gbc_btnAdd );
+		}
 		
-		horizontalStrut_5 = Box.createHorizontalStrut(20);
-		pnlLoansInvTop.add(horizontalStrut_5);
-		
-		btnShowSelectedLoans = new JButton(Messages.getString("BookMaster.btnShowSelectedLoans.text")); //$NON-NLS-1$
-		btnShowSelectedLoans.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showSelectedLoansButtonActionPerformed(e);
-			}
-		});
-		
-		chckbxOnlyDueLoans = new JCheckBox( Messages.getString("BookMasterTable.chckbxOnlyDueLoans.text") ); //$NON-NLS-1$
-		chckbxOnlyDueLoans.setAction( getToggleShowDueLoansAction() );
-		pnlLoansInvTop.add(chckbxOnlyDueLoans);
-		
-		///////////////////////////////////////////////////////////
-		// ComboBox
-		///////////////////////////////////////////////////////////
-		String[] strLoanTableModes = {
-			Messages.getString( "BookMastertable.BookTableModes.All" ),
-			Messages.getString( "BookMastertable.BookTableModes.LentOnly" ),
-			Messages.getString( "BookMastertable.BookTableModes.OverdueOnly" )
-		};
-		
-		cmbLoanTableModes = new JComboBox<String>( strLoanTableModes );
-		cmbLoanTableModes.setAction( getChangeLoanTableModeAction() );
-		
-		pnlLoansInvTop.add( cmbLoanTableModes );
-		
-		horizontalStrut_6 = Box.createHorizontalStrut(20);
-		pnlLoansInvTop.add(horizontalStrut_6);
-		pnlLoansInvTop.add(btnShowSelectedLoans);
-		
-		btnAddNewLoan= new JButton(Messages.getString("BookMaster.btnAddNewLoan.text")); //$NON-NLS-1$
-		btnAddNewLoan.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//addLoanButtonActionPerformed(e);
-			}
-		});
-		pnlLoansInvTop.add(btnAddNewLoan);
 		pnlLoansInvBottom = new JPanel();
 		
 		gbc_pnlLoansInvBottom = new GridBagConstraints();
@@ -220,7 +240,11 @@ public class LoansTab extends LibraryTab {
 		scrollPaneLoans.setViewportView(tblLoans);
 		
 		initLoansTable();
-
+		
+		// Enable opening selected items on ENTER
+		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+		tblLoans.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "showItem");
+		tblLoans.getActionMap().put( "showItem", showSelected );
 	}
 	
 	private void initLoansTable() {
@@ -236,9 +260,30 @@ public class LoansTab extends LibraryTab {
 		updateFilters();
 		
 		TableColumn statusColumn = tblLoans.getColumnModel().getColumn(0);
-		statusColumn.setMinWidth(50);
-		statusColumn.setMaxWidth(50);
-		statusColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()));
+		statusColumn.setMinWidth(100);
+		statusColumn.setMaxWidth(100);
+		statusColumn.setCellRenderer(new LoanTableCellRenderer(getLibrary()) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				
+				// get value from TableModel
+				boolean isOverdue = (Boolean) value;
+				
+				if ( isOverdue ) {
+					label.setIcon( new ImageIcon("icons/warning_16.png") );
+					label.setText( Messages.getString("LoanTable.CellContent.Overdue") );
+				} else {
+					label.setText( Messages.getString("LoanTable.CellContent.OK") );
+					label.setIcon( new ImageIcon("icons/ok_button_16.png") );
+				}
+				
+				
+				return label;
+			}
+		});		
 		
 		TableColumn copyIDColumn = tblLoans.getColumnModel().getColumn(1);
 		copyIDColumn.setMinWidth(50);
@@ -281,15 +326,24 @@ public class LoansTab extends LibraryTab {
 	 * 
 	 */
 	private void initLoansSearchField() {
-		txtSearchLoans = new JTextField();
+		GridBagConstraints gbc_Icon = new GridBagConstraints();
+		gbc_Icon.insets = new Insets(0, 0, 0, 5);
+		gbc_Icon.anchor = GridBagConstraints.EAST;
+		gbc_Icon.gridx = 0;
+		gbc_Icon.gridy = 0;
+		pnlLoansInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
+		
+		txtSearchLoans = new JTextField(10);
+		txtSearchLoans.setToolTipText( Messages.getString( "LoansTab.txtSearchLoans.desc") );
+		// enables to focus on the searchfield by pressing Alt-F
+		txtSearchLoans.setFocusAccelerator('F');
 		txtSearchLoans.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				searchTextLoans = txtSearchLoans.getText();
 				updateFilters();
 			}
 		});
-		txtSearchLoans.setText(Messages.getString("BookMasterTable.textField.text")); //$NON-NLS-1$
 		txtSearchLoans.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
     	    public void focusGained(java.awt.event.FocusEvent evt) {
@@ -314,7 +368,13 @@ public class LoansTab extends LibraryTab {
     	    }
     	});
 		txtSearchLoans.setColumns(10);
-		pnlLoansInvTop.add(txtSearchLoans);
+		
+		GridBagConstraints gbc_searchField = new GridBagConstraints();
+		gbc_searchField.insets = new Insets(0, 0, 0, 5);
+		gbc_searchField.anchor = GridBagConstraints.EAST;
+		gbc_searchField.gridx = 1;
+		gbc_searchField.gridy = 0;
+		pnlLoansInvTop.add( txtSearchLoans, gbc_searchField );
 	}
 
 	/**
@@ -325,28 +385,6 @@ public class LoansTab extends LibraryTab {
 		if ( !loanFilters.isEmpty() ) {
 			loanFilters.clear();
 		}
-		
-		// 2nd: apply the "showDueLoans" filter if applicable
-		// also, check here if the loan is currently lent.
-		// TODO: PCHR - CHECK IF THIS WORKS. LOOKS GOOD, BUT FEELS BAD
-		/*
-		loanFilters.add( new RowFilter<Object, Object>() {
-			@Override
-			public boolean include(RowFilter.Entry<? extends Object, ? extends Object> entry) {
-				 LoanTableModel loanModel = (LoanTableModel) entry.getModel();
-				 Loan loan = loanModel.getLoan(entry.getIdentifier());
-				 
-				 if ( loan.isLent() ) {
-					 if (showDueLoans){
-						 return loan.isOverdue();
-					 } else {
-						 return true;
-					 }
-				 }
-				 return false;
-			}
-		} );
-		*/
 		
 		// 2nd: apply the "loanTableMode" filter if applicable (e.g. if not ALL)
 		if ( currentTableMode != loanTableMode.ALL ) {
@@ -374,42 +412,10 @@ public class LoansTab extends LibraryTab {
 		loanSorter.setRowFilter( RowFilter.andFilter(loanFilters) );
 	}
 	
-	private AbstractAction getToggleShowDueLoansAction() {
-		if(toggleShowDueLoansAction == null) {
-			toggleShowDueLoansAction = new ToggleShowDueLoansAction();
-		}
-		return toggleShowDueLoansAction;
-	}
-	
-	private class ToggleShowDueLoansAction extends AbstractAction {
-		private static final long serialVersionUID = 1L;
-		
-		ToggleShowDueLoansAction() {
-			super( Messages.getString("BookMasterTable.chckbxOnlyDueLoans.text") , null);
-			putValue(MNEMONIC_KEY, KeyEvent.VK_D);
-			putValue(SHORT_DESCRIPTION, Messages.getString("BookMasterTable.chckbxOnlyDueLoans.desc") );
-			putValue(ACCELERATOR_KEY, 
-					KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
-		}
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			showDueLoans=!showDueLoans;
-			
-			// Re-Filter		
-			updateFilters();
-			updateListButtons();
-			updateShowDueLoansCheckbox();
-		}
-	}
-	
 	public void updateListButtons() {
 		// Enables or disables the "Show Selected" buttons
 		// depending on whether a book/loan is selected.
 		btnShowSelectedLoans.setEnabled( tblLoans.getSelectedRowCount()>0);
-	}
-	
-	public void updateShowDueLoansCheckbox() {
-		chckbxOnlyDueLoans.setSelected( showDueLoans );
 	}
 	
 	///////////////////////////////////////
@@ -429,22 +435,11 @@ public class LoansTab extends LibraryTab {
 			currentTableMode = loanTableMode.values()[cmbLoanTableModes.getSelectedIndex()];
 			updateFilters();
 		}
-		public void actionPerformed(int i) {
-			currentTableMode = loanTableMode.values()[i];
-			updateFilters();
-		}
 	}
-	
-	/**
-	 * Updates the labels that contain statistical information.
-	 * @author PCHR
-	 */
-	public void updateStatistics() {
-		lblNrOfCurrentLoans.setText( Messages.getString( "BookMasterTable.lblNrOfCurrentLoans.text", String.valueOf( getLibrary().getLentOutBooks().size() ) ) );
-		lblNrOfDueLoans.setText( Messages.getString( "BookMasterTable.lblNrOfDueLoans.text", String.valueOf( getLibrary().getOverdueLoans().size() ) ) );
-		lblNrOfLoans.setText( Messages.getString( "BookMasterTable.lblNrOfLoans.text", String.valueOf( getLibrary().getLoans().size() ) ) );
-	}
-	
+	///////////////////////////////////////
+	// ACTIONS
+	///////////////////////////////////////
+	// Show selected Loans
 	private void showSelectedLoansButtonActionPerformed(ActionEvent event){
 		int[] selectedRows = tblLoans.getSelectedRows();
 		
@@ -453,5 +448,44 @@ public class LoansTab extends LibraryTab {
 			Loan selectedLoan = getLibrary().getLoans().get(selectedRow);
 			LoanDetail.editLoan(selectedLoan, getLibrary());
 		}
+	}
+	class ShowSelectedLoanAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public ShowSelectedLoanAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_S );
+	    }
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int[] selectedRows = tblLoans.getSelectedRows();
+			
+			for (int selectedRow : selectedRows) {
+				Loan loan = getLibrary().getLoans().get( tblLoans.convertRowIndexToModel( selectedRow ) );
+				LoanDetail.editLoan(loan, getLibrary() );
+			}
+		}	
+	}
+	class AddLoanAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public AddLoanAction( String text, String desc ) {
+	        super( text );
+	        putValue( SHORT_DESCRIPTION, desc );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_N );
+	    }
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			LoanDetail.editLoan( null, getLibrary() );
+		}
+	}
+
+	/**
+	 * Updates the labels that contain statistical information.
+	 * @author PCHR
+	 */
+	public void updateStatistics() {
+		lblNrOfCurrentLoans.setText( Messages.getString( "BookMasterTable.lblNrOfCurrentLoans.text", String.valueOf( getLibrary().getLentOutBooks().size() ) ) );
+		lblNrOfDueLoans.setText( Messages.getString( "BookMasterTable.lblNrOfDueLoans.text", String.valueOf( getLibrary().getOverdueLoans().size() ) ) );
+		lblNrOfLoans.setText( Messages.getString( "BookMasterTable.lblNrOfLoans.text", String.valueOf( getLibrary().getLoans().size() ) ) );
 	}
 }

@@ -1,19 +1,18 @@
 package viewModels;
 
+import i18n.Messages;
+
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.table.AbstractTableModel;
 
-import views.Messages;
 import domain.Customer;
 import domain.CustomerList;
-import domain.Library;
 
 public class CustomerTableModel extends AbstractTableModel implements Observer {
 
 	private static final long serialVersionUID = 1L;
-	Library library;
 	CustomerList customers;
 	
 	private String[] columns = {
@@ -22,10 +21,8 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 		Messages.getString("CustomerMasterTable.ColumnHeader.Address")
 	};
 	
-	public CustomerTableModel( Library library ) {
-		this.library = library;
-		//this.library.addObserver(this);
-		this.customers = library.getCustomerList();
+	public CustomerTableModel( CustomerList customers) {
+		this.customers = customers;
 		
 		this.customers.addObserver( this );
 	}
@@ -47,7 +44,6 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public int getRowCount() {
-		System.out.println( "CustomerTableModel: getRowCount = "+customers.getCustomers().size() );
 		return customers.getCustomers().size();
 	}
 	@Override
@@ -57,30 +53,24 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Customer customer = customers.getCustomers().get(rowIndex);
-		String returnString;
 		
 		switch (columnIndex) {
 		case 0:
-			returnString = ""+customer.getCustomerNo();
-			break;
+			return customer.getCustomerNo();
 		case 1:
-			returnString = customer.getName()+" "+customer.getSurname();
-			break;
+			return customer.getName()+" "+customer.getSurname();
 		case 2:
-			returnString = customer.getStreet()+" "+customer.getZip()+" "+customer.getCity();
-			break;
+			return customer.getStreet()+" "+customer.getZip()+" "+customer.getCity();
 		default:
-			returnString = "";
-			break;
+			return "";
 		}
-		
-		return returnString;
 	}
 	
 	@Override
-	public Class getColumnClass (int columnIndex) {
+	public Class<?> getColumnClass (int columnIndex) {
 		switch (columnIndex) {
 		case 0:
+			return Integer.class;
 		case 1:
 		case 2:
 			return String.class;
@@ -91,31 +81,25 @@ public class CustomerTableModel extends AbstractTableModel implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("UPDATE IN CUSTOMERTABLEMODEL!");
-		
 		int pos = customers.getEditedCustomerPos();
 			
 		if ( pos >= 0 ) {
-			System.out.println("Customer was edited: "+pos);
 			// Customer was edited
 			fireTableRowsUpdated( pos, pos );
 		} else {
 			pos = customers.getRemovedCustomerIndex();
-			System.out.println("pos: "+pos);
+
 			if ( pos >= 0 ) {
-				System.out.println("Customer was removed: "+pos);
 				// Customer was removed
 				fireTableRowsDeleted( pos, pos );
 			} else {
 				pos = customers.getAddedCustomerIndex();
 				
 				if ( pos >= 0 ) {
-					System.out.println("Customer was added: "+pos);
 					// Customer was added
 					fireTableRowsInserted( pos, pos );
-					fireTableDataChanged();
 				} else {
-					// Nothing of our concern. Maybe a TODO?
+					fireTableDataChanged();
 				}
 			}
 		}

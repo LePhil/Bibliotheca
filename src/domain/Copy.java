@@ -1,9 +1,19 @@
 package domain;
 
-public class Copy {
+import i18n.Messages;
 
+public class Copy {
 	public enum Condition {
-		NEW, GOOD, DAMAGED, WASTE, LOST
+		NEW,
+		GOOD,
+		DAMAGED,
+		WASTE,
+		LOST;
+		
+		@Override
+		public String toString() {
+			return Messages.getString("Copy.Condition." + name());
+		};
 	}
 
 	public static long nextInventoryNumber = 1;
@@ -36,7 +46,6 @@ public class Copy {
 
 	@Override
 	public String toString() {
-		// TODO pforster: optimize as soon as loan information are available
 		return this.inventoryNumber + book.getName();
 	}
 }

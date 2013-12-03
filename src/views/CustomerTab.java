@@ -1,12 +1,12 @@
 package views;
 
-import java.awt.Component;
+import i18n.Messages;
+
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -15,14 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
@@ -33,11 +34,11 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
-import viewModels.CustomerTableModel;
+import renderers.CustomerTableCellRenderer;
 
+import viewModels.CustomerTableModel;
 import domain.Customer;
 import domain.Library;
-import domain.Loan;
 
 public class CustomerTab extends LibraryTab {
 	private static final long serialVersionUID = 1L;
@@ -65,10 +66,6 @@ public class CustomerTab extends LibraryTab {
 	private List<RowFilter<Object,Object>> customerFilters;
 	private String searchText;
 	
-	// Actions
-	private ShowSelectedCustomerAction showSelected;
-	private AddCustomerAction addCustomer;
-	
 	CustomerTab(CustomerTableModel customerTableModel, Library library) {
 		super(library);
 		this.customerTableModel = customerTableModel;
@@ -78,29 +75,31 @@ public class CustomerTab extends LibraryTab {
 		/////////////////////////////////////////////////
 		// ACTIONS
 		/////////////////////////////////////////////////
-		{
-			// Show/Edit selected customer
-			AbstractAction showCustomer = new ShowSelectedCustomerAction( Messages.getString( "CustomerTab.btnShowSelected.text"), "Show the customer that has been selected in the customer list" );
-			// Close
-			// Add Customer
-			AbstractAction addCustomer = new AddCustomerAction("ASd", "Adds a new customer" );
-		}
-
+		// Show/Edit selected customer
+		AbstractAction showCustomer = new ShowSelectedCustomerAction(
+			Messages.getString( "CustomerTab.btnShowSelected.text"),
+			Messages.getString("CustomerTab.btnShowSelected.desc")
+		);
+		// Add Customer
+		AbstractAction addCustomer = new AddCustomerAction(
+			Messages.getString("CustomerTab.btnAddNewCustomer.text"),
+			Messages.getString("CustomerTab.btnAddNewCustomer.desc")
+		);
 		
 		// CustomerStats
 		{
 			pnlCustomerStats = new JPanel();
-			pnlCustomerStats.setBorder(new TitledBorder(null, Messages.getString("CustomerTab.CustomerStats.Title")));
+			pnlCustomerStats.setBorder(new TitledBorder(null, Messages.getString("CustomerTab.CustomerStats.Title"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			this.add(pnlCustomerStats);
 			pnlCustomerStats.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-			this.add( pnlCustomerStats );
-		
+			
 			lblNrOfCustomers = new JLabel();
 			pnlCustomerStats.add( lblNrOfCustomers );
 		}
 		// Inventory (Customer table)
 		{
 			pnlCustomerInventory = new JPanel();
-			pnlCustomerInventory.setBorder(new TitledBorder(null, Messages.getString("Customertab.pnlCustomerInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null)); //$NON-NLS-1$
+			pnlCustomerInventory.setBorder(new TitledBorder(null, Messages.getString("Customertab.pnlCustomerInventory.borderTitle"), TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			this.add(pnlCustomerInventory);
 			GridBagLayout gbl_pnlCustomerInventory = new GridBagLayout();
 			gbl_pnlCustomerInventory.columnWidths = new int[] {0};
@@ -117,7 +116,14 @@ public class CustomerTab extends LibraryTab {
 			gbc_pnlCustomersInvTop.gridx = 0;
 			gbc_pnlCustomersInvTop.gridy = 0;
 			pnlCustomerInventory.add(pnlCustomersInvTop, gbc_pnlCustomersInvTop);
-			pnlCustomersInvTop.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+
+			GridBagLayout gbl_InvTop = new GridBagLayout();
+			gbl_InvTop.columnWidths = new int[]{0, 100, 20, 0, 0, 0};
+			gbl_InvTop.rowHeights = new int[]{0, 0};
+			gbl_InvTop.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_InvTop.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+			
+			pnlCustomersInvTop.setLayout( gbl_InvTop );
 			
 			// Init Filters
 			customerFilters = new ArrayList<RowFilter<Object,Object>>();
@@ -125,27 +131,23 @@ public class CustomerTab extends LibraryTab {
 			// Search field i.e. Searchbox
 			initSearchField();
 			
-			Component horizontalStrut_1 = Box.createHorizontalStrut(20);
-			pnlCustomersInvTop.add(horizontalStrut_1);
+			btnShowSelected = new JButton( showCustomer );
+			btnShowSelected.setIcon( new ImageIcon("icons/user_search_32.png") );
 			
-			btnShowSelected = new JButton(Messages.getString("CustomerTab.btnShowSelected.text")); //$NON-NLS-1$
-			btnShowSelected.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					getShowSelectedCustomerAction().actionPerformed(null);
-				}
-			});
+			GridBagConstraints gbc_btnShow = new GridBagConstraints();
+			gbc_btnShow.gridx = 4;
+			gbc_btnShow.gridy = 0;
+			pnlCustomersInvTop.add(btnShowSelected, gbc_btnShow);
+
 			
-			Component horizontalStrut_2 = Box.createHorizontalStrut(20);
-			pnlCustomersInvTop.add(horizontalStrut_2);
-			pnlCustomersInvTop.add(btnShowSelected);
+			btnAddNewCustomer = new JButton( addCustomer );
+			btnAddNewCustomer.setIcon( new ImageIcon("icons/user_add_32.png") );
+
+			GridBagConstraints gbc_btnAdd = new GridBagConstraints();
+			gbc_btnAdd.gridx = 5;
+			gbc_btnAdd.gridy = 0;
+			pnlCustomersInvTop.add( btnAddNewCustomer, gbc_btnAdd );
 			
-			btnAddNewCustomer = new JButton(Messages.getString("CustomerTab.btnAddNewCustomer.text")); //$NON-NLS-1$
-			btnAddNewCustomer.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					getAddCustomerAction().actionPerformed(null);
-				}
-			});
-			pnlCustomersInvTop.add(btnAddNewCustomer);
 			
 			pnlCustomersInvBottom = new JPanel();
 			GridBagConstraints gbc_pnlCustomersInvBottom = new GridBagConstraints();
@@ -178,6 +180,11 @@ public class CustomerTab extends LibraryTab {
 		initTable();
 		updateListButtons();
 		updateStatistics();
+		
+		// Enable opening selected items on ENTER
+		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+		tblCustomers.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, "showItem");
+		tblCustomers.getActionMap().put( "showItem", showCustomer );
 	}
 	
 	private void initTable() {
@@ -192,14 +199,15 @@ public class CustomerTab extends LibraryTab {
 		// Handle the filtering over there:
 		updateFilters();
 		
+		CustomerTableCellRenderer cellRenderer = new CustomerTableCellRenderer();
+		
 		TableColumn customerNoColumn = tblCustomers.getColumnModel().getColumn(0);
 		customerNoColumn.setMinWidth(100);
 		customerNoColumn.setMaxWidth(100);
-		//customerNoColumn.setCellRenderer(new BookTableCellRenderer(getLibrary()));
+		customerNoColumn.setCellRenderer( cellRenderer );
 		
-		// TODO: was haben wir hier versucht? Oo
-		tblCustomers.getColumnModel().getColumn(1);
-		tblCustomers.getColumnModel().getColumn(2);
+		tblCustomers.getColumnModel().getColumn(1).setCellRenderer( cellRenderer );
+		tblCustomers.getColumnModel().getColumn(2).setCellRenderer( cellRenderer );
 		
 		// Add Listeners
 		tblCustomers.getSelectionModel().addListSelectionListener(
@@ -219,22 +227,29 @@ public class CustomerTab extends LibraryTab {
 		tblCustomers.addMouseListener(new MouseAdapter() {
 	        public void mouseClicked(MouseEvent e) {
 	            if (e.getClickCount() == 2) {
-	            	getShowSelectedCustomerAction().actionPerformed(null);
+	            	new ShowSelectedCustomerAction("", "").actionPerformed(null);
 	            }
 	        }
 		});
 	}
 
 	private void initSearchField() {
-		txtSearch = new JTextField();
+		GridBagConstraints gbc_Icon = new GridBagConstraints();
+		gbc_Icon.gridx = 0;
+		gbc_Icon.gridy = 0;
+		pnlCustomersInvTop.add( new JLabel( new ImageIcon("icons/search_32.png") ), gbc_Icon );
+		
+		txtSearch = new JTextField( 10 );
+		txtSearch.setToolTipText( Messages.getString( "CustomerTab.txtSearch.desc") );
+		// enables to focus on the searchfield by pressing Alt-F
+		txtSearch.setFocusAccelerator('F');
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				searchText = txtSearch.getText();
 				updateFilters();
 			}
 		});
-		txtSearch.setText(Messages.getString("BookMasterTable.txtSearch.text")); //$NON-NLS-1$
 		txtSearch.addFocusListener(new java.awt.event.FocusAdapter() {
 			// Mark the whole text when the text field gains focus
     	    public void focusGained(java.awt.event.FocusEvent evt) {
@@ -258,8 +273,10 @@ public class CustomerTab extends LibraryTab {
     			});
     	    }
     	});
-		txtSearch.setColumns(10);
-		pnlCustomersInvTop.add(txtSearch);
+		GridBagConstraints gbc_searchField = new GridBagConstraints();
+		gbc_searchField.gridx = 1;
+		gbc_searchField.gridy = 0;
+		pnlCustomersInvTop.add( txtSearch, gbc_searchField );
 	}
 	
 	private void updateFilters() {
@@ -290,36 +307,22 @@ public class CustomerTab extends LibraryTab {
 	/////////////////////////////////////////////////
 	// Action Subclasses
 	/////////////////////////////////////////////////
-	public AbstractAction getShowSelectedCustomerAction() {
-		if( showSelected == null ) {
-			showSelected = new ShowSelectedCustomerAction("", "");
-		}
-		return showSelected;
-	}
 	class ShowSelectedCustomerAction extends AbstractAction {
 		private static final long serialVersionUID = 1L;
 		public ShowSelectedCustomerAction( String text, String desc ) {
 	        super( text );
 	        putValue( SHORT_DESCRIPTION, desc );
-	        putValue( MNEMONIC_KEY, KeyEvent.VK_ENTER );
+	        putValue( MNEMONIC_KEY, KeyEvent.VK_S );
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("SHOW CUSTOMER");
 			int selectedRow = tblCustomers.getSelectedRow();
 			
 			//Convert to model
 			selectedRow = tblCustomers.convertRowIndexToModel( selectedRow );
-			System.out.println(selectedRow);
 			Customer selectedCustomer= getLibrary().getCustomerList().getCustomers().get(selectedRow);
-			CustomerDetail.editCustomer(getLibrary(), selectedCustomer);
+			CustomerDetail.editCustomer(getLibrary(), getLibrary().getCustomerList(), selectedCustomer);
 		}	
-	}
-	public AbstractAction getAddCustomerAction() {
-		if( addCustomer == null ) {
-			addCustomer= new AddCustomerAction("", "");
-		}
-		return addCustomer;
 	}
 	class AddCustomerAction extends AbstractAction {
 		private static final long serialVersionUID = 1L;
@@ -330,8 +333,7 @@ public class CustomerTab extends LibraryTab {
 	    }
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("NEW CUSTOMER");
-			CustomerDetail.editCustomer( getLibrary(), null );
+			CustomerDetail.editCustomer( getLibrary(), getLibrary().getCustomerList(), null );
 		}
 	}
 }

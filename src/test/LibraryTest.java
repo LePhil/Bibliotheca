@@ -18,9 +18,9 @@ public class LibraryTest extends TestCase {
 		library = new Library();
 		
 		// Books
-		Book b1 = library.createAndAddBook("Design Pattern");
-		Book b2 = library.createAndAddBook("Refactoring");
-		Book b3 = library.createAndAddBook("Clean Code");
+		Book b1 = library.getBookList().createAndAddBook("Design Pattern");
+		Book b2 = library.getBookList().createAndAddBook("Refactoring");
+		Book b3 = library.getBookList().createAndAddBook("Clean Code");
 		
 		// Books
 		library.createAndAddCopy(b1);
@@ -42,18 +42,18 @@ public class LibraryTest extends TestCase {
 
 	public void testGetBooksPerTitle() {
 		
-		Book t = library.findByBookTitle("Design Pattern");
+		Book t = library.getBookList().findByBookTitle("Design Pattern");
 		assertEquals(3, library.getCopiesOfBook(t).size());
 		
-		Book t2 = library.findByBookTitle("Clean Code");
+		Book t2 = library.getBookList().findByBookTitle("Clean Code");
 		assertEquals(1, library.getCopiesOfBook(t2).size());
 		
-		Book t3 = library.findByBookTitle("noTitle");
+		Book t3 = library.getBookList().findByBookTitle("noTitle");
 		assertEquals(0, library.getCopiesOfBook(t3).size());
 	}
 	
 	public void testLoans() {
-		Book t = library.findByBookTitle("Design Pattern");
+		Book t = library.getBookList().findByBookTitle("Design Pattern");
 		
 		assertEquals(0, library.getLentCopiesOfBook(t).size());
 		
@@ -75,7 +75,7 @@ public class LibraryTest extends TestCase {
 	public void testAvailability () {
 		assertEquals(library.getCopies().size(),library.getAvailableCopies().size());
 		
-		Book t = library.findByBookTitle("Refactoring");
+		Book t = library.getBookList().findByBookTitle("Refactoring");
 		Customer c = library.getCustomers().get(1);
 		library.createAndAddLoan(c, library.getCopiesOfBook(t).get(0));
 		

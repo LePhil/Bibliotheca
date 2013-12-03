@@ -1,4 +1,4 @@
-package views;
+package renderers;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -6,11 +6,12 @@ import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import sun.swing.DefaultLookup;
+
 import domain.Loan;
 import domain.Library;
 
 public class LoanTableCellRenderer extends DefaultTableCellRenderer {
-	
 	private static final long serialVersionUID = 1L;
 	private Library library;
 	
@@ -24,16 +25,22 @@ public class LoanTableCellRenderer extends DefaultTableCellRenderer {
 		Loan loan = library.getLoans().get(table.convertRowIndexToModel(row));
 		Color fgColor = Color.BLACK,
 			  bgColor = Color.WHITE;
+			
+		Color alternateColor = DefaultLookup.getColor(this, ui, "Table.alternateRowColor");
 		
 		if (value!= null) {
+			
+			if ( row % 2 != 0 ) {
+				bgColor = alternateColor;
+			}
+			
 			if( isSelected ) {
 				fgColor = Color.WHITE;
-				bgColor = Color.GRAY;
+				bgColor = bgColor.darker();
 			}
 			
 			if ( loan.isOverdue() ) {
 				fgColor = Color.RED;
-				bgColor = bgColor.brighter();
 			}
 			
 			cellRenderer.setBackground(bgColor);

@@ -1,5 +1,7 @@
 package viewModels;
 
+import i18n.Messages;
+
 import java.util.Observable;
 import java.util.Observer;
 
@@ -7,6 +9,7 @@ import javax.swing.table.AbstractTableModel;
 
 import domain.Book;
 import domain.Copy;
+import domain.Loan;
 import domain.LoanList;
 
 public class CustomerLoanTableModel extends AbstractTableModel implements
@@ -14,7 +17,12 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	private static final long serialVersionUID = 1L;
 
-	private String[] columns = { "Exemplar-ID", "Titel", "Author" };
+	private String[] columns = {
+		Messages.getString( "BookMasterLoanTable.ColumnHeader.CopyID" ),
+		Messages.getString( "BookMasterLoanTable.ColumnHeader.Status" ),
+		Messages.getString( "BookDetail.lblTitle.text" ),
+		Messages.getString( "BookDetail.lblAuthor.text" )
+	};
 
 	private LoanList loanList;
 
@@ -29,20 +37,28 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 	}
 
 	@Override
+	public String getColumnName(int column) {
+		return columns[column];
+	}
+
+	@Override
 	public int getColumnCount() {
 		return columns.length;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Copy copy = loanList.getLoanAt(rowIndex).getCopy();
+		Loan loan = loanList.getLoanAt(rowIndex);
+		Copy copy = loan.getCopy();
 		Book book = copy.getTitle();
 		switch (columnIndex) {
 		case 0:
 			return copy.getInventoryNumber();
 		case 1:
-			return book.getName();
+			return loan.isOverdue() ? 0 : loan.isLent() ? 1 : 2;
 		case 2:
+			return book.getName();
+		case 3:
 			return book.getAuthor();
 		default:
 			return null;
@@ -51,8 +67,7 @@ public class CustomerLoanTableModel extends AbstractTableModel implements
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
+		fireTableDataChanged();
 	}
 
 }
