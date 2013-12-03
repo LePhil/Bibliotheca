@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -361,7 +362,7 @@ public class BooksTab extends LibraryTab {
 
 		// 3rd: apply the filter from the search box.  (?i) makes regex ignore cases
 		if ( searchText != null ) {
-			bookFilters.add( RowFilter.regexFilter( "(?i)" + searchText ) );
+			bookFilters.add( RowFilter.regexFilter( "(?i)" + Pattern.quote( searchText ) ) );
 		}
 		
 		sorter.setRowFilter( RowFilter.andFilter(bookFilters) );

@@ -19,6 +19,7 @@ import java.util.Dictionary;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -474,7 +475,7 @@ public class LoanDetail extends JFrame {
 		
 		// 2nd: apply the filter from the search box. (?i) makes regex ignore cases
 		if ( searchText != null ) {
-			copyFilters.add( RowFilter.regexFilter( "(?i)" + searchText ) );
+			copyFilters.add( RowFilter.regexFilter( "(?i)" + Pattern.quote( searchText ) ) );
 		}
 		
 		copySorter.setRowFilter( RowFilter.andFilter(copyFilters) );

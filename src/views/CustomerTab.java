@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
@@ -287,7 +288,7 @@ public class CustomerTab extends LibraryTab {
 
 		// 2nd: apply the filter from the search box.  (?i) makes regex ignore cases
 		if ( searchText != null ) {
-			customerFilters.add( RowFilter.regexFilter( "(?i)" + searchText ) );
+			customerFilters.add( RowFilter.regexFilter( "(?i)" + Pattern.quote( searchText ) ) );
 		}
 		
 		sorter.setRowFilter( RowFilter.andFilter(customerFilters) );

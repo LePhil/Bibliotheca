@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.Box;
@@ -406,7 +407,7 @@ public class LoansTab extends LibraryTab {
 		
 		// 3rd: apply the filter from the search box. (?i) makes regex ignore cases
 		if ( searchTextLoans != null ) {
-			loanFilters.add( RowFilter.regexFilter( "(?i)" + searchTextLoans ) );
+			loanFilters.add( RowFilter.regexFilter( "(?i)" + Pattern.quote( searchTextLoans ) ) );
 		}
 		
 		loanSorter.setRowFilter( RowFilter.andFilter(loanFilters) );
