@@ -41,7 +41,7 @@ public class LibraryApp {
 		// Much beautiful. Wow. Very shiny.
 		UIManager.setLookAndFeel(new NimbusLookAndFeel());
 		
-		// Create Master Book View
+		// Create MainView
 		// Get Splash Screen
 		splash.initUI( new MainView( library ) );
 	}

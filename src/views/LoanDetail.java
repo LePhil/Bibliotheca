@@ -594,7 +594,7 @@ public class LoanDetail extends JFrame {
 				countLoans++;
 			}
 		}
-		displayBtn = displayBtn && countLoans < 3 && cmbCustomer.getSelectedItem() != null;
+		displayBtn = displayBtn && countLoans < 3 && cmbCustomer.getSelectedItem() != null && copyTable.getSelectedRowCount() > 0;
 		btnAddLoan.setEnabled( displayBtn );
 	}
 
