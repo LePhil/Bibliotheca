@@ -113,20 +113,24 @@ public class CustomerDetail extends JFrame {
 			// ///////////////////////////////////////////////
 			// Close (via Esc-Key (?), Button)
 			AbstractAction cancel = new CloseAction(
-					Messages.getString("DetailDialogs.btnClose.text"),
-					"Revert Changes, close dialog");
+				Messages.getString("DetailDialogs.btnClose.text"),
+				Messages.getString("DetailDialogs.btnClose.desc")
+			);
 			// Save (via S, Button)
 			AbstractAction save = new SaveAction(
-					Messages.getString("CustomerDetail.btnSave.text"),
-					"Save changes");
+				Messages.getString("CustomerDetail.btnSave.text"),
+				Messages.getString("CustomerDetail.btnSave.desc")
+			);
 			// Reset (via R, Button)
 			AbstractAction reset = new ResetAction(
-					Messages.getString("CustomerDetail.btnReset.text"),
-					"Revert changes");
+				Messages.getString("CustomerDetail.btnReset.text"),
+				Messages.getString("CustomerDetail.btnReset.desc")
+			);
 			// Delete customer (via D, Button)
 			AbstractAction delete = new DeleteAction(
-					Messages.getString("CustomerDetail.btnDelete.text"),
-					"Delete this customer");
+				Messages.getString("CustomerDetail.btnDelete.text"),
+				Messages.getString("CustomerDetail.btnDelete.desc")
+			);
 
 			// ///////////////////////////////////////////////
 			// INFORMATION PANEL
@@ -522,10 +526,19 @@ public class CustomerDetail extends JFrame {
 
 		public void actionPerformed(ActionEvent e) {
 			// default icon, custom title
-			int delete = JOptionPane.showConfirmDialog(editFrame,
-					Messages.getString("CustomerDetail.deleteDlg.message"),
-					Messages.getString("CustomerDetail.deleteDlg.title"),
-					JOptionPane.YES_NO_OPTION);
+			Object[] options = {
+				Messages.getString("Common.Yes"),
+				Messages.getString("Common.No")
+			};
+			int delete = JOptionPane.showOptionDialog(
+				editFrame,
+				Messages.getString("CustomerDetail.deleteDlg.message"),
+				Messages.getString("CustomerDetail.deleteDlg.title"),
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.WARNING_MESSAGE, 
+                null, options, options[1]
+            );
+			
 			if (delete == 0) {
 				List<Loan> customerLoans = library.getCustomerLoans(customer);
 				List<Loan> lentLoans = new ArrayList<>();

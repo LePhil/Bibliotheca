@@ -13,8 +13,13 @@ import java.util.Observer;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 import viewModels.BookTableModel;
@@ -31,6 +36,15 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	private LoansTab loansTab;
 	private CustomerTab customerTab;
 	
+	// Menu
+	private JMenuBar jMenuBar;
+	private JMenu fileMenu;
+	private JMenuItem fileExit;
+	
+	private JMenu helpMenu;
+	private JMenuItem helpAbout;
+	private JMenuItem helpHelp;
+	
 	private Library library;
 	
 	// Models
@@ -39,6 +53,8 @@ public class MainView extends javax.swing.JFrame implements Observer {
 	private CustomerTableModel customerTableModel;
 	private JPanel pnlMainButtons;
 	private JButton btnCloseApp;
+	
+	private static MainView mainFrame;
 	
 	/**
 	 * Create the application.
@@ -54,6 +70,8 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		bookTableModel = new BookTableModel( this.library );
 		loanTableModel = new LoanTableModel( this.library );
 		customerTableModel = new CustomerTableModel( library.getCustomerList() );
+		
+		mainFrame = this;
 		
 		initialize();
 		library.addObserver( this );
@@ -78,7 +96,48 @@ public class MainView extends javax.swing.JFrame implements Observer {
 				Messages.getString( "MainView.btnExit.text"),
 				Messages.getString( "MainView.btnExit.desc")
 			);
+			// ABOUT
+			AbstractAction about = new AboutAction(
+				Messages.getString("MainView.Menu.Help.about"),
+				Messages.getString("MainView.Menu.Help.aboutDesc")
+			);
+			// HELP
+			AbstractAction help = new HelpAction(
+				Messages.getString("MainView.Menu.Help.help"),
+				Messages.getString("MainView.Menu.Help.helpDesc")
+			);
 
+			///////////////////////////////////////////////////////////////////
+			// MENU
+			///////////////////////////////////////////////////////////////////
+			jMenuBar = new JMenuBar();
+			getContentPane().add( jMenuBar, BorderLayout.NORTH );
+			
+			fileMenu = new JMenu( Messages.getString("MainView.Menu.File.title") );
+			fileMenu.setMnemonic('E');
+			jMenuBar.add( fileMenu );
+			{
+				fileExit = new JMenuItem( close );
+				fileExit.setIcon( new ImageIcon("icons/close_16.png") );
+				fileExit.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+				fileMenu.add( fileExit );
+			}
+			
+			helpMenu = new JMenu( Messages.getString("MainView.Menu.Help.title") );
+			helpMenu.setMnemonic('H');
+			jMenuBar.add( helpMenu );
+			{
+				helpAbout = new JMenuItem( about );
+				helpAbout.setIcon( new ImageIcon("icons/heart_16.png") );
+				helpAbout.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+				helpMenu.add( helpAbout );
+				
+				helpHelp = new JMenuItem( help );
+				helpHelp.setIcon( new ImageIcon("icons/info_button_16.png") );
+				helpHelp.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_H, ActionEvent.CTRL_MASK));
+				helpMenu.add( helpHelp );
+			}
+			
 			///////////////////////////////////////////////////////////////////
 			// INITIAL SETUP
 			///////////////////////////////////////////////////////////////////
@@ -186,6 +245,36 @@ public class MainView extends javax.swing.JFrame implements Observer {
 		}
 		public void actionPerformed(ActionEvent e) {
 			System.exit(0);
+		}
+	}
+	class AboutAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public AboutAction( String text, String desc ) {
+			super( text );
+			putValue( SHORT_DESCRIPTION, desc );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_A );
+		}
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog( mainFrame,
+			    Messages.getString("MainView.AboutDlg.text"),
+			    Messages.getString("MainView.AboutDlg.title"),
+			    JOptionPane.PLAIN_MESSAGE
+			);
+		}
+	}
+	class HelpAction extends AbstractAction {
+		private static final long serialVersionUID = 1L;
+		public HelpAction( String text, String desc ) {
+			super( text );
+			putValue( SHORT_DESCRIPTION, desc );
+			putValue( MNEMONIC_KEY, KeyEvent.VK_H );
+		}
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog( mainFrame,
+			    Messages.getString("MainView.HelpDlg.text"),
+			    Messages.getString("MainView.HelpDlg.title"),
+			    JOptionPane.PLAIN_MESSAGE
+			);
 		}
 	}
 }

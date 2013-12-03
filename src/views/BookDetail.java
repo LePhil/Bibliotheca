@@ -164,18 +164,36 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			// ACTIONS
 			/////////////////////////////////////////////////
 			// Close (via Esc-Key (?), Button)
-			AbstractAction cancel = new CloseAction( Messages.getString( "DetailDialogs.btnClose.text"), "Revert Changes, close dialog" );
+			AbstractAction cancel = new CloseAction(
+				Messages.getString( "DetailDialogs.btnClose.text"),
+				Messages.getString( "DetailDialogs.btnClose.desc")
+			);
 			// Save (via S, Button)
-			AbstractAction save = new SaveAction( Messages.getString( "BookDetail.btnSave.text"), "Save changes" );
+			AbstractAction save = new SaveAction(
+				Messages.getString( "BookDetail.btnSave.text"),
+				Messages.getString( "BookDetail.btnSave.desc")
+			);
 			// Reset (via R, Button)
-			AbstractAction reset = new ResetAction(Messages.getString( "BookDetail.btnReset.text"), "Revert changes" );
+			AbstractAction reset = new ResetAction(
+				Messages.getString( "BookDetail.btnReset.text"),
+				Messages.getString( "BookDetail.btnReset.desc")
+			);
 			// Remove Book (via D, Button)
-			AbstractAction delete = new DeleteAction( Messages.getString("BookDetail.btnRemove.text"), "Remove this book" );
+			AbstractAction delete = new DeleteAction(
+				Messages.getString("BookDetail.btnRemove.text"),
+				Messages.getString("BookDetail.btnRemove.desc")
+			);
 			
 			// Add Copy (via A, Button)
-			AbstractAction addCopy = new AddCopyAction( Messages.getString("BookDetail.btnAdd.text"), "Add a copy of this book" );
+			AbstractAction addCopy = new AddCopyAction(
+				Messages.getString("BookDetail.btnAdd.text"),
+				Messages.getString("BookDetail.btnAdd.desc")
+			);
 			// Remove Selected Copies (via Button)
-			AbstractAction removeCopy = new RemoveCopyAction( Messages.getString("BookDetail.btnRemoveCopy.text"), "Remove selected copies" );
+			AbstractAction removeCopy = new RemoveCopyAction(
+				Messages.getString("BookDetail.btnRemoveCopy.text"),
+				Messages.getString("BookDetail.btnRemoveCopy.desc")
+			);
 			
 			/////////////////////////////////////////////////
 			// INFORMATION PANEL
