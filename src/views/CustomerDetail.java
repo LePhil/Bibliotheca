@@ -350,6 +350,8 @@ public class CustomerDetail extends JFrame {
 				btnCancel.setIcon( new ImageIcon("icons/close_32.png") );
 				panel_1.add(btnCancel);
 			}
+			
+			rootPane.setDefaultButton( btnCancel );
 
 			fillForm();
 			

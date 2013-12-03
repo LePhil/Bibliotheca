@@ -156,6 +156,7 @@ public class LoanDetail extends JFrame {
 			editFrame = new LoanDetail( loan, loans, library );
 			loanFramesDict.put( loan, editFrame );
 		}
+
 		editFrame.setVisible( true );
 	}
 
@@ -402,6 +403,8 @@ public class LoanDetail extends JFrame {
 			btnClose = new JButton( closeAction );
 			btnClose.setIcon( new ImageIcon("icons/close_32.png") );
 			pnlButtons.add(btnClose);
+			
+			rootPane.setDefaultButton( btnClose );
 			
 			updateLabels();
 			updateListButtons();

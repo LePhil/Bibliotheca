@@ -400,6 +400,8 @@ public class BookDetail extends javax.swing.JFrame implements Observer {
 			btnCancel.setIcon( new ImageIcon("icons/close_32.png") );
 			pnlButtons.add( btnCancel );
 			
+			rootPane.setDefaultButton( btnCancel );
+			
 			displayBook();
 			
 			updateLabels();
